@@ -14,7 +14,6 @@ public class Localizacao implements Serializable {
     private Long sequencial;
     private String descricao;
     private TipoLocalizacao tipo;
-    private Servico servico;
     private Boolean ativo;
 
     @Id
@@ -44,16 +43,6 @@ public class Localizacao implements Serializable {
     }
     public void setTipo(TipoLocalizacao tipo) {
         this.tipo = tipo;
-    }
-
-    @ManyToOne
-    @NotNull(message = "Obrigatório informar o serviço")
-    @JoinColumn(name="seq_servico", referencedColumnName="seq_servico", nullable=false)
-    public Servico getServico() {
-        return servico;
-    }
-    public void setServico(Servico servico) {
-        this.servico = servico;
     }
 
     @Column(name="ind_ativo", nullable=false)

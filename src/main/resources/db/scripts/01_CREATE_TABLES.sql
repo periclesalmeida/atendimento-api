@@ -167,9 +167,6 @@ comment on column atm_tipo_localizacao.seq_tipo_localizacao is
 comment on column atm_tipo_localizacao.dsc_tipo_localizacao is
    'Descrição do tipo localização.';
 
--- set table ownership
-alter table atm_tipo_localizacao owner to admatm
-;
 /*==============================================================*/
 /* Table: atm_usuario                                           */
 /*==============================================================*/
@@ -196,9 +193,7 @@ comment on column atm_usuario.dsc_senha is
 comment on column atm_usuario.ind_ativo is
    'Indicador de ativo do usuáiro.';
 
--- set table ownership
-alter table atm_usuario owner to admatm
-;
+
 /*==============================================================*/
 /* Table: atm_usuario_permissao                                 */
 /*==============================================================*/
@@ -217,9 +212,7 @@ comment on column atm_usuario_permissao.seq_usuario is
 comment on column atm_usuario_permissao.cod_permissao is
    'Código da permissão.';
 
--- set table ownership
-alter table atm_usuario_permissao owner to admatm
-;
+
 alter table atm_atendimento
    add constraint fk_atendimento_localizacao foreign key (seq_localizacao)
 references atm_localizacao (seq_localizacao);
