@@ -1,0 +1,15 @@
+version: '2'
+services:
+  engsoft:
+    image: periclesalmeida/padrao:engsoft-1.19
+    container_name: engsoft
+    ports:
+     - "8787:8787"
+    environment:
+        SERVER_PORT: 8787
+        SPRING_PROFILES_ACTIVE: prod
+        SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/engsoft
+        SPRING_DATASOURCE_USERNAME: postgres
+        SPRING_DATASOURCE_PASSWORD: postgres
+        JAVA_OPTS: "-Xmx512m -Xms256m"
+    mem_limit: 1024m
