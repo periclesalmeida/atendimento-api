@@ -5,6 +5,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name="atm_localizacao", schema="admatm")
@@ -15,6 +16,7 @@ public class Localizacao implements Serializable {
     private String descricao;
     private TipoLocalizacao tipo;
     private Boolean ativo;
+    private Set<Servico> servicos;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,6 +53,19 @@ public class Localizacao implements Serializable {
     }
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
+    }
+
+    @ManyToMany(fetch=FetchType.LAZY)
+    @NotNull(message="Obrigatório pelo menos um serviço")
+    @JoinTable(name="atm_localizacao_servico", schema="admatm",
+            joinColumns={@JoinColumn(name="seq_localizacao", referencedColumnName="seq_localizacao")},
+            inverseJoinColumns={@JoinColumn(name="seq_servico", referencedColumnName="seq_servico")
+            })
+    public Set<Servico> getServicos() {
+        return servicos;
+    }
+    public void setServicos(Set<Servico> servicos) {
+        this.servicos = servicos;
     }
 
     @Override

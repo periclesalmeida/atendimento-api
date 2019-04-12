@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface GenericService<ENTIDADE, ID> {
 
+    ENTIDADE incluir(ENTIDADE entidade);
+    ENTIDADE alterar(ENTIDADE entidade);
     ENTIDADE salvar(ENTIDADE entidade);
     void excluir(ENTIDADE entidade);
 

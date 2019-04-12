@@ -50,7 +50,7 @@ public class Servico implements Serializable {
     @NotBlank(message = "Obrigatório informar a cor")
     @Column(name="tip_cor", nullable=false)
     public String getTipoCor() {
-        return tipoCor;
+        return this.tipoCor;
     }
     public void setTipoCor(String tipoCor) {
         this.tipoCor = tipoCor;

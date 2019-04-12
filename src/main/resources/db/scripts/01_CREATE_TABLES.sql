@@ -1,11 +1,13 @@
 
+CREATE SCHEMA admatm;
+
 SET search_path = admatm;
 
 /*==============================================================*/
 /* Table: atm_atendimento                                       */
 /*==============================================================*/
 create table atm_atendimento (
-   seq_atendimento      INT4                 not null,
+   seq_atendimento      SERIAL                 not null,
    num_atendimento      INT4                 not null,
    dth_cadastro         DATE                 not null,
    dth_apresentacao     DATE                 null,
@@ -52,7 +54,7 @@ comment on column atm_atendimento.seq_usuario is
 /* Table: atm_localizacao                                       */
 /*==============================================================*/
 create table atm_localizacao (
-   seq_localizacao      INT4                 not null,
+   seq_localizacao      SERIAL                 not null,
    seq_tipo_localizacao INT4                 not null,
    dsc_localizacao      VARCHAR(50)          not null,
    ind_ativo            BOOL                 not null,
@@ -118,7 +120,7 @@ comment on column atm_permissao.dsc_permissao is
 /* Table: atm_servico                                           */
 /*==============================================================*/
 create table atm_servico (
-   seq_servico          INT4                 not null,
+   seq_servico          SERIAL                 not null,
    dsc_servico          VARCHAR(100)         not null,
    dsc_sigla            VARCHAR(10)          not null,
    tip_cor              CHAR(1)              not null,

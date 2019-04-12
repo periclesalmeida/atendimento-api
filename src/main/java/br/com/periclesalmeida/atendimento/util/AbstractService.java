@@ -14,6 +14,21 @@ public abstract class AbstractService<ENTIDADE, ID extends Serializable> impleme
 
     protected abstract JpaRepository<ENTIDADE, ID> getRepository();
 
+    @Override
+    public ENTIDADE incluir(ENTIDADE entidade) {
+        this.regrasNegocioCadastrar(entidade);
+        this.getRepository().save(entidade);
+        return entidade;
+    }
+
+    @Override
+    public ENTIDADE alterar(ENTIDADE entidade) {
+        this.regrasNegocioAlterar(entidade);
+        this.getRepository().save(entidade);
+        return entidade;
+    }
+
+
     public ENTIDADE salvar(ENTIDADE entidade) {
         this.regrasNegocioSalvar(entidade);
         this.getRepository().save(entidade);
@@ -34,7 +49,7 @@ public abstract class AbstractService<ENTIDADE, ID extends Serializable> impleme
     }
 
     public Integer obterQuantidadeDeRegistros(ENTIDADE entidade) {
-        Long quantidade = this.getRepository().count();
+        Long quantidade = this.getRepository().count(of(entidade));
         return quantidade.intValue();
     }
 
@@ -43,6 +58,14 @@ public abstract class AbstractService<ENTIDADE, ID extends Serializable> impleme
     }
 
     protected void regrasNegocioSalvar(ENTIDADE entidade) {
+    }
+
+    protected void regrasNegocioCadastrar(ENTIDADE entidade) {
+        regrasNegocioSalvar(entidade);
+    }
+
+    protected void regrasNegocioAlterar(ENTIDADE entidade) {
+        regrasNegocioSalvar(entidade);
     }
 
     protected void regrasNegocioExcluir(ENTIDADE entidade) {

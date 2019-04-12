@@ -2,6 +2,7 @@ package br.com.periclesalmeida.atendimento.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.Set;
 
@@ -53,7 +54,7 @@ public class Usuario {
     }
 
     @ManyToMany(fetch=FetchType.LAZY)
-    @NotBlank(message="Obrigatório pelo uma permissão")
+    @NotNull(message="Obrigatório pelo menos uma permissão")
     @JoinTable(name="atm_usuario_permissao", schema="admatm",
             joinColumns={@JoinColumn(name="seq_usuario", referencedColumnName="seq_usuario")},
             inverseJoinColumns={@JoinColumn(name="cod_permissao", referencedColumnName="cod_permissao")

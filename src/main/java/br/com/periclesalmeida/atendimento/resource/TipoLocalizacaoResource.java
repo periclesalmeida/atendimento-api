@@ -22,21 +22,21 @@ public class TipoLocalizacaoResource {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_INCLUIR_TIPO_LOCALIZACAO')")
+    @PreAuthorize("hasAuthority('ROLE_TIPO_LOCALIZACAO_INCLUIR')")
     public ResponseEntity<TipoLocalizacao>  incluir(@Validated @RequestBody TipoLocalizacao entidade) {
-        tipoLocalizacaoService.salvar(entidade);
+        tipoLocalizacaoService.incluir(entidade);
         return ResponseEntity.status(HttpStatus.CREATED).body(entidade);
     }
 
     @PutMapping
-    @PreAuthorize("hasAuthority('ROLE_ALTERAR_TIPO_LOCALIZACAO')")
+    @PreAuthorize("hasAuthority('ROLE_TIPO_LOCALIZACAO_ALTERAR')")
     public ResponseEntity<TipoLocalizacao>  alterar(@Validated @RequestBody TipoLocalizacao entidade) {
-        tipoLocalizacaoService.salvar(entidade);
+        tipoLocalizacaoService.alterar(entidade);
         return ResponseEntity.status(HttpStatus.OK).body(entidade);
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ROLE_CONSULTAR_TIPO_LOCALIZACAO')")
+    @PreAuthorize("hasAuthority('ROLE_TIPO_LOCALIZACAO_CONSULTAR')")
     public List<TipoLocalizacao> consultarTodos() {
         return tipoLocalizacaoService.consultarTodos();
     }

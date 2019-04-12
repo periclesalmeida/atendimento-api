@@ -21,16 +21,16 @@ public class LocalizacaoResource {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_INCLUIR_LOCALIZACAO')")
+    @PreAuthorize("hasAuthority('ROLE_LOCALIZACAO_INCLUIR')")
     public ResponseEntity<Localizacao> incluir(@Validated @RequestBody Localizacao entidade) {
-        localizacaoService.salvar(entidade);
+        localizacaoService.incluir(entidade);
         return ResponseEntity.status(HttpStatus.CREATED).body(entidade);
     }
 
     @PutMapping
-    @PreAuthorize("hasAuthority('ROLE_ALTERAR_LOCALIZACAO')")
+    @PreAuthorize("hasAuthority('ROLE_LOCALIZACAO_ALTERAR')")
     public ResponseEntity<Localizacao> alterar(@Validated @RequestBody Localizacao entidade) {
-        localizacaoService.salvar(entidade);
+        localizacaoService.alterar(entidade);
         return ResponseEntity.status(HttpStatus.OK).body(entidade);
     }
 
