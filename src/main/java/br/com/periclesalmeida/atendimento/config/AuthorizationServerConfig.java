@@ -1,12 +1,11 @@
 package br.com.periclesalmeida.atendimento.config;
 
-import br.com.periclesalmeida.atendimento.config.property.AtendimentoApiProperty;
+import br.com.periclesalmeida.atendimento.config.property.Oauth2Property;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -23,57 +22,57 @@ import java.util.Arrays;
 @Configuration
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
-	@Autowired
-	private AuthenticationManager authenticationManager;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
-	@Autowired
-	private AtendimentoApiProperty atendimentoApiProperty;
+    @Autowired
+    private Oauth2Property oauth2Property;
 
-	@Autowired
-	private UserDetailsService userDetailsService;
+    @Autowired
+    private UserDetailsService userDetailsService;
 
-	@Override
-	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		clients.inMemory()
-				.withClient(atendimentoApiProperty.getClientId())
-				.secret(passwordEncoder().encode(atendimentoApiProperty.getSecret()))
-				.scopes("read", "write")
-				.authorizedGrantTypes("password", "refresh_token")
-				.accessTokenValiditySeconds(atendimentoApiProperty.getAccessTokenSeconds())
-				.refreshTokenValiditySeconds(atendimentoApiProperty.getRefreshTokenSeconds());
-	}
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        clients.inMemory()
+                .withClient(oauth2Property.getClientId())
+                .secret(passwordEncoder().encode(oauth2Property.getSecret()))
+                .scopes("read", "write")
+                .authorizedGrantTypes("password", "refresh_token")
+                .accessTokenValiditySeconds(oauth2Property.getAccessTokenSeconds())
+                .refreshTokenValiditySeconds(oauth2Property.getRefreshTokenSeconds());
+    }
 
-	@Override
-	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-		TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
-		tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
-		endpoints
-				.tokenStore(tokenStore())
-				.tokenEnhancer(tokenEnhancerChain)
-				.reuseRefreshTokens(false)
-				.userDetailsService(userDetailsService)
-				.authenticationManager(authenticationManager);
-	}
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
+        endpoints
+                .tokenStore(tokenStore())
+                .tokenEnhancer(tokenEnhancerChain)
+                .reuseRefreshTokens(false)
+                .userDetailsService(userDetailsService)
+                .authenticationManager(authenticationManager);
+    }
 
-	@Bean
-	public JwtAccessTokenConverter accessTokenConverter() {
-		JwtAccessTokenConverter accessTokenConverter = new JwtAccessTokenConverter();
-		accessTokenConverter.setSigningKey(atendimentoApiProperty.getJwtSigningKey());
-		return accessTokenConverter;
-	}
+    @Bean
+    public JwtAccessTokenConverter accessTokenConverter() {
+        JwtAccessTokenConverter accessTokenConverter = new JwtAccessTokenConverter();
+        accessTokenConverter.setSigningKey(oauth2Property.getJwtSigningKey());
+        return accessTokenConverter;
+    }
 
-	@Bean
-	public TokenStore tokenStore() {
-		return new JwtTokenStore(accessTokenConverter());
-	}
+    @Bean
+    public TokenStore tokenStore() {
+        return new JwtTokenStore(accessTokenConverter());
+    }
 
-	@Bean
-	public TokenEnhancer tokenEnhancer() {
-		return new CustomTokenEnhancer();
-	}
+    @Bean
+    public TokenEnhancer tokenEnhancer() {
+        return new CustomTokenEnhancer();
+    }
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-	}
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
 }

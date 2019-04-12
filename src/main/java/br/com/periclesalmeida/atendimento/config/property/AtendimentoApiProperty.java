@@ -7,59 +7,99 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AtendimentoApiProperty {
 
-	private String origempermitida;
-	private String clientId;
-	private String secret;
-	private int accessTokenSeconds;
-	private int refreshTokenSeconds;
-	private String jwtSigningKey;
+    private ApiInfo apiInfo = new ApiInfo();
 
+    public ApiInfo getApiInfo() {
+        return apiInfo;
+    }
+    public void setApiInfo(ApiInfo apiInfo) {
+        this.apiInfo = apiInfo;
+    }
 
-	public String getOrigempermitida() {
-		return origempermitida;
-	}
+    public static class ApiInfo {
+        private String title;
+        private String description;
+        private String version;
+        private String termsOfServiceUrl;
+        private String license;
+        private String licenseUrl;
 
-	public void setOrigempermitida(String origempermitida) {
-		this.origempermitida = origempermitida;
-	}
+        private Contact contact = new Contact();
 
-	public String getClientId() {
-		return clientId;
-	}
+        public String getTitle() {
+            return title;
+        }
+        public void setTitle(String title) {
+            this.title = title;
+        }
 
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
-	}
+        public String getDescription() {
+            return description;
+        }
+        public void setDescription(String description) {
+            this.description = description;
+        }
 
-	public String getSecret() {
-		return secret;
-	}
+        public String getVersion() {
+            return version;
+        }
+        public void setVersion(String version) {
+            this.version = version;
+        }
 
-	public void setSecret(String secret) {
-		this.secret = secret;
-	}
+        public Contact getContact() {
+            return contact;
+        }
+        public void setContact(Contact contact) {
+            this.contact = contact;
+        }
 
-	public int getAccessTokenSeconds() {
-		return accessTokenSeconds;
-	}
+        public String getTermsOfServiceUrl() {
+            return termsOfServiceUrl;
+        }
+        public void setTermsOfServiceUrl(String termsOfServiceUrl) {
+            this.termsOfServiceUrl = termsOfServiceUrl;
+        }
 
-	public void setAccessTokenSeconds(int accessTokenSeconds) {
-		this.accessTokenSeconds = accessTokenSeconds;
-	}
+        public String getLicense() {
+            return license;
+        }
+        public void setLicense(String license) {
+            this.license = license;
+        }
 
-	public int getRefreshTokenSeconds() {
-		return refreshTokenSeconds;
-	}
+        public String getLicenseUrl() {
+            return licenseUrl;
+        }
+        public void setLicenseUrl(String licenseUrl) {
+            this.licenseUrl = licenseUrl;
+        }
 
-	public void setRefreshTokenSeconds(int refreshTokenSeconds) {
-		this.refreshTokenSeconds = refreshTokenSeconds;
-	}
+        public static class Contact {
+            private String nome;
+            private String url;
+            private String email;
 
-	public String getJwtSigningKey() {
-		return jwtSigningKey;
-	}
+            public String getNome() {
+                return nome;
+            }
+            public void setNome(String nome) {
+                this.nome = nome;
+            }
 
-	public void setJwtSigningKey(String jwtSigningKey) {
-		this.jwtSigningKey = jwtSigningKey;
-	}
+            public String getUrl() {
+                return url;
+            }
+            public void setUrl(String url) {
+                this.url = url;
+            }
+
+            public String getEmail() {
+                return email;
+            }
+            public void setEmail(String email) {
+                this.email = email;
+            }
+        }
+    }
 }
