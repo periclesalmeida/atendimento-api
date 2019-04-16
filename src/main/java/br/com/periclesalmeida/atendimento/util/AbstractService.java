@@ -28,7 +28,6 @@ public abstract class AbstractService<ENTIDADE, ID extends Serializable> impleme
         return entidade;
     }
 
-
     public ENTIDADE salvar(ENTIDADE entidade) {
         this.regrasNegocioSalvar(entidade);
         this.getRepository().save(entidade);
