@@ -14,44 +14,32 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.Serializable;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
-public abstract class AbstractServiceImplTest<ENTIDADE, ID extends Serializable> {
-
-    protected ENTIDADE entidade;
-    protected ID id;
-
-    @Before
-    public void inicializarContexto(){};
+public abstract class AbstractServiceImplTest<ENTIDADE, ID> {
 
     @Test
     public void aoIncluirDeveriaDelegarParaOhRespitorio() {
         getService().incluir(getEntidade());
         verify(getRepositoryMock()).save(getEntidade());
-        Mockito.verifyNoMoreInteractions(getRepositoryMock());
     }
 
     @Test
     public void aoAlterarDeveriaDelegarParaOhRespitorio() {
         getService().alterar(getEntidade());
         verify(getRepositoryMock()).save(getEntidade());
-        Mockito.verifyNoMoreInteractions(getRepositoryMock());
     }
 
     @Test
     public void aoSalvarDeveriaDelegarParaOhRespitorio() {
         getService().salvar(getEntidade());
         verify(getRepositoryMock()).save(getEntidade());
-        Mockito.verifyNoMoreInteractions(getRepositoryMock());
     }
 
     @Test
@@ -65,7 +53,6 @@ public abstract class AbstractServiceImplTest<ENTIDADE, ID extends Serializable>
     public void aoConsultarTodosDeveriaDelegarParaOhRepositorio() {
         getService().consultarTodos();
         verify(getRepositoryMock()).findAll();
-        Mockito.verifyNoMoreInteractions(getRepositoryMock());
     }
 
     @Test
@@ -79,7 +66,6 @@ public abstract class AbstractServiceImplTest<ENTIDADE, ID extends Serializable>
     public void aoConsultarPorIdIhDelegarParaOhRepositorioIhRetornouNuloDeveriaLancarExcecaoEmptyResultDataAccessException() {
         when(getRepositoryMock().findById(getId())).thenReturn(Optional.empty());
         getService().consultarPorId(getId());
-        Mockito.verifyNoMoreInteractions(getRepositoryMock());
     }
 
     @Test
@@ -90,12 +76,11 @@ public abstract class AbstractServiceImplTest<ENTIDADE, ID extends Serializable>
         verify(getRepositoryMock()).findAll(any(Example.class), pageArgument.capture());
     }
 
-    protected ID getId() {
-        return id;
-    }
-    protected ENTIDADE getEntidade() {
-        return entidade;
-    }
+    @Before
+    public abstract void inicializarContexto();
+
+    protected abstract ID getId();
+    protected abstract ENTIDADE getEntidade();
     protected abstract GenericService<ENTIDADE, ID> getService();
     protected abstract JpaRepository<ENTIDADE, ID> getRepositoryMock();
 }
