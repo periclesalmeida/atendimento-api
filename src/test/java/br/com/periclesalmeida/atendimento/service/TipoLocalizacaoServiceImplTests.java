@@ -4,21 +4,22 @@ import br.com.periclesalmeida.atendimento.domain.TipoLocalizacao;
 import br.com.periclesalmeida.atendimento.repository.TipoLocalizacaoRepository;
 import br.com.periclesalmeida.atendimento.service.impl.TipoLocalizacaoServiceImpl;
 import br.com.periclesalmeida.atendimento.util.GenericService;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import static org.mockito.Mockito.verify;
 
-public class TipoLocalizacaoServiceImplTests extends AbstractServiceImplTest {
+public class TipoLocalizacaoServiceImplTests extends AbstractServiceImplTest<TipoLocalizacao, Integer> {
 
+    @Mock
     private TipoLocalizacaoRepository tipoLocalizacaoRepositoryMock;
     private TipoLocalizacaoService tipoLocalizacaoService;
 
     @Override
     public void inicializarContexto() {
-        tipoLocalizacaoRepositoryMock = Mockito.mock(TipoLocalizacaoRepository.class);
-        tipoLocalizacaoService = new TipoLocalizacaoServiceImpl((TipoLocalizacaoRepository) getRepositoryMock());
+        tipoLocalizacaoService = new TipoLocalizacaoServiceImpl(tipoLocalizacaoRepositoryMock);
     }
 
     @Override
@@ -27,7 +28,7 @@ public class TipoLocalizacaoServiceImplTests extends AbstractServiceImplTest {
     }
 
     @Override
-    protected JpaRepository getRepositoryMock() {
+    protected JpaRepository<TipoLocalizacao, Integer> getRepositoryMock() {
         return tipoLocalizacaoRepositoryMock;
     }
 
@@ -38,7 +39,12 @@ public class TipoLocalizacaoServiceImplTests extends AbstractServiceImplTest {
     }
 
     @Override
-    protected Object getEntidade() {
+    protected Integer getId() {
+        return getEntidade().getCodigo();
+    }
+
+    @Override
+    protected TipoLocalizacao getEntidade() {
         return new TipoLocalizacao();
     }
 }
