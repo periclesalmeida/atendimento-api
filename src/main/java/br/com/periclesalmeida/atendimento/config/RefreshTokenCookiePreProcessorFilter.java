@@ -1,6 +1,5 @@
 package br.com.periclesalmeida.atendimento.config;
 
-import org.apache.catalina.util.ParameterMap;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -10,6 +9,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -55,9 +55,8 @@ public class RefreshTokenCookiePreProcessorFilter implements Filter {
 
 		@Override
 		public Map<String, String[]> getParameterMap() {
-			ParameterMap<String, String[]> map = new ParameterMap<>(getRequest().getParameterMap());
+			HashMap<String, String[]> map = new HashMap<>(getRequest().getParameterMap());
 			map.put("refresh_token", new String[] { refreshToken });
-			map.setLocked(true);
 			return map;
 		}
 	}
