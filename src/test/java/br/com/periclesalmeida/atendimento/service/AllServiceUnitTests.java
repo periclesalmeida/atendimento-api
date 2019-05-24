@@ -5,6 +5,8 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        TipoLocalizacaoServiceImplTests.class
+        TipoLocalizacaoServiceImplTests.class,
+        ServicoServiceImplTest.class,
+        LocalizacaoServiceImplTest.class
 })
 public class AllServiceUnitTests {}
