@@ -45,7 +45,7 @@ public class TipoLocalizacaoServiceImpl extends AbstractService<TipoLocalizacao,
     }
 
     private void lancarExecaoCasoCodigoDoObjetoConsultadoEhDiferenteDoInformado(TipoLocalizacao objetoConsultado, TipoLocalizacao objetoInformado) {
-        if (!objetoConsultado.getCodigo().equals(objetoInformado.getCodigo()) ){
+        if (!objetoConsultado.getCodigo().equals(objetoInformado.getCodigo())) {
             throw new NegocioException(MENSAGEM_OBJETO_JA_CADASTRADO);
         }
     }

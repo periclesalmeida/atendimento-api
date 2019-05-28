@@ -46,7 +46,6 @@ public abstract class AbstractServiceImplTest<ENTIDADE, ID> {
     public void aoExcluirDeveriaDelegarParaOhRespitorio() {
         getService().excluir(getEntidade());
         verify(getRepositoryMock()).delete(getEntidade());
-        Mockito.verifyNoMoreInteractions(getRepositoryMock());
     }
 
     @Test
