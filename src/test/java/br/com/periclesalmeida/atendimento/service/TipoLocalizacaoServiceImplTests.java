@@ -4,14 +4,24 @@ import br.com.periclesalmeida.atendimento.domain.TipoLocalizacao;
 import br.com.periclesalmeida.atendimento.repository.TipoLocalizacaoRepository;
 import br.com.periclesalmeida.atendimento.service.impl.TipoLocalizacaoServiceImpl;
 import br.com.periclesalmeida.atendimento.util.GenericService;
+import br.com.periclesalmeida.atendimento.util.exception.NegocioException;
+import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class TipoLocalizacaoServiceImplTests extends AbstractServiceImplTest<TipoLocalizacao, Integer> {
+
+    private final int CODIGO_TIPO_LOCALIZACAO_2 = 2;
+    private final String DESCRICAO = "descricao";
+    private final String DESCRICAO_SALA = "SALA";
+    private final int CODIGO_TIPO_LOCALIZACAO_1 = 1;
 
     @Mock
     private TipoLocalizacaoRepository tipoLocalizacaoRepositoryMock;
@@ -35,7 +45,20 @@ public class TipoLocalizacaoServiceImplTests extends AbstractServiceImplTest<Tip
     @Override
     public void aoConsultarTodosDeveriaDelegarParaOhRepositorio() {
         getService().consultarTodos();
-        verify(getRepositoryMock()).findAll(Sort.by("descricao"));
+        verify(getRepositoryMock()).findAll(Sort.by(DESCRICAO));
+    }
+
+    @Test
+    public void aoSalvarDeveriaDelegarParaOhRepositorioFindByDescricaoContainsAllIgnoreCase() {
+        getService().salvar(getEntidadeComCodigoUm());
+        verify(tipoLocalizacaoRepositoryMock).findByDescricaoContainsAllIgnoreCase(anyString());
+    }
+
+
+    @Test(expected = NegocioException.class)
+    public void aoSalvarEntidadeQueJaExisteDeveriaLancarExcecaoComNegocioException() {
+        when(tipoLocalizacaoRepositoryMock.findByDescricaoContainsAllIgnoreCase(anyString())).thenReturn(Optional.of(getEntidadeComCodigoUm()));
+        getService().salvar(getEntidadeComCodigoDois());
     }
 
     @Override
@@ -46,5 +69,19 @@ public class TipoLocalizacaoServiceImplTests extends AbstractServiceImplTest<Tip
     @Override
     protected TipoLocalizacao getEntidade() {
         return new TipoLocalizacao();
+    }
+
+    private TipoLocalizacao getEntidadeComCodigoUm() {
+        TipoLocalizacao tipoLocalizacao = new TipoLocalizacao();
+        tipoLocalizacao.setCodigo(CODIGO_TIPO_LOCALIZACAO_1);
+        tipoLocalizacao.setDescricao(DESCRICAO_SALA);
+        return tipoLocalizacao;
+    }
+
+    private TipoLocalizacao getEntidadeComCodigoDois() {
+        TipoLocalizacao tipoLocalizacao = new TipoLocalizacao();
+        tipoLocalizacao.setCodigo(CODIGO_TIPO_LOCALIZACAO_2);
+        tipoLocalizacao.setDescricao(DESCRICAO_SALA);
+        return tipoLocalizacao;
     }
 }
