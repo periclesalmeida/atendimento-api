@@ -29,10 +29,10 @@ public class ServicoResource {
         return ResponseEntity.status(HttpStatus.CREATED).body(entidade);
     }
 
-    @PutMapping
+    @PutMapping("/sequencial")
     @PreAuthorize("hasAuthority('ROLE_SERVICO_ALTERAR')")
-    public ResponseEntity<Servico>  alterar(@Validated @RequestBody Servico entidade) {
-        servicoService.alterar(entidade);
+    public ResponseEntity<Servico>  alterar(@PathVariable Long sequencial, @Validated @RequestBody Servico entidade) {
+        servicoService.alterar(sequencial, entidade);
         return ResponseEntity.status(HttpStatus.OK).body(entidade);
     }
 

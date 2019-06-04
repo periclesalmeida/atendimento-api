@@ -1,5 +1,6 @@
 package br.com.periclesalmeida.atendimento.util;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +23,9 @@ public abstract class AbstractService<ENTIDADE, ID extends Serializable> impleme
     }
 
     @Override
-    public ENTIDADE alterar(ENTIDADE entidade) {
+    public ENTIDADE alterar(ID identificador, ENTIDADE entidade) {
+        ENTIDADE entidadeConsultada = this.consultarPorId(identificador);
+        copiarPropriedadesDaEntidade(entidade, entidadeConsultada);
         this.regrasNegocioAlterar(entidade);
         this.getRepository().save(entidade);
         return entidade;
@@ -58,7 +61,6 @@ public abstract class AbstractService<ENTIDADE, ID extends Serializable> impleme
 
     protected void regrasNegocioSalvar(ENTIDADE entidade) {
     }
-
     protected void regrasNegocioCadastrar(ENTIDADE entidade) {
         regrasNegocioSalvar(entidade);
     }
@@ -68,5 +70,13 @@ public abstract class AbstractService<ENTIDADE, ID extends Serializable> impleme
     }
 
     protected void regrasNegocioExcluir(ENTIDADE entidade) {
+    }
+
+    protected void copiarPropriedadesDaEntidade(ENTIDADE entidade, ENTIDADE entidadeConsultada) {
+        BeanUtils.copyProperties(entidade, entidadeConsultada, getPropriedadesIgnoreAlterar());
+    }
+
+    protected String[] getPropriedadesIgnoreAlterar() {
+        return new String[]{"codigo", "sequencial"};
     }
 }
