@@ -32,8 +32,15 @@ public abstract class AbstractServiceImplTest<ENTIDADE, ID> {
 
     @Test
     public void aoAlterarDeveriaDelegarParaOhRespitorio() {
-        getService().alterar(getEntidade());
+        when(getRepositoryMock().findById(getId())).thenReturn(Optional.of(getEntidade()));
+        getService().alterar(getId(), getEntidade());
         verify(getRepositoryMock()).save(getEntidade());
+    }
+
+    @Test(expected = EmptyResultDataAccessException.class)
+    public void aoAlterarIhRetornouNuloNaConsultaPorIdDeveriaLancarExcecaoEmptyResultDataAccessException() {
+        when(getRepositoryMock().findById(getId())).thenReturn(Optional.empty());
+        getService().alterar(getId(), getEntidade());
     }
 
     @Test

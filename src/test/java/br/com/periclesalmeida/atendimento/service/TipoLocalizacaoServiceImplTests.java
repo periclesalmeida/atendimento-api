@@ -50,6 +50,7 @@ public class TipoLocalizacaoServiceImplTests extends AbstractServiceImplTest<Tip
 
     @Test
     public void aoSalvarDeveriaDelegarParaOhRepositorioFindByDescricaoContainsAllIgnoreCase() {
+        when(tipoLocalizacaoRepositoryMock.findByDescricaoContainsAllIgnoreCase(anyString())).thenReturn(Optional.of(getEntidadeComCodigoUm()));
         getService().salvar(getEntidadeComCodigoUm());
         verify(tipoLocalizacaoRepositoryMock).findByDescricaoContainsAllIgnoreCase(anyString());
     }
