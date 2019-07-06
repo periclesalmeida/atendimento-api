@@ -16,8 +16,8 @@ import java.util.Optional;
 @Service
 public class ServicoServiceImpl extends AbstractService<Servico, Long> implements ServicoService {
 
-    private static final String MENSAGEM_JA_EXISTE_SERVICO_CADASTRADO_COM_A_SIGLA_INFORMADA = "Já existe serviço cadastrado com a sigla informada";
-    private static final String MENSAGEM_TIPO_COR_INFORMADO_INVALIDO = "Tipo cor informado inválido.";
+    private final String MENSAGEM_JA_EXISTE_SERVICO_CADASTRADO_COM_A_SIGLA_INFORMADA = "Já existe serviço cadastrado com a sigla informada";
+    private final String MENSAGEM_TIPO_COR_INFORMADO_INVALIDO = "Tipo cor informado inválido.";
     private ServicoRepository servicoRepository;
 
     public ServicoServiceImpl(ServicoRepository servicoRepository) {
@@ -42,7 +42,7 @@ public class ServicoServiceImpl extends AbstractService<Servico, Long> implement
 
     @Override
     protected void regrasNegocioCadastrar(Servico servico) {
-        super.regrasNegocioCadastrar(servico);
+        regrasNegocioSalvar(servico);
         setarComoAtivo(servico);
     }
 

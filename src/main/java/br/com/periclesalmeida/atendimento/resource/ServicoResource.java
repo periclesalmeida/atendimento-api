@@ -3,6 +3,8 @@ package br.com.periclesalmeida.atendimento.resource;
 import br.com.periclesalmeida.atendimento.domain.Servico;
 import br.com.periclesalmeida.atendimento.domain.type.TipoCor;
 import br.com.periclesalmeida.atendimento.service.ServicoService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,7 +44,13 @@ public class ServicoResource {
         return servicoService.consultarTodos();
     }
 
-    @GetMapping(path = "/tipoCor")
+    @PostMapping(path = "/consulta")
+    @PreAuthorize("hasAuthority('ROLE_SERVICO_CONSULTAR')")
+    public Page<Servico> consultarPorEntidade(Servico entidade, Pageable pageable) {
+        return servicoService.consultarPassandoEntidade(entidade, pageable);
+    }
+
+    @GetMapping(path = "/tipo-cor")
     @PreAuthorize("isAuthenticated()")
     public Map<String, String> consultarTipoCor() {
         return TipoCor.getMapValues();
