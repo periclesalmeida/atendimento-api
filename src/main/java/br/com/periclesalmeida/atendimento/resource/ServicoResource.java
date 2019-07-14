@@ -52,13 +52,13 @@ public class ServicoResource {
 
     @PostMapping(path = "/consulta")
     @PreAuthorize("hasAuthority('ROLE_SERVICO_CONSULTAR')")
-    public Page<Servico> consultarPorEntidade(Servico entidade, Pageable pageable) {
+    public Page<Servico> consultarPorEntidade(@RequestBody Servico entidade, Pageable pageable) {
         return servicoService.consultarPassandoEntidade(entidade, pageable);
     }
 
     @GetMapping(path = "/tipo-cor")
     @PreAuthorize("isAuthenticated()")
-    public Map<String, String> consultarTipoCor() {
-        return TipoCor.getMapValues();
+    public TipoCor[] consultarTipoCor() {
+        return TipoCor.values();
     }
 }

@@ -1,19 +1,24 @@
 package br.com.periclesalmeida.atendimento.domain.type;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum TipoCor {
 
-	AZUL("A"),
-	VERMELHO("R"),
-	AMARELO("M"),
-	VERDE("V");
+	AZUL("A","#3352FF"),
+	VERMELHO("R", "#FF5733"),
+	AMARELO("M", "#FFC133"),
+	VERDE("V", "#39FF33");
 
 	private String value;
+	private String html;
 
-	private TipoCor(String value) {
+	private TipoCor(String value, String html) {
 		this.value = value;
+		this.html = html;
 	}
 
 	public String getValue() {
@@ -31,16 +36,9 @@ public enum TipoCor {
 		return tipoCor;
 	}
 
-	public String getNome() {
+	public String getName() {
 		return this.name();
 	}
 
-	public static Map<String, String> getMapValues() {
-		Map<String, String> map = new HashMap<>();
-		for (TipoCor item : TipoCor.values()) {
-			map.put(item.getNome(), item.getValue());
-		}
-		return map;
-	}
-
+	public String getHtml() { return this.html;}
 }
