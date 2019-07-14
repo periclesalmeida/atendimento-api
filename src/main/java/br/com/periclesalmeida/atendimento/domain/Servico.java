@@ -1,9 +1,11 @@
 package br.com.periclesalmeida.atendimento.domain;
 
 
+import br.com.periclesalmeida.atendimento.domain.type.TipoCor;
+import br.com.periclesalmeida.atendimento.util.StringUtil;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -35,7 +37,7 @@ public class Servico implements Serializable {
         return descricao;
     }
     public void setDescricao(String descricao) {
-        this.descricao = descricao;
+        this.descricao = StringUtil.setarUpperCase(descricao) ;
     }
 
     @NotBlank(message = "Obrigatório informar a sigla")
@@ -44,7 +46,7 @@ public class Servico implements Serializable {
         return sigla;
     }
     public void setSigla(String sigla) {
-        this.sigla = sigla;
+        this.sigla = StringUtil.setarUpperCase(sigla) ;
     }
 
     @NotBlank(message = "Obrigatório informar a cor")
@@ -56,7 +58,6 @@ public class Servico implements Serializable {
         this.tipoCor = tipoCor;
     }
 
-    @NotNull(message = "Obrigatório informar o número do atendimento atual")
     @Column(name="num_atendimento_atual", nullable=false)
     public Long getNumeroAtendimentoAtual() {
         return numeroAtendimentoAtual;
@@ -71,6 +72,21 @@ public class Servico implements Serializable {
     }
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
+    }
+
+    @Transient
+    public String getTipoCorHtml() {
+        return TipoCor.parse(getTipoCor()).getHtml();
+    }
+
+    @Transient
+    public String getTipoCorDescricao() {
+        return TipoCor.parse(getTipoCor()).getName();
+    }
+
+    @Transient
+    public TipoCor getTipoCorEnum() {
+        return TipoCor.parse(tipoCor);
     }
 
     @Override

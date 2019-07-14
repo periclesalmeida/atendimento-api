@@ -3,6 +3,8 @@ package br.com.periclesalmeida.atendimento.resource;
 
 import br.com.periclesalmeida.atendimento.domain.TipoLocalizacao;
 import br.com.periclesalmeida.atendimento.service.TipoLocalizacaoService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,6 +41,12 @@ public class TipoLocalizacaoResource {
     @PreAuthorize("hasAuthority('ROLE_TIPO_LOCALIZACAO_CONSULTAR')")
     public TipoLocalizacao  consultarPorId(@PathVariable Integer codigo) {
         return tipoLocalizacaoService.consultarPorId(codigo);
+    }
+
+    @PostMapping(path = "/consulta")
+    @PreAuthorize("hasAuthority('ROLE_SERVICO_CONSULTAR')")
+    public Page<TipoLocalizacao> consultarPorEntidade(@RequestBody TipoLocalizacao entidade, Pageable pageable) {
+        return tipoLocalizacaoService.consultarPassandoEntidade(entidade, pageable);
     }
 
     @GetMapping

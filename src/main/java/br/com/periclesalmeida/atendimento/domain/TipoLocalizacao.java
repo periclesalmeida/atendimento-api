@@ -1,5 +1,7 @@
 package br.com.periclesalmeida.atendimento.domain;
 
+import br.com.periclesalmeida.atendimento.util.StringUtil;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
@@ -29,7 +31,7 @@ public class TipoLocalizacao implements Serializable {
         return descricao;
     }
     public void setDescricao(String descricao) {
-        this.descricao = descricao;
+        this.descricao = StringUtil.setarUpperCase(descricao);
     }
 
     @Override

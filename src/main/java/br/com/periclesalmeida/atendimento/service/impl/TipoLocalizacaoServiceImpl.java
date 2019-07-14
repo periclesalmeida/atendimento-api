@@ -5,12 +5,19 @@ import br.com.periclesalmeida.atendimento.repository.TipoLocalizacaoRepository;
 import br.com.periclesalmeida.atendimento.service.TipoLocalizacaoService;
 import br.com.periclesalmeida.atendimento.util.AbstractService;
 import br.com.periclesalmeida.atendimento.util.exception.NegocioException;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.data.domain.Example.of;
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.contains;
+import static org.springframework.data.domain.ExampleMatcher.matching;
 
 @Service
 public class TipoLocalizacaoServiceImpl extends AbstractService<TipoLocalizacao, Integer> implements TipoLocalizacaoService {
@@ -30,6 +37,13 @@ public class TipoLocalizacaoServiceImpl extends AbstractService<TipoLocalizacao,
     @Override
     public List<TipoLocalizacao> consultarTodos() {
         return tipoLocalizacaoRepository.findAll(Sort.by("descricao"));
+    }
+
+    @Override
+    public Page<TipoLocalizacao> consultarPassandoEntidade(TipoLocalizacao tipoLocalizacao, Pageable pageable) {
+        ExampleMatcher matcher = matching()
+                .withMatcher("descricao", contains().ignoreCase());
+        return getRepository().findAll(of(tipoLocalizacao, matcher), pageable);
     }
 
     @Override
