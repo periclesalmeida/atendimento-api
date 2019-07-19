@@ -2,6 +2,8 @@ package br.com.periclesalmeida.atendimento.resource;
 
 import br.com.periclesalmeida.atendimento.domain.Localizacao;
 import br.com.periclesalmeida.atendimento.service.LocalizacaoService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,11 +29,17 @@ public class LocalizacaoResource {
         return ResponseEntity.status(HttpStatus.CREATED).body(entidade);
     }
 
-    @PutMapping("/sequencial")
+    @PutMapping("/{sequencial}")
     @PreAuthorize("hasAuthority('ROLE_LOCALIZACAO_ALTERAR')")
     public ResponseEntity<Localizacao> alterar(@PathVariable Long sequencial, @Validated @RequestBody Localizacao entidade) {
         localizacaoService.alterar(sequencial, entidade);
         return ResponseEntity.status(HttpStatus.OK).body(entidade);
+    }
+
+    @PostMapping(path = "/consulta")
+    @PreAuthorize("hasAuthority('ROLE_SERVICO_CONSULTAR')")
+    public Page<Localizacao> consultarPorEntidade(@RequestBody Localizacao entidade, Pageable pageable) {
+        return localizacaoService.consultarPassandoEntidade(entidade, pageable);
     }
 
     @GetMapping("/{sequencial}")
