@@ -12,4 +12,8 @@ INSERT INTO admatm.atm_permissao (cod_permissao, dsc_permissao) VALUES ('ROLE_SE
 
 INSERT INTO admatm.atm_permissao (cod_permissao, dsc_permissao) VALUES ('ROLE_PERMISSAO_CONSULTAR','CONSULTAR PERMISSÃO');
 
+INSERT INTO admatm.atm_permissao (cod_permissao, dsc_permissao) VALUES ('ROLE_USUARIO_CONSULTAR','CONSULTAR USUÁRIO');
+INSERT INTO admatm.atm_permissao (cod_permissao, dsc_permissao) VALUES ('ROLE_USUARIO_INCLUIR','INCLUIR USUÁRIO');
+INSERT INTO admatm.atm_permissao (cod_permissao, dsc_permissao) VALUES ('ROLE_USUARIO_ALTERAR','ALTERAR USUÁRIO');
+
 
