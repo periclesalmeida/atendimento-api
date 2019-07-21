@@ -22,7 +22,7 @@ import static org.springframework.data.domain.ExampleMatcher.matching;
 @Service
 public class TipoLocalizacaoServiceImpl extends AbstractService<TipoLocalizacao, Integer> implements TipoLocalizacaoService {
 
-    private static final String MENSAGEM_OBJETO_JA_CADASTRADO = "Objeto já cadastrado.";
+    private final String MENSAGEM_OBJETO_JA_CADASTRADO = "Objeto já cadastrado.";
     private TipoLocalizacaoRepository tipoLocalizacaoRepository;
 
     public TipoLocalizacaoServiceImpl(TipoLocalizacaoRepository tipoLocalizacaoRepository) {
