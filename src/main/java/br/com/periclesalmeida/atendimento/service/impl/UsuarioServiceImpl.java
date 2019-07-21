@@ -15,6 +15,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -29,14 +30,17 @@ import static org.springframework.data.domain.ExampleMatcher.matching;
 @Service
 public class UsuarioServiceImpl extends AbstractService<Usuario, Long> implements UsuarioService {
 
+    private final String MENSAGEM_OBRIGATORIO_INFORMAR_A_SENHA = "Obrigatório informar a senha";
     private final String MENSAGEM_USUARIO_NÃO_POSSUI_PERMISSÃO = "Usuário não possui permissão.";
     private final String MENSAGEM_JA_EXISTE_USUARIO_CADASTRADO_COM_O_LOGIN_INFORMADO = "Já existe usuário cadastrado com o LOGIN informado.";
     private final String MENSAGEM_USUARIO_E_OU_SENHA_INVALIDO = "Usuário e/ou senha inválido";
 
     private UsuarioRepository usuarioRepository;
+    private PasswordEncoder passwordEncoder;
 
-    public UsuarioServiceImpl(UsuarioRepository usuarioRepository) {
+    public UsuarioServiceImpl(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -61,7 +65,24 @@ public class UsuarioServiceImpl extends AbstractService<Usuario, Long> implement
 
     @Override
     protected void regrasNegocioSalvar(Usuario usuario) {
+        setarSenhaSeSenhaSemRashInformada(usuario);
         lancarExececaoCasoJaExistaUsuarioCadastradoComOhLoginIformado(usuario);
+    }
+
+    @Override
+    protected void regrasNegocioCadastrar(Usuario usuario) {
+        lancarExcecaoCasoSenhaSemRashNaoInformada(usuario);
+        super.regrasNegocioCadastrar(usuario);
+    }
+
+    private void setarSenhaSeSenhaSemRashInformada(Usuario usuario) {
+        Optional.ofNullable(usuario.getSenhaSemRash()).ifPresent(s -> {
+            usuario.setSenha(passwordEncoder.encode(usuario.getSenhaSemRash()));
+        });
+    }
+
+    private void lancarExcecaoCasoSenhaSemRashNaoInformada(Usuario usuario) {
+        Optional.ofNullable(usuario.getSenhaSemRash()).orElseThrow(() -> new NegocioException(MENSAGEM_OBRIGATORIO_INFORMAR_A_SENHA));
     }
 
     private void lancarExcecaoCasoUsuarioNaoPossuaPermissao(Set<Permissao> permissoes) {

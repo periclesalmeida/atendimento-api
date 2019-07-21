@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -20,6 +21,7 @@ import static org.mockito.Mockito.when;
 
 public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, Long> {
 
+    public static final String SENHA_ALEATORIA = "SENHA_123";
     private final String CODIDO_PERMISSAO = "COD_PERMISSAO";
     private final long SEQUENCIAL_USUARIO_1 = 1L;
     private final long SEQUENCIAL_USUARIO_2 = 2L;
@@ -30,11 +32,14 @@ public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, Lo
     @Mock
     private UsuarioRepository usuarioRepositoryMock;
 
+    @Mock
+    private PasswordEncoder passwordEncoderMock;
+
     private UsuarioService usuarioService;
 
     @Override
     public void inicializarContexto() {
-        this.usuarioService = new UsuarioServiceImpl(usuarioRepositoryMock);
+        this.usuarioService = new UsuarioServiceImpl(usuarioRepositoryMock, passwordEncoderMock);
     }
 
     @Test
@@ -69,6 +74,12 @@ public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, Lo
         getService().salvar(getUsuarioLoginTestIhSequencial3());
     }
 
+    @Test(expected = NegocioException.class)
+    public void aoIncluirEntidadeSemInformarSenhComRashDeveriaLancarExcecaoNegocioException() {
+        when(usuarioRepositoryMock.findByLogin(anyString())).thenReturn(Optional.of(getUsuarioLoginTestIhSequencial2()));
+        getService().incluir(getUsuarioLoginTestIhSequencial2());
+    }
+
     @Override
     protected Long getId() {
         return getEntidade().getSequencial();
@@ -76,7 +87,7 @@ public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, Lo
 
     @Override
     protected Usuario getEntidade() {
-        return new Usuario();
+        return getUsuarioLoginAdmin();
     }
 
     @Override
@@ -91,8 +102,9 @@ public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, Lo
 
     private Usuario getUsuarioLoginAdmin() {
         Usuario usuario = new Usuario();
-        usuario.setLogin(LOGIN_ADMIN);
         usuario.setSequencial(SEQUENCIAL_USUARIO_1);
+        usuario.setLogin(LOGIN_ADMIN);
+        usuario.setSenhaSemRash(SENHA_ALEATORIA);
         usuario.setPermissoes(getPermissoes());
         return usuario;
     }
