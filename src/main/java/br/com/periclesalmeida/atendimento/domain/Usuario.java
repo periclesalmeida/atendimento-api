@@ -1,5 +1,7 @@
 package br.com.periclesalmeida.atendimento.domain;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -36,8 +38,8 @@ public class Usuario {
         this.login = login;
     }
 
-    @NotBlank(message = "Obrigatório informar a senha")
     @Column(name="dsc_senha", nullable=false)
+    @JsonIgnore
     public String getSenha() {
         return senha;
     }

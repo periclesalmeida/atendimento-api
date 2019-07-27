@@ -10,4 +10,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     @EntityGraph(type = EntityGraph.EntityGraphType.FETCH, attributePaths = {"permissoes"})
     Optional<Usuario> findByLogin(String login);
+
+    @Override
+    @EntityGraph(type = EntityGraph.EntityGraphType.FETCH, attributePaths = {"permissoes"})
+    Optional<Usuario> findById(Long sequencial);
 }

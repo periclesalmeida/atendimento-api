@@ -7,6 +7,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
         TipoLocalizacaoServiceImplTests.class,
         ServicoServiceImplTest.class,
-        LocalizacaoServiceImplTest.class
+        LocalizacaoServiceImplTest.class,
+        UsuarioServiceImplTest.class
 })
 public class AllServiceUnitTests {}
