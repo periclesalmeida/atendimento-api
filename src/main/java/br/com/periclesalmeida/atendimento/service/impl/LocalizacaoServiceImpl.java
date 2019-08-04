@@ -46,8 +46,8 @@ public class LocalizacaoServiceImpl extends AbstractService<Localizacao, Long> i
     }
 
     @Override
-    protected void regrasNegocioCadastrar(Localizacao localizacao) {
-        super.regrasNegocioCadastrar(localizacao);
+    protected void regrasNegocioIncluir(Localizacao localizacao) {
+        super.regrasNegocioIncluir(localizacao);
         setarComoAtivo(localizacao);
     }
 
