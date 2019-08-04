@@ -1,7 +1,10 @@
 package br.com.periclesalmeida.atendimento.domain;
 
+import br.com.periclesalmeida.atendimento.util.DataUtils;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.xml.crypto.Data;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -12,14 +15,14 @@ public class Atendimento implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private Long sequencial;
-    private Long numeroAtendimento;
+    private Integer numeroAtendimento;
     private Date dataHoraCadastro;
     private Date dataHoraApresentacao;
     private Date dataHoraChamada;
     private Localizacao localizacao;
     private Servico servico;
     private Usuario usuario;
-    private Boolean indicadorPrioridade = false;
+    private Boolean indicadorPrioridade;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,10 +36,10 @@ public class Atendimento implements Serializable {
 
     @NotNull(message = "Obrigatório informar o número do atendimento")
     @Column(name="num_atendimento", nullable=false)
-    public Long getNumeroAtendimento() {
+    public Integer getNumeroAtendimento() {
         return numeroAtendimento;
     }
-    public void setNumeroAtendimento(Long numeroAtendimento) {
+    public void setNumeroAtendimento(Integer numeroAtendimento) {
         this.numeroAtendimento = numeroAtendimento;
     }
 
@@ -97,6 +100,16 @@ public class Atendimento implements Serializable {
     }
     public void setIndicadorPrioridade(Boolean indicadorPrioridade) {
         this.indicadorPrioridade = indicadorPrioridade;
+    }
+
+    @Transient
+    public String getDataHoraCadastroFormatada() {
+        return DataUtils.converterDataParaStringNoFormato(getDataHoraCadastro(),"dd/MM/YYYY HH:mm");
+    }
+
+    @Transient
+    public String getNumeroAtendimentoFormatado() {
+        return String.format("%04d", getNumeroAtendimento());
     }
 
     @Override
