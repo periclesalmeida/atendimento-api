@@ -7,12 +7,14 @@ import br.com.periclesalmeida.atendimento.service.impl.LocalizacaoServiceImpl;
 import br.com.periclesalmeida.atendimento.util.GenericService;
 import br.com.periclesalmeida.atendimento.util.exception.NegocioException;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -51,6 +53,17 @@ public class LocalizacaoServiceImplTest extends AbstractServiceImplTest<Localiza
         getService().salvar(getLocalizacaoB());
     }
 
+    @Test
+    public void aoIncluirDeveriaSetarEntidadeComoAtivo() {
+        getService().incluir(getLocalizacaoA());
+
+        ArgumentCaptor<Localizacao> localizacaoArgument = ArgumentCaptor.forClass(Localizacao.class);
+        verify(localizacaoRepositoryMock).save(localizacaoArgument.capture());
+        Localizacao localizacaoToSave = localizacaoArgument.getValue();
+
+        assertTrue(localizacaoToSave.getAtivo());
+    }
+
     @Override
     protected Long getId() {
         return getEntidade().getSequencial();
@@ -70,6 +83,7 @@ public class LocalizacaoServiceImplTest extends AbstractServiceImplTest<Localiza
     protected JpaRepository<Localizacao, Long> getRepositoryMock() {
         return localizacaoRepositoryMock;
     }
+
 
     private Localizacao getLocalizacaoA() {
         Localizacao localizacao = new Localizacao();

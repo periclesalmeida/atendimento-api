@@ -1,5 +1,6 @@
 package br.com.periclesalmeida.atendimento.service;
 
+import br.com.periclesalmeida.atendimento.service.impl.AtendimentoServiceImpl;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -8,6 +9,7 @@ import org.junit.runners.Suite;
         TipoLocalizacaoServiceImplTests.class,
         ServicoServiceImplTest.class,
         LocalizacaoServiceImplTest.class,
-        UsuarioServiceImplTest.class
+        UsuarioServiceImplTest.class,
+        AtendimentoServiceImplTest.class
 })
 public class AllServiceUnitTests {}

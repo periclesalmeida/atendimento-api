@@ -7,20 +7,24 @@ import br.com.periclesalmeida.atendimento.service.impl.ServicoServiceImpl;
 import br.com.periclesalmeida.atendimento.util.GenericService;
 import br.com.periclesalmeida.atendimento.util.exception.NegocioException;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class ServicoServiceImplTest  extends AbstractServiceImplTest<Servico, Long> {
 
+    private final Integer NUMERO_ATENDIMENTO_ATUAL_ZERO = 0;
+    private final Integer NUMERO_ATENDIMENTO_ATUAL_CINCO = 5;
+    private final Integer NUMERO_ATENDIMENTO_ATUAL_SEIS = 6;
     private final long SEQUENCIAL_SERVICO_1 = 1L;
     private final long SEQUENCIAL_SERVICO_2 = 2L;
     private final String SIGLA_SERVICO_NEG = "NEG";
@@ -77,9 +81,58 @@ public class ServicoServiceImplTest  extends AbstractServiceImplTest<Servico, Lo
         getService().salvar(getServicoComCorVermelho());
     }
 
+    @Test
+    public void aoIncluirDeveriaSetarEntidadeComoAtivo() {
+        getService().incluir(getEntidade());
+        Servico servicoToSave = captureAhEntidadeAoSalvar();
+        assertTrue(servicoToSave.getAtivo());
+    }
+
+    @Test
+    public void aoIncluirSeOhNumeroAtendimentoAtualEstiverNuloDeveriaSetarComoZero() {
+        getService().incluir(getEntidade());
+        Servico servicoToSave = captureAhEntidadeAoSalvar();
+        assertEquals(NUMERO_ATENDIMENTO_ATUAL_ZERO, servicoToSave.getNumeroAtendimentoAtual());
+    }
+
+    @Test
+    public void aoIncluirSeOhNumeroAtendimentoAtualEstiverPreenchidoDeveriaFazerNada() {
+        getService().incluir(getServicoComCorAzul());
+        Servico servicoToSave = captureAhEntidadeAoSalvar();
+        assertEquals(NUMERO_ATENDIMENTO_ATUAL_CINCO, servicoToSave.getNumeroAtendimentoAtual());
+    }
+
+    @Test
+    public void aoRetornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtualDeveriaDelegarParaRepositoryFindById() {
+        when(getRepositoryMock().findById(getId())).thenReturn(Optional.of(getServicoComCorAzul()));
+        servicoService.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(SEQUENCIAL_SERVICO_1);
+        verify(getRepositoryMock()).findById(getId());
+    }
+
+    @Test
+    public void aoRetornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtualDeveriaDelegarParaRepositorySave() {
+        when(getRepositoryMock().findById(getId())).thenReturn(Optional.of(getServicoComCorAzul()));
+        servicoService.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(SEQUENCIAL_SERVICO_1);
+        verify(getRepositoryMock()).save(getServicoComCorAzul());
+    }
+
+    @Test
+    public void aoRetornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtualDeveriaDeveriaIncrementarOhNumeroAtendimentoMaisUm() {
+        when(getRepositoryMock().findById(getId())).thenReturn(Optional.of(getServicoComCorAzul()));
+        servicoService.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(SEQUENCIAL_SERVICO_1);
+        Servico servicoToSave = captureAhEntidadeAoSalvar();
+        assertEquals(NUMERO_ATENDIMENTO_ATUAL_SEIS, servicoToSave.getNumeroAtendimentoAtual());
+    }
+
     @Override
     protected Servico getEntidade() {
         return getServicoComCorVermelho();
+    }
+
+    private Servico captureAhEntidadeAoSalvar() {
+        ArgumentCaptor<Servico> servicoArgument = ArgumentCaptor.forClass(Servico.class);
+        verify(servicoRepositoryMock).save(servicoArgument.capture());
+        return servicoArgument.getValue();
     }
 
     private Servico getServicoComCorInvalida() {
@@ -100,6 +153,7 @@ public class ServicoServiceImplTest  extends AbstractServiceImplTest<Servico, Lo
         Servico servico =  new Servico();
         servico.setSequencial(SEQUENCIAL_SERVICO_2);
         servico.setSigla(SIGLA_SERVICO_NEG);
+        servico.setNumeroAtendimentoAtual(NUMERO_ATENDIMENTO_ATUAL_CINCO);
         servico.setTipoCor(TipoCor.AZUL.getValue());
         return servico;
     }

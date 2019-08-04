@@ -4,25 +4,23 @@ import br.com.periclesalmeida.atendimento.util.GenericService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public abstract class AbstractServiceImplTest<ENTIDADE, ID> {
+
+    private final int PAGE_2 = 2;
+    private final int SIZE_10 = 10;
 
     @Test
     public void aoIncluirDeveriaDelegarParaOhRespitorio() {
@@ -76,10 +74,8 @@ public abstract class AbstractServiceImplTest<ENTIDADE, ID> {
 
     @Test
     public void aoConsultarPassandoEntidadeDeveriaDelegarParaOhRepositorio() {
-        ArgumentCaptor<Pageable> pageArgument = ArgumentCaptor.forClass(Pageable.class);
-        when(getRepositoryMock().findAll(any(Example.class), any(Pageable.class))).thenReturn(any(Page.class));
-        getService().consultarPassandoEntidade(getEntidade() ,  eq(PageRequest.of(2,10)));
-        verify(getRepositoryMock()).findAll(any(Example.class), pageArgument.capture());
+        getService().consultarPassandoEntidade(getEntidade() ,  PageRequest.of(PAGE_2, SIZE_10));
+        verify(getRepositoryMock()).findAll(any(Example.class), any(PageRequest.class));
     }
 
     @Before
