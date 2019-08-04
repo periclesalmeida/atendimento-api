@@ -18,7 +18,7 @@ public class Servico implements Serializable {
     private String descricao;
     private String sigla;
     private String tipoCor;
-    private Long numeroAtendimentoAtual;
+    private Integer numeroAtendimentoAtual;
     private Boolean ativo;
 
     @Id
@@ -59,10 +59,10 @@ public class Servico implements Serializable {
     }
 
     @Column(name="num_atendimento_atual", nullable=false)
-    public Long getNumeroAtendimentoAtual() {
+    public Integer getNumeroAtendimentoAtual() {
         return numeroAtendimentoAtual;
     }
-    public void setNumeroAtendimentoAtual(Long numeroAtendimentoAtual) {
+    public void setNumeroAtendimentoAtual(Integer numeroAtendimentoAtual) {
         this.numeroAtendimentoAtual = numeroAtendimentoAtual;
     }
 
