@@ -9,9 +9,9 @@ SET search_path = admatm;
 create table atm_atendimento (
    seq_atendimento      SERIAL                 not null,
    num_atendimento      INT4                 not null,
-   dth_cadastro         DATE                 not null,
-   dth_apresentacao     DATE                 null,
-   dth_chamada          DATE                 null,
+   dth_cadastro         timestamp            not null,
+   dth_apresentacao     timestamp            null,
+   dth_chamada          timestamp            null,
    ind_prioridade       BOOL                 not null,
    seq_servico          INT4                 not null,
    seq_localizacao      INT4                 null,

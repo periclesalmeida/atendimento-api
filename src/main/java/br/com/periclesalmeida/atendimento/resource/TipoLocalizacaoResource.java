@@ -43,9 +43,9 @@ public class TipoLocalizacaoResource {
         return tipoLocalizacaoService.consultarPorId(codigo);
     }
 
-    @PostMapping(path = "/consulta")
-    @PreAuthorize("hasAuthority('ROLE_SERVICO_CONSULTAR')")
-    public Page<TipoLocalizacao> consultarPorEntidade(@RequestBody TipoLocalizacao entidade, Pageable pageable) {
+    @GetMapping(path = "/consulta")
+    @PreAuthorize("hasAuthority('ROLE_TIPO_LOCALIZACAO_CONSULTAR')")
+    public Page<TipoLocalizacao> consultarPorEntidade(TipoLocalizacao entidade, Pageable pageable) {
         return tipoLocalizacaoService.consultarPassandoEntidade(entidade, pageable);
     }
 

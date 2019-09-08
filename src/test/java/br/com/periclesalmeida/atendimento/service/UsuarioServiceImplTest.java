@@ -1,27 +1,31 @@
 package br.com.periclesalmeida.atendimento.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.HashSet;
+import java.util.Optional;
+
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import br.com.periclesalmeida.atendimento.domain.Permissao;
 import br.com.periclesalmeida.atendimento.domain.Usuario;
 import br.com.periclesalmeida.atendimento.repository.UsuarioRepository;
 import br.com.periclesalmeida.atendimento.service.impl.UsuarioServiceImpl;
 import br.com.periclesalmeida.atendimento.util.GenericService;
 import br.com.periclesalmeida.atendimento.util.exception.NegocioException;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.HashSet;
-import java.util.Optional;
-
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, Long> {
 
-    public static final String SENHA_ALEATORIA = "SENHA_123";
+    private final String SENHA_COM_RASH = "SENHA_COM_RASH";
+    private final String SENHA_ALEATORIA = "SENHA_123";
     private final String CODIDO_PERMISSAO = "COD_PERMISSAO";
     private final long SEQUENCIAL_USUARIO_1 = 1L;
     private final long SEQUENCIAL_USUARIO_2 = 2L;
@@ -80,6 +84,22 @@ public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, Lo
         getService().incluir(getUsuarioLoginTestIhSequencial2());
     }
 
+    @Test
+    public void aoSalvarSeFoiInformadaSenhaSemRashDeveriaSetarAhSenhaComRash() {
+        when(passwordEncoderMock.encode(anyString())).thenReturn(SENHA_COM_RASH);
+        getService().salvar(getUsuarioLoginAdmin());
+        Usuario usuarioToSave = captureAhEntidadeAoSalvar();
+        assertEquals(SENHA_COM_RASH, usuarioToSave.getSenha());
+    }
+
+    @Test
+    public void aoSalvarSeNaoFoiInformadaSenhaSemRashDeveriaFazerNada() {
+        when(passwordEncoderMock.encode(anyString())).thenReturn(SENHA_COM_RASH);
+        getService().salvar(getUsuarioLoginTestIhSequencial2());
+        Usuario usuarioToSave = captureAhEntidadeAoSalvar();
+        assertEquals(null, usuarioToSave.getSenha());
+    }
+
     @Override
     protected Long getId() {
         return getEntidade().getSequencial();
@@ -98,6 +118,12 @@ public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, Lo
     @Override
     protected JpaRepository<Usuario, Long> getRepositoryMock() {
         return usuarioRepositoryMock;
+    }
+
+    private Usuario captureAhEntidadeAoSalvar() {
+        ArgumentCaptor<Usuario> usuarioArgument = ArgumentCaptor.forClass(Usuario.class);
+        verify(usuarioRepositoryMock).save(usuarioArgument.capture());
+        return usuarioArgument.getValue();
     }
 
     private Usuario getUsuarioLoginAdmin() {

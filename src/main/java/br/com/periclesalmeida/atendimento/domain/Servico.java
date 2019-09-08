@@ -1,13 +1,20 @@
 package br.com.periclesalmeida.atendimento.domain;
 
 
-import br.com.periclesalmeida.atendimento.domain.type.TipoCor;
-import br.com.periclesalmeida.atendimento.util.StringUtil;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotBlank;
+
+import br.com.periclesalmeida.atendimento.domain.type.TipoCor;
+import br.com.periclesalmeida.atendimento.util.StringUtil;
 
 @Entity
 @Table(name="atm_servico", schema="admatm")
@@ -18,7 +25,7 @@ public class Servico implements Serializable {
     private String descricao;
     private String sigla;
     private String tipoCor;
-    private Long numeroAtendimentoAtual;
+    private Integer numeroAtendimentoAtual;
     private Boolean ativo;
 
     @Id
@@ -59,10 +66,10 @@ public class Servico implements Serializable {
     }
 
     @Column(name="num_atendimento_atual", nullable=false)
-    public Long getNumeroAtendimentoAtual() {
+    public Integer getNumeroAtendimentoAtual() {
         return numeroAtendimentoAtual;
     }
-    public void setNumeroAtendimentoAtual(Long numeroAtendimentoAtual) {
+    public void setNumeroAtendimentoAtual(Integer numeroAtendimentoAtual) {
         this.numeroAtendimentoAtual = numeroAtendimentoAtual;
     }
 

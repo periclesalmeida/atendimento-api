@@ -8,6 +8,7 @@ import org.junit.runners.Suite;
         TipoLocalizacaoServiceImplTests.class,
         ServicoServiceImplTest.class,
         LocalizacaoServiceImplTest.class,
-        UsuarioServiceImplTest.class
+        UsuarioServiceImplTest.class,
+        AtendimentoServiceImplTest.class
 })
 public class AllServiceUnitTests {}

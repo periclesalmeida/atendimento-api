@@ -24,7 +24,7 @@ import static org.springframework.data.domain.ExampleMatcher.matching;
 @Service
 public class ServicoServiceImpl extends AbstractService<Servico, Long> implements ServicoService {
 
-    private final Long NUMERO_ATENDIMENTO_ATUAL_ZERO_0 = 0L;
+    private final Integer NUMERO_ATENDIMENTO_ATUAL_ZERO_0 = 0;
     private final String MENSAGEM_JA_EXISTE_SERVICO_CADASTRADO_COM_A_SIGLA_INFORMADA = "Já existe serviço cadastrado com a sigla informada";
     private final String MENSAGEM_TIPO_COR_INFORMADO_INVALIDO = "Tipo cor informado inválido.";
     private ServicoRepository servicoRepository;
@@ -52,16 +52,28 @@ public class ServicoServiceImpl extends AbstractService<Servico, Long> implement
     }
 
     @Override
+    public Servico retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(Long sequencial) {
+        Servico servicoConsultado = consultarPorId(sequencial);
+        incrementarNumeroDeAtendimentoAtual(servicoConsultado);
+        servicoRepository.save(servicoConsultado);
+        return servicoConsultado;
+    }
+
+    @Override
     protected void regrasNegocioSalvar(Servico servico) {
         lancarExecaoCasoTipoCorInformadoNaoDisponivel(servico);
         lancarExecaoCasoExistaServicoComAhSiglaInformada(servico);
     }
 
     @Override
-    protected void regrasNegocioCadastrar(Servico entidade) {
+    protected void regrasNegocioIncluir(Servico entidade) {
         regrasNegocioSalvar(entidade);
         setarComoAtivo(entidade);
         setarNumeroAtendimentoAtualSeNaoInformado(entidade);
+    }
+
+    private void incrementarNumeroDeAtendimentoAtual(Servico servico) {
+        servico.setNumeroAtendimentoAtual(servico.getNumeroAtendimentoAtual() + 1);
     }
 
     private void setarNumeroAtendimentoAtualSeNaoInformado(Servico entidade) {

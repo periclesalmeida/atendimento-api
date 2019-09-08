@@ -1,10 +1,13 @@
 package br.com.periclesalmeida.atendimento.domain;
 
+import br.com.periclesalmeida.atendimento.util.DataUtils;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Optional;
 
 @Entity
 @Table(name="atm_atendimento", schema="admatm")
@@ -12,14 +15,14 @@ public class Atendimento implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private Long sequencial;
-    private Long numeroAtendimento;
+    private Integer numeroAtendimento;
     private Date dataHoraCadastro;
     private Date dataHoraApresentacao;
     private Date dataHoraChamada;
     private Localizacao localizacao;
     private Servico servico;
     private Usuario usuario;
-    private Boolean indicadorPrioridade = false;
+    private Boolean indicadorPrioridade;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,14 +36,15 @@ public class Atendimento implements Serializable {
 
     @NotNull(message = "Obrigatório informar o número do atendimento")
     @Column(name="num_atendimento", nullable=false)
-    public Long getNumeroAtendimento() {
+    public Integer getNumeroAtendimento() {
         return numeroAtendimento;
     }
-    public void setNumeroAtendimento(Long numeroAtendimento) {
+    public void setNumeroAtendimento(Integer numeroAtendimento) {
         this.numeroAtendimento = numeroAtendimento;
     }
 
     @Column(name="dth_cadastro", nullable=false, updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     public Date getDataHoraCadastro() {
         return dataHoraCadastro;
     }
@@ -49,6 +53,7 @@ public class Atendimento implements Serializable {
     }
 
     @Column(name="dth_apresentacao")
+    @Temporal(TemporalType.TIMESTAMP)
     public Date getDataHoraApresentacao() {
         return dataHoraApresentacao;
     }
@@ -57,6 +62,7 @@ public class Atendimento implements Serializable {
     }
 
     @Column(name="dth_chamada")
+    @Temporal(TemporalType.TIMESTAMP)
     public Date getDataHoraChamada() {
         return dataHoraChamada;
     }
@@ -97,6 +103,36 @@ public class Atendimento implements Serializable {
     }
     public void setIndicadorPrioridade(Boolean indicadorPrioridade) {
         this.indicadorPrioridade = indicadorPrioridade;
+    }
+
+    @Transient
+    public String getDataHoraCadastroFormatada() {
+        return DataUtils.converterDataComHorarioParaString(getDataHoraCadastro());
+    }
+    
+    @Transient
+    public String getHoraChamada() {
+        return DataUtils.converterDataParaStringNoFormato(getDataHoraChamada(), "HH:mm:ss");
+    }
+
+    @Transient
+    public String getNumeroAtendimentoFormatado() {
+        return String.format("%04d", getNumeroAtendimento());
+    }
+
+    @Transient
+    public String getTempoDecorrido() {
+        return DataUtils.getTextoTempoDecorrido(getDataHoraCadastro(), new Date());
+    }
+
+    @Transient
+    public Boolean isRealizado() {
+        return Optional.ofNullable(getDataHoraChamada()).isPresent();
+    }
+
+    @Transient
+    public Boolean isEmEspera() {
+        return !isRealizado();
     }
 
     @Override

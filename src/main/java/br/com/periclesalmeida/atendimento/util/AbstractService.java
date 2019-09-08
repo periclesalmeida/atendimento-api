@@ -17,7 +17,7 @@ public abstract class AbstractService<ENTIDADE, ID extends Serializable> impleme
 
     @Override
     public ENTIDADE incluir(ENTIDADE entidade) {
-        this.regrasNegocioCadastrar(entidade);
+        this.regrasNegocioIncluir(entidade);
         this.getRepository().save(entidade);
         return entidade;
     }
@@ -50,18 +50,13 @@ public abstract class AbstractService<ENTIDADE, ID extends Serializable> impleme
         return this.getRepository().findAll();
     }
 
-    public Integer obterQuantidadeDeRegistros(ENTIDADE entidade) {
-        Long quantidade = this.getRepository().count(of(entidade));
-        return quantidade.intValue();
-    }
-
     public Page<ENTIDADE> consultarPassandoEntidade(ENTIDADE entidade, Pageable pageable) {
         return getRepository().findAll(of(entidade), pageable);
     }
 
     protected void regrasNegocioSalvar(ENTIDADE entidade) {
     }
-    protected void regrasNegocioCadastrar(ENTIDADE entidade) {
+    protected void regrasNegocioIncluir(ENTIDADE entidade) {
         regrasNegocioSalvar(entidade);
     }
 

@@ -8,9 +8,11 @@ import br.com.periclesalmeida.atendimento.util.exception.NegocioException;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.data.domain.Example.of;
@@ -41,13 +43,18 @@ public class LocalizacaoServiceImpl extends AbstractService<Localizacao, Long> i
     }
 
     @Override
+    public List<Localizacao> consultarTodos() {
+        return this.getRepository().findAll(Sort.by("tipo.descricao","descricao"));
+    }
+
+    @Override
     protected void regrasNegocioSalvar(Localizacao localizacao) {
         lancarExecaoCasoExistaLocalizacaoCadastradaComAhDescricaoIhTipoInformado(localizacao);
     }
 
     @Override
-    protected void regrasNegocioCadastrar(Localizacao localizacao) {
-        super.regrasNegocioCadastrar(localizacao);
+    protected void regrasNegocioIncluir(Localizacao localizacao) {
+        super.regrasNegocioIncluir(localizacao);
         setarComoAtivo(localizacao);
     }
 

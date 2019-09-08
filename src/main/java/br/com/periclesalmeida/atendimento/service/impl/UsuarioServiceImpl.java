@@ -70,9 +70,9 @@ public class UsuarioServiceImpl extends AbstractService<Usuario, Long> implement
     }
 
     @Override
-    protected void regrasNegocioCadastrar(Usuario usuario) {
+    protected void regrasNegocioIncluir(Usuario usuario) {
         lancarExcecaoCasoSenhaSemRashNaoInformada(usuario);
-        super.regrasNegocioCadastrar(usuario);
+        super.regrasNegocioIncluir(usuario);
     }
 
     private void setarSenhaSeSenhaSemRashInformada(Usuario usuario) {
