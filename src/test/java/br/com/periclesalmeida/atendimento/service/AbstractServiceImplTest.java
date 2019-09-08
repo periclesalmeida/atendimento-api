@@ -1,6 +1,11 @@
 package br.com.periclesalmeida.atendimento.service;
 
-import br.com.periclesalmeida.atendimento.util.GenericService;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,11 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Optional;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import br.com.periclesalmeida.atendimento.util.GenericService;
 
 @RunWith(SpringRunner.class)
 public abstract class AbstractServiceImplTest<ENTIDADE, ID> {

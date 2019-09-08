@@ -1,24 +1,25 @@
 package br.com.periclesalmeida.atendimento.service;
 
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
+
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import br.com.periclesalmeida.atendimento.domain.Localizacao;
 import br.com.periclesalmeida.atendimento.domain.TipoLocalizacao;
 import br.com.periclesalmeida.atendimento.repository.LocalizacaoRepository;
 import br.com.periclesalmeida.atendimento.service.impl.LocalizacaoServiceImpl;
 import br.com.periclesalmeida.atendimento.util.GenericService;
 import br.com.periclesalmeida.atendimento.util.exception.NegocioException;
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.Optional;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class LocalizacaoServiceImplTest extends AbstractServiceImplTest<Localizacao, Long> {
 
@@ -36,6 +37,13 @@ public class LocalizacaoServiceImplTest extends AbstractServiceImplTest<Localiza
     @Override
     public void inicializarContexto() {
         this.localizacaoService = new LocalizacaoServiceImpl(localizacaoRepositoryMock);
+    }
+    
+    @Override
+    @Test
+    public void aoConsultarTodosDeveriaDelegarParaOhRepositorio() {
+        getService().consultarTodos();
+        verify(getRepositoryMock()).findAll(Mockito.any(org.springframework.data.domain.Sort.class));
     }
 
     @Test

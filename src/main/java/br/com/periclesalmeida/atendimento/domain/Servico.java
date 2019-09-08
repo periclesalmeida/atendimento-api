@@ -1,13 +1,20 @@
 package br.com.periclesalmeida.atendimento.domain;
 
 
-import br.com.periclesalmeida.atendimento.domain.type.TipoCor;
-import br.com.periclesalmeida.atendimento.util.StringUtil;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotBlank;
+
+import br.com.periclesalmeida.atendimento.domain.type.TipoCor;
+import br.com.periclesalmeida.atendimento.util.StringUtil;
 
 @Entity
 @Table(name="atm_servico", schema="admatm")

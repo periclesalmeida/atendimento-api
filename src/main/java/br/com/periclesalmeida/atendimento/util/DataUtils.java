@@ -194,13 +194,6 @@ public class DataUtils {
 		calendario.set(Calendar.SECOND, 59);
 		return calendario.getTime();
 	}
-
-	public static Date acrescentarMinutos(Date data, Integer minutos) {
-		Calendar calendario = Calendar.getInstance();
-		calendario.setTime(data);
-		calendario.add(Calendar.MINUTE, minutos);
-		return calendario.getTime();
-	}
 	
 	public static Date acrescentarUmMinuto(Date data) {
 		Calendar calendario = Calendar.getInstance();

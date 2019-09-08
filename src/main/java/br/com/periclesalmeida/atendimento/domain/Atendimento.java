@@ -4,10 +4,10 @@ import br.com.periclesalmeida.atendimento.util.DataUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.xml.crypto.Data;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Optional;
 
 @Entity
 @Table(name="atm_atendimento", schema="admatm")
@@ -44,6 +44,7 @@ public class Atendimento implements Serializable {
     }
 
     @Column(name="dth_cadastro", nullable=false, updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     public Date getDataHoraCadastro() {
         return dataHoraCadastro;
     }
@@ -52,6 +53,7 @@ public class Atendimento implements Serializable {
     }
 
     @Column(name="dth_apresentacao")
+    @Temporal(TemporalType.TIMESTAMP)
     public Date getDataHoraApresentacao() {
         return dataHoraApresentacao;
     }
@@ -60,6 +62,7 @@ public class Atendimento implements Serializable {
     }
 
     @Column(name="dth_chamada")
+    @Temporal(TemporalType.TIMESTAMP)
     public Date getDataHoraChamada() {
         return dataHoraChamada;
     }
@@ -104,12 +107,32 @@ public class Atendimento implements Serializable {
 
     @Transient
     public String getDataHoraCadastroFormatada() {
-        return DataUtils.converterDataParaStringNoFormato(getDataHoraCadastro(),"dd/MM/YYYY HH:mm");
+        return DataUtils.converterDataComHorarioParaString(getDataHoraCadastro());
+    }
+    
+    @Transient
+    public String getHoraChamada() {
+        return DataUtils.converterDataParaStringNoFormato(getDataHoraChamada(), "HH:mm:ss");
     }
 
     @Transient
     public String getNumeroAtendimentoFormatado() {
         return String.format("%04d", getNumeroAtendimento());
+    }
+
+    @Transient
+    public String getTempoDecorrido() {
+        return DataUtils.getTextoTempoDecorrido(getDataHoraCadastro(), new Date());
+    }
+
+    @Transient
+    public Boolean isRealizado() {
+        return Optional.ofNullable(getDataHoraChamada()).isPresent();
+    }
+
+    @Transient
+    public Boolean isEmEspera() {
+        return !isRealizado();
     }
 
     @Override
