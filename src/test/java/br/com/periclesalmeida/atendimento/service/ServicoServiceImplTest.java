@@ -1,25 +1,24 @@
 package br.com.periclesalmeida.atendimento.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.Optional;
-
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import br.com.periclesalmeida.atendimento.domain.Servico;
 import br.com.periclesalmeida.atendimento.domain.type.TipoCor;
 import br.com.periclesalmeida.atendimento.repository.ServicoRepository;
 import br.com.periclesalmeida.atendimento.service.impl.ServicoServiceImpl;
 import br.com.periclesalmeida.atendimento.util.GenericService;
 import br.com.periclesalmeida.atendimento.util.exception.NegocioException;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class ServicoServiceImplTest  extends AbstractServiceImplTest<Servico, Long> {
 
@@ -49,7 +48,7 @@ public class ServicoServiceImplTest  extends AbstractServiceImplTest<Servico, Lo
 	}
 
 	@Override
-	protected JpaRepository<Servico, Long> getRepositoryMock() {
+	protected MongoRepository<Servico, Long> getRepositoryMock() {
 		return servicoRepositoryMock;
 	}
 

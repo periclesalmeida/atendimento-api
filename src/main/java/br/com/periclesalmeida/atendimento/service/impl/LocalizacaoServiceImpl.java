@@ -9,7 +9,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,7 +30,7 @@ public class LocalizacaoServiceImpl extends AbstractService<Localizacao, Long> i
     }
 
     @Override
-    protected JpaRepository<Localizacao, Long> getRepository() {
+    protected MongoRepository<Localizacao, Long> getRepository() {
         return localizacaoRepository;
     }
 

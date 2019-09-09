@@ -1,4 +1,6 @@
-package br.com.periclesalmeida.atendimento.domain;
+package br.com.periclesalmeida.atendimento.domain.dto;
+
+import br.com.periclesalmeida.atendimento.domain.Atendimento;
 
 import java.util.List;
 import java.util.stream.Collectors;

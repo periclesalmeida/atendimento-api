@@ -1,23 +1,22 @@
 package br.com.periclesalmeida.atendimento.service.impl;
 
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Service;
-
 import br.com.periclesalmeida.atendimento.domain.Atendimento;
-import br.com.periclesalmeida.atendimento.domain.AtendimentoMovimentacaoDTO;
 import br.com.periclesalmeida.atendimento.domain.Localizacao;
 import br.com.periclesalmeida.atendimento.domain.Servico;
+import br.com.periclesalmeida.atendimento.domain.dto.AtendimentoMovimentacaoDTO;
 import br.com.periclesalmeida.atendimento.repository.AtendimentoRepository;
 import br.com.periclesalmeida.atendimento.service.AtendimentoService;
 import br.com.periclesalmeida.atendimento.service.LocalizacaoService;
 import br.com.periclesalmeida.atendimento.service.ServicoService;
 import br.com.periclesalmeida.atendimento.util.VerificadorUtil;
 import br.com.periclesalmeida.atendimento.util.exception.NegocioException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AtendimentoServiceImpl implements AtendimentoService {

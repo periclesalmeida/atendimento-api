@@ -1,15 +1,16 @@
 package br.com.periclesalmeida.atendimento.domain;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
+import javax.persistence.Id;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.Set;
 
-@Entity
-@Table(name="atm_usuario", schema="admatm")
+@Document(collection = "usuario")
 public class Usuario {
 
     private Long sequencial;
@@ -19,9 +20,18 @@ public class Usuario {
     private Boolean ativo;
     private Set<Permissao> permissoes;
 
+    public Usuario(String login, String senha, Boolean ativo, Set<Permissao> permissoes) {
+        this.login = login;
+        this.senha = senha;
+        this.senhaSemRash = senhaSemRash;
+        this.ativo = ativo;
+        this.permissoes = permissoes;
+    }
+
+    public Usuario() {
+    }
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="seq_usuario", nullable=false)
     public Long getSequencial() {
         return sequencial;
     }
@@ -30,7 +40,6 @@ public class Usuario {
     }
 
     @NotBlank(message = "Obrigatório informar o login")
-    @Column(name="nom_login", nullable=false)
     public String getLogin() {
         return login;
     }
@@ -38,7 +47,6 @@ public class Usuario {
         this.login = login;
     }
 
-    @Column(name="dsc_senha", nullable=false)
     @JsonIgnore
     public String getSenha() {
         return senha;
@@ -47,7 +55,6 @@ public class Usuario {
         this.senha = senha;
     }
 
-    @Column(name = "ind_ativo", nullable = false)
     public Boolean getAtivo() {
         return ativo;
     }
@@ -55,12 +62,7 @@ public class Usuario {
         this.ativo = ativo;
     }
 
-    @ManyToMany(fetch=FetchType.LAZY)
     @NotNull(message="Obrigatório pelo menos uma permissão")
-    @JoinTable(name="atm_usuario_permissao", schema="admatm",
-            joinColumns={@JoinColumn(name="seq_usuario", referencedColumnName="seq_usuario")},
-            inverseJoinColumns={@JoinColumn(name="cod_permissao", referencedColumnName="cod_permissao")
-            })
     public Set<Permissao> getPermissoes() {
         return permissoes;
     }

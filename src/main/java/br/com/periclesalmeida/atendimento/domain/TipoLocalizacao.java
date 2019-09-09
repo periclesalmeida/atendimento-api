@@ -1,14 +1,14 @@
 package br.com.periclesalmeida.atendimento.domain;
 
 import br.com.periclesalmeida.atendimento.util.StringUtil;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
+import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Objects;
 
-@Entity
-@Table(name="atm_tipo_localizacao", schema="admatm")
+@Document(collection = "tipoLocalizacao")
 public class TipoLocalizacao implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -16,8 +16,6 @@ public class TipoLocalizacao implements Serializable {
     private String descricao;
 
     @Id
-    @Column(name="seq_tipo_localizacao", nullable=false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getCodigo() {
         return codigo;
     }
@@ -25,7 +23,6 @@ public class TipoLocalizacao implements Serializable {
         this.codigo = codigo;
     }
 
-    @Column(name="dsc_tipo_localizacao", nullable=false)
     @NotBlank(message = "Obrigatório informar a descrição")
     public String getDescricao() {
         return descricao;

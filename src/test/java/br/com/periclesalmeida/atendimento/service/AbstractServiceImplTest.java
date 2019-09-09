@@ -1,21 +1,20 @@
 package br.com.periclesalmeida.atendimento.service;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.Optional;
-
+import br.com.periclesalmeida.atendimento.util.GenericService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import br.com.periclesalmeida.atendimento.util.GenericService;
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public abstract class AbstractServiceImplTest<ENTIDADE, ID> {
@@ -85,5 +84,5 @@ public abstract class AbstractServiceImplTest<ENTIDADE, ID> {
     protected abstract ID getId();
     protected abstract ENTIDADE getEntidade();
     protected abstract GenericService<ENTIDADE, ID> getService();
-    protected abstract JpaRepository<ENTIDADE, ID> getRepositoryMock();
+    protected abstract MongoRepository<ENTIDADE, ID> getRepositoryMock();
 }

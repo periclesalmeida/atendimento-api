@@ -8,7 +8,7 @@ import br.com.periclesalmeida.atendimento.util.exception.NegocioException;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
 
@@ -38,7 +38,7 @@ public class TipoLocalizacaoServiceImplTests extends AbstractServiceImplTest<Tip
     }
 
     @Override
-    protected JpaRepository<TipoLocalizacao, Integer> getRepositoryMock() {
+    protected MongoRepository<TipoLocalizacao, Integer> getRepositoryMock() {
         return tipoLocalizacaoRepositoryMock;
     }
 

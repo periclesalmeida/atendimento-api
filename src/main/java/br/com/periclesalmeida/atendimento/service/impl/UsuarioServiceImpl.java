@@ -10,7 +10,7 @@ import br.com.periclesalmeida.atendimento.util.exception.NegocioException;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -59,7 +59,7 @@ public class UsuarioServiceImpl extends AbstractService<Usuario, Long> implement
     }
 
     @Override
-    protected JpaRepository<Usuario, Long> getRepository() {
+    protected MongoRepository<Usuario, Long> getRepository() {
         return usuarioRepository;
     }
 

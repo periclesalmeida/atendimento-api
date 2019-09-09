@@ -1,23 +1,17 @@
 package br.com.periclesalmeida.atendimento.domain;
 
 
+import br.com.periclesalmeida.atendimento.domain.type.TipoCor;
+import br.com.periclesalmeida.atendimento.util.StringUtil;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import javax.persistence.Id;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotBlank;
-
-import br.com.periclesalmeida.atendimento.domain.type.TipoCor;
-import br.com.periclesalmeida.atendimento.util.StringUtil;
-
-@Entity
-@Table(name="atm_servico", schema="admatm")
+@Document(collection = "servico")
 public class Servico implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -29,8 +23,6 @@ public class Servico implements Serializable {
     private Boolean ativo;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="seq_servico", nullable=false)
     public Long getSequencial() {
         return sequencial;
     }
@@ -39,7 +31,6 @@ public class Servico implements Serializable {
     }
 
     @NotBlank(message = "Obrigatório informar a descrição")
-    @Column(name="dsc_servico", nullable=false)
     public String getDescricao() {
         return descricao;
     }
@@ -48,7 +39,6 @@ public class Servico implements Serializable {
     }
 
     @NotBlank(message = "Obrigatório informar a sigla")
-    @Column(name="dsc_sigla", nullable=false)
     public String getSigla() {
         return sigla;
     }
@@ -57,7 +47,6 @@ public class Servico implements Serializable {
     }
 
     @NotBlank(message = "Obrigatório informar a cor")
-    @Column(name="tip_cor", nullable=false)
     public String getTipoCor() {
         return this.tipoCor;
     }
@@ -65,7 +54,6 @@ public class Servico implements Serializable {
         this.tipoCor = tipoCor;
     }
 
-    @Column(name="num_atendimento_atual", nullable=false)
     public Integer getNumeroAtendimentoAtual() {
         return numeroAtendimentoAtual;
     }
@@ -73,7 +61,6 @@ public class Servico implements Serializable {
         this.numeroAtendimentoAtual = numeroAtendimentoAtual;
     }
 
-    @Column(name="ind_ativo", nullable=false)
     public Boolean getAtivo() {
         return ativo;
     }

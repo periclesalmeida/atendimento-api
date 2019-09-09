@@ -1,24 +1,29 @@
 package br.com.periclesalmeida.atendimento.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Objects;
 
-@Entity
-@Table(name="atm_permissao", schema="admatm")
+@Document(collection = "permissao")
 public class Permissao implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private String codigo;
     private String descricao;
 
+    public Permissao(String codigo, String descricao) {
+        this.codigo = codigo;
+        this.descricao = descricao;
+    }
+
+    public Permissao() {
+    }
+
     @Id
     @NotBlank(message = "Obrigatório informar o código")
-    @Column(name="cod_permissao", nullable=false)
     public String getCodigo() {
         return codigo;
     }
@@ -27,7 +32,6 @@ public class Permissao implements Serializable {
     }
 
     @NotBlank(message = "Obrigatório informar a descrição")
-    @Column(name="dsc_permissao", nullable=false)
     public String getDescricao() {
         return descricao;
     }

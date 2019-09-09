@@ -1,7 +1,7 @@
 package br.com.periclesalmeida.atendimento.service;
 
 import br.com.periclesalmeida.atendimento.domain.Atendimento;
-import br.com.periclesalmeida.atendimento.domain.AtendimentoMovimentacaoDTO;
+import br.com.periclesalmeida.atendimento.domain.dto.AtendimentoMovimentacaoDTO;
 
 public interface AtendimentoService {
 

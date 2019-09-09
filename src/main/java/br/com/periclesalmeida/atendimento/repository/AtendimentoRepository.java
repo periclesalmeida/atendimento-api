@@ -1,16 +1,16 @@
 package br.com.periclesalmeida.atendimento.repository;
 
+import br.com.periclesalmeida.atendimento.domain.Atendimento;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+public interface AtendimentoRepository extends MongoRepository<Atendimento, Long> {
 
-import br.com.periclesalmeida.atendimento.domain.Atendimento;
-
-public interface AtendimentoRepository extends JpaRepository<Atendimento, Long> {
-
+	/*
 	@Query("SELECT at                                " +
 			"FROM Atendimento           at           " +
 			"JOIN at.servico            se           " +
@@ -22,6 +22,9 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, Long> 
 			"   WHERE se2 = se                                " +
 			"     AND lo.sequencial = :sequencialLocalizacao) " +
 			"ORDER BY at.dataHoraCadastro ASC                 ")
+	 */
+
+	@Query("{ 'dataHoraCadastro' : ?0 }")
 	List<Atendimento> listarPorLocalizacaoIhData(
 			@Param("sequencialLocalizacao") Long sequencialLocalizacao,
 			@Param("data") LocalDate data);

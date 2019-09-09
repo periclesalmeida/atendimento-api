@@ -1,7 +1,7 @@
 package br.com.periclesalmeida.atendimento.resource;
 
 import br.com.periclesalmeida.atendimento.domain.Atendimento;
-import br.com.periclesalmeida.atendimento.domain.AtendimentoMovimentacaoDTO;
+import br.com.periclesalmeida.atendimento.domain.dto.AtendimentoMovimentacaoDTO;
 import br.com.periclesalmeida.atendimento.service.AtendimentoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,27 +1,5 @@
 package br.com.periclesalmeida.atendimento.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Optional;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.test.context.junit4.SpringRunner;
-
 import br.com.periclesalmeida.atendimento.domain.Atendimento;
 import br.com.periclesalmeida.atendimento.domain.Localizacao;
 import br.com.periclesalmeida.atendimento.domain.Servico;
@@ -30,6 +8,25 @@ import br.com.periclesalmeida.atendimento.repository.AtendimentoRepository;
 import br.com.periclesalmeida.atendimento.service.impl.AtendimentoServiceImpl;
 import br.com.periclesalmeida.atendimento.util.DataUtils;
 import br.com.periclesalmeida.atendimento.util.exception.NegocioException;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Optional;
+
+import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public class AtendimentoServiceImplTest {
@@ -302,7 +299,7 @@ public class AtendimentoServiceImplTest {
 		return atendimentoService;
 	}
 
-	private JpaRepository<Atendimento, Long> getRepositoryMock() {
+	private MongoRepository<Atendimento, Long> getRepositoryMock() {
 		return atendimentoRepositoryMock;
 	}
 }

@@ -1,16 +1,19 @@
 package br.com.periclesalmeida.atendimento.domain;
 
 import br.com.periclesalmeida.atendimento.util.DataUtils;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
+import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 
-@Entity
-@Table(name="atm_atendimento", schema="admatm")
+@Document(collection = "atendimento")
 public class Atendimento implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -25,8 +28,6 @@ public class Atendimento implements Serializable {
     private Boolean indicadorPrioridade;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="seq_atendimento", nullable=false)
     public Long getSequencial() {
         return sequencial;
     }
@@ -35,7 +36,6 @@ public class Atendimento implements Serializable {
     }
 
     @NotNull(message = "Obrigatório informar o número do atendimento")
-    @Column(name="num_atendimento", nullable=false)
     public Integer getNumeroAtendimento() {
         return numeroAtendimento;
     }
@@ -43,7 +43,6 @@ public class Atendimento implements Serializable {
         this.numeroAtendimento = numeroAtendimento;
     }
 
-    @Column(name="dth_cadastro", nullable=false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     public Date getDataHoraCadastro() {
         return dataHoraCadastro;
@@ -52,7 +51,6 @@ public class Atendimento implements Serializable {
         this.dataHoraCadastro = dataHoraCadastro;
     }
 
-    @Column(name="dth_apresentacao")
     @Temporal(TemporalType.TIMESTAMP)
     public Date getDataHoraApresentacao() {
         return dataHoraApresentacao;
@@ -61,7 +59,6 @@ public class Atendimento implements Serializable {
         this.dataHoraApresentacao = dataHoraApresentacao;
     }
 
-    @Column(name="dth_chamada")
     @Temporal(TemporalType.TIMESTAMP)
     public Date getDataHoraChamada() {
         return dataHoraChamada;
@@ -70,8 +67,6 @@ public class Atendimento implements Serializable {
         this.dataHoraChamada = dataHoraChamada;
     }
 
-    @ManyToOne
-    @JoinColumn(name="seq_localizacao", referencedColumnName="seq_localizacao")
     public Localizacao getLocalizacao() {
         return localizacao;
     }
@@ -79,8 +74,6 @@ public class Atendimento implements Serializable {
         this.localizacao = localizacao;
     }
 
-    @ManyToOne
-    @JoinColumn(name="seq_servico", referencedColumnName="seq_servico", nullable = false)
     public Servico getServico() {
         return servico;
     }
@@ -88,8 +81,6 @@ public class Atendimento implements Serializable {
         this.servico = servico;
     }
 
-    @ManyToOne
-    @JoinColumn(name="seq_usuario", referencedColumnName="seq_usuario")
     public Usuario getUsuario() {
         return usuario;
     }
@@ -97,7 +88,6 @@ public class Atendimento implements Serializable {
         this.usuario = usuario;
     }
 
-    @Column(name="ind_prioridade", nullable=false)
     public Boolean getIndicadorPrioridade() {
         return indicadorPrioridade;
     }
