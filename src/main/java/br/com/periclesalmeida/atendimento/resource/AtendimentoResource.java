@@ -24,41 +24,41 @@ public class AtendimentoResource {
 
     @GetMapping("/{sequencial}")
     @PreAuthorize("hasAuthority('ROLE_SERVICO_INCLUIR')")
-    public Atendimento consultarPorId(@PathVariable Long sequencial) {
+    public Atendimento consultarPorId(@PathVariable String sequencial) {
         return atendimentoService.consultarPorId(sequencial);
     }
     
     @GetMapping("/movimentacao/{sequencialLocalizacao}")
     @PreAuthorize("hasAuthority('ROLE_SERVICO_INCLUIR')")
-    public ResponseEntity<AtendimentoMovimentacaoDTO> consultarMovimentacao(@PathVariable Long sequencialLocalizacao) {
+    public ResponseEntity<AtendimentoMovimentacaoDTO> consultarMovimentacao(@PathVariable String sequencialLocalizacao) {
         AtendimentoMovimentacaoDTO atendimentoMovimentacaoDTO = atendimentoService.consultarMovimentacaoDoDiaDaLocalizacao(sequencialLocalizacao);
         return ResponseEntity.status(HttpStatus.OK).body(atendimentoMovimentacaoDTO);
     }
 
     @PostMapping("/gerar/{sequencialServico}")
     @PreAuthorize("hasAuthority('ROLE_SERVICO_INCLUIR')")
-    public ResponseEntity<Atendimento> gerarSenha(@PathVariable Long sequencialServico) {
+    public ResponseEntity<Atendimento> gerarSenha(@PathVariable String sequencialServico) {
         Atendimento atendimentoGerado = atendimentoService.gerar(sequencialServico);
         return ResponseEntity.status(HttpStatus.CREATED).body(atendimentoGerado);
     }
 
     @PostMapping("/gerar-prioridade/{sequencialServico}")
     @PreAuthorize("hasAuthority('ROLE_SERVICO_INCLUIR')")
-    public ResponseEntity<Atendimento> gerarSenhaPrioridade(@PathVariable Long sequencialServico) {
+    public ResponseEntity<Atendimento> gerarSenhaPrioridade(@PathVariable String sequencialServico) {
         Atendimento atendimentoGerado = atendimentoService.gerarPrioridade(sequencialServico);
         return ResponseEntity.status(HttpStatus.CREATED).body(atendimentoGerado);
     }
 
     @PostMapping("/chamar-proximo/{sequencialLocalizacao}")
     @PreAuthorize("hasAuthority('ROLE_SERVICO_INCLUIR')")
-    public ResponseEntity<Atendimento> chamarProximo(@PathVariable Long sequencialLocalizacao) {
+    public ResponseEntity<Atendimento> chamarProximo(@PathVariable String sequencialLocalizacao) {
         Atendimento atendimentoChamado = atendimentoService.chamarProximo(sequencialLocalizacao);
         return ResponseEntity.status(HttpStatus.OK).body(atendimentoChamado);
     }
 
     @PostMapping("/chamar-novamente/{sequencial}/{sequencialLocalizacao}")
     @PreAuthorize("hasAuthority('ROLE_SERVICO_INCLUIR')")
-    public ResponseEntity<Atendimento> chamarNovamente(@PathVariable Long sequencial, @PathVariable Long sequencialLocalizacao) {
+    public ResponseEntity<Atendimento> chamarNovamente(@PathVariable String sequencial, @PathVariable String sequencialLocalizacao) {
         Atendimento atendimentoChamado = atendimentoService.chamarNovamente(sequencial, sequencialLocalizacao);
         return ResponseEntity.status(HttpStatus.OK).body(atendimentoChamado);
     }

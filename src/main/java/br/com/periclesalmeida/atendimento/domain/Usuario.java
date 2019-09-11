@@ -1,9 +1,9 @@
 package br.com.periclesalmeida.atendimento.domain;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Id;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -13,11 +13,16 @@ import java.util.Set;
 @Document(collection = "usuario")
 public class Usuario {
 
-    private Long sequencial;
+    @Id
+    private String sequencial;
+
+    @NotBlank(message = "Obrigatório informar o login")
     private String login;
     private String senha;
     private String senhaSemRash;
     private Boolean ativo;
+
+    @NotNull(message="Obrigatório pelo menos uma permissão")
     private Set<Permissao> permissoes;
 
     public Usuario(String login, String senha, Boolean ativo, Set<Permissao> permissoes) {
@@ -31,15 +36,13 @@ public class Usuario {
     public Usuario() {
     }
 
-    @Id
-    public Long getSequencial() {
+    public String getSequencial() {
         return sequencial;
     }
-    public void setSequencial(Long sequencial) {
+    public void setSequencial(String sequencial) {
         this.sequencial = sequencial;
     }
 
-    @NotBlank(message = "Obrigatório informar o login")
     public String getLogin() {
         return login;
     }
@@ -62,7 +65,6 @@ public class Usuario {
         this.ativo = ativo;
     }
 
-    @NotNull(message="Obrigatório pelo menos uma permissão")
     public Set<Permissao> getPermissoes() {
         return permissoes;
     }

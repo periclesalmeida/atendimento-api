@@ -20,7 +20,7 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 import static org.springframework.data.domain.ExampleMatcher.matching;
 
 @Service
-public class LocalizacaoServiceImpl extends AbstractService<Localizacao, Long> implements LocalizacaoService {
+public class LocalizacaoServiceImpl extends AbstractService<Localizacao, String> implements LocalizacaoService {
 
     private static final String MENSAGEM_JA_EXISTE_LOCALIZACAO_COM_A_DESCRICAO_E_O_TIPO_INFORMADOS = "Já existe localização com a descrição e o tipo informados.";
     private LocalizacaoRepository localizacaoRepository;
@@ -30,7 +30,7 @@ public class LocalizacaoServiceImpl extends AbstractService<Localizacao, Long> i
     }
 
     @Override
-    protected MongoRepository<Localizacao, Long> getRepository() {
+    protected MongoRepository<Localizacao, String> getRepository() {
         return localizacaoRepository;
     }
 

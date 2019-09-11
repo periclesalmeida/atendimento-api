@@ -5,12 +5,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
 
-public interface UsuarioRepository extends MongoRepository<Usuario, Long> {
+public interface UsuarioRepository extends MongoRepository<Usuario, String> {
 
-//    @EntityGraph(type = EntityGraph.EntityGraphType.FETCH, attributePaths = {"permissoes"})
     Optional<Usuario> findByLogin(String login);
 
-    @Override
-//    @EntityGraph(type = EntityGraph.EntityGraphType.FETCH, attributePaths = {"permissoes"})
-    Optional<Usuario> findById(Long sequencial);
 }

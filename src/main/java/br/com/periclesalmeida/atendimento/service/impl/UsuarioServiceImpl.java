@@ -28,7 +28,7 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 import static org.springframework.data.domain.ExampleMatcher.matching;
 
 @Service
-public class UsuarioServiceImpl extends AbstractService<Usuario, Long> implements UsuarioService {
+public class UsuarioServiceImpl extends AbstractService<Usuario, String> implements UsuarioService {
 
     private final String MENSAGEM_OBRIGATORIO_INFORMAR_A_SENHA = "Obrigatório informar a senha";
     private final String MENSAGEM_USUARIO_NÃO_POSSUI_PERMISSÃO = "Usuário não possui permissão.";
@@ -59,7 +59,7 @@ public class UsuarioServiceImpl extends AbstractService<Usuario, Long> implement
     }
 
     @Override
-    protected MongoRepository<Usuario, Long> getRepository() {
+    protected MongoRepository<Usuario, String> getRepository() {
         return usuarioRepository;
     }
 

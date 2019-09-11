@@ -20,11 +20,11 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class LocalizacaoServiceImplTest extends AbstractServiceImplTest<Localizacao, Long> {
+public class LocalizacaoServiceImplTest extends AbstractServiceImplTest<Localizacao, String> {
 
-    private final int CODIGO_TIPO_LOCALIZACA_1 = 1;
-    private final long SEQUENCIAL_LOCALIZACAL_1 = 1L;
-    private final long SEQUENCIAL_LOCALIZACAO_2 = 2L;
+    private final String CODIGO_TIPO_LOCALIZACA_1 = "1";
+    private final String SEQUENCIAL_LOCALIZACAL_1 = "1";
+    private final String SEQUENCIAL_LOCALIZACAO_2 = "2";
     private final String DESCRICAO_TIPO_LOCALIZACAO_SALA = "SALA";
     private final String DESCRICAO_LOCALIZACAO_A = "A";
     private final String DESCRICAO_LOCALIZACAO_B = "B";
@@ -72,7 +72,7 @@ public class LocalizacaoServiceImplTest extends AbstractServiceImplTest<Localiza
     }
 
     @Override
-    protected Long getId() {
+    protected String getId() {
         return getEntidade().getSequencial();
     }
 
@@ -82,12 +82,12 @@ public class LocalizacaoServiceImplTest extends AbstractServiceImplTest<Localiza
     }
 
     @Override
-    protected GenericService<Localizacao, Long> getService() {
+    protected GenericService<Localizacao, String> getService() {
         return localizacaoService;
     }
 
     @Override
-    protected MongoRepository<Localizacao, Long> getRepositoryMock() {
+    protected MongoRepository<Localizacao, String> getRepositoryMock() {
         return localizacaoRepositoryMock;
     }
 
@@ -110,7 +110,7 @@ public class LocalizacaoServiceImplTest extends AbstractServiceImplTest<Localiza
 
     private TipoLocalizacao getTipoLocalizacaoSala() {
         TipoLocalizacao tipoLocalizacao = new TipoLocalizacao();
-        tipoLocalizacao.setCodigo(CODIGO_TIPO_LOCALIZACA_1);
+        tipoLocalizacao.setSequencial(CODIGO_TIPO_LOCALIZACA_1);
         tipoLocalizacao.setDescricao(DESCRICAO_TIPO_LOCALIZACAO_SALA);
         return tipoLocalizacao;
     }

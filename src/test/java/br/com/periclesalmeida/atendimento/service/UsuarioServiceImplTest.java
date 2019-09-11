@@ -21,14 +21,14 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, Long> {
+public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, String> {
 
     private final String SENHA_COM_RASH = "SENHA_COM_RASH";
     private final String SENHA_ALEATORIA = "SENHA_123";
     private final String CODIDO_PERMISSAO = "COD_PERMISSAO";
-    private final long SEQUENCIAL_USUARIO_1 = 1L;
-    private final long SEQUENCIAL_USUARIO_2 = 2L;
-    private final long SEQUENCIAL_USUARIO_3 = 3L;
+    private final String SEQUENCIAL_USUARIO_1 = "1L";
+    private final String SEQUENCIAL_USUARIO_2 = "2L";
+    private final String SEQUENCIAL_USUARIO_3 = "3L";
     private final String LOGIN_ADMIN = "ADMIN";
     private final String LOGIN_TEST = "TEST";
 
@@ -100,7 +100,7 @@ public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, Lo
     }
 
     @Override
-    protected Long getId() {
+    protected String getId() {
         return getEntidade().getSequencial();
     }
 
@@ -110,12 +110,12 @@ public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, Lo
     }
 
     @Override
-    protected GenericService<Usuario, Long> getService() {
+    protected GenericService<Usuario, String> getService() {
         return usuarioService;
     }
 
     @Override
-    protected MongoRepository<Usuario, Long> getRepositoryMock() {
+    protected MongoRepository<Usuario, String> getRepositoryMock() {
         return usuarioRepositoryMock;
     }
 

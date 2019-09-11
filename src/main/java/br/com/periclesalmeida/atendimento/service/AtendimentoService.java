@@ -5,10 +5,10 @@ import br.com.periclesalmeida.atendimento.domain.dto.AtendimentoMovimentacaoDTO;
 
 public interface AtendimentoService {
 
-	Atendimento consultarPorId(Long identificador);
-    Atendimento gerar(Long sequencialServico);
-    Atendimento gerarPrioridade(Long sequencialServico);
-    AtendimentoMovimentacaoDTO consultarMovimentacaoDoDiaDaLocalizacao(Long sequencialLocalizacao);
-    Atendimento chamarProximo(Long sequencialLocalizacao);
-    Atendimento chamarNovamente(Long sequencial, Long sequencialLocalizacao) ;
+	Atendimento consultarPorId(String identificador);
+    Atendimento gerar(String sequencialServico);
+    Atendimento gerarPrioridade(String sequencialServico);
+    AtendimentoMovimentacaoDTO consultarMovimentacaoDoDiaDaLocalizacao(String sequencialLocalizacao);
+    Atendimento chamarProximo(String sequencialLocalizacao);
+    Atendimento chamarNovamente(String sequencial, String sequencialLocalizacao) ;
 }

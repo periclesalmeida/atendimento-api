@@ -32,14 +32,14 @@ public class TipoLocalizacaoResource {
 
     @PutMapping("/{codigo}")
     @PreAuthorize("hasAuthority('ROLE_TIPO_LOCALIZACAO_ALTERAR')")
-    public ResponseEntity<TipoLocalizacao>  alterar(@PathVariable Integer codigo, @Validated @RequestBody TipoLocalizacao entidade) {
+    public ResponseEntity<TipoLocalizacao>  alterar(@PathVariable String codigo, @Validated @RequestBody TipoLocalizacao entidade) {
         tipoLocalizacaoService.alterar(codigo, entidade);
         return ResponseEntity.status(HttpStatus.OK).body(entidade);
     }
 
     @GetMapping("/{codigo}")
     @PreAuthorize("hasAuthority('ROLE_TIPO_LOCALIZACAO_CONSULTAR')")
-    public TipoLocalizacao  consultarPorId(@PathVariable Integer codigo) {
+    public TipoLocalizacao  consultarPorId(@PathVariable String codigo) {
         return tipoLocalizacaoService.consultarPorId(codigo);
     }
 

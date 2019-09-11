@@ -22,7 +22,7 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 import static org.springframework.data.domain.ExampleMatcher.matching;
 
 @Service
-public class ServicoServiceImpl extends AbstractService<Servico, Long> implements ServicoService {
+public class ServicoServiceImpl extends AbstractService<Servico, String> implements ServicoService {
 
     private final Integer NUMERO_ATENDIMENTO_ATUAL_ZERO_0 = 0;
     private final String MENSAGEM_JA_EXISTE_SERVICO_CADASTRADO_COM_A_SIGLA_INFORMADA = "Já existe serviço cadastrado com a sigla informada";
@@ -34,7 +34,7 @@ public class ServicoServiceImpl extends AbstractService<Servico, Long> implement
     }
 
     @Override
-    protected MongoRepository<Servico, Long> getRepository() {
+    protected MongoRepository<Servico, String> getRepository() {
         return servicoRepository;
     }
 
@@ -52,7 +52,7 @@ public class ServicoServiceImpl extends AbstractService<Servico, Long> implement
     }
 
     @Override
-    public Servico retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(Long sequencial) {
+    public Servico retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(String sequencial) {
         Servico servicoConsultado = consultarPorId(sequencial);
         incrementarNumeroDeAtendimentoAtual(servicoConsultado);
         servicoRepository.save(servicoConsultado);

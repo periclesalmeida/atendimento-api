@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
 
-public interface ServicoRepository extends MongoRepository<Servico, Long> {
+public interface ServicoRepository extends MongoRepository<Servico, String> {
 
     Optional<Servico> findBySiglaContainsAllIgnoreCase(String sigla);
 }

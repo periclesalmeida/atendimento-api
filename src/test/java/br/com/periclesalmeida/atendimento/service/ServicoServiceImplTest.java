@@ -20,13 +20,13 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ServicoServiceImplTest  extends AbstractServiceImplTest<Servico, Long> {
+public class ServicoServiceImplTest  extends AbstractServiceImplTest<Servico, String> {
 
 	private final Integer NUMERO_ATENDIMENTO_ATUAL_ZERO = 0;
 	private final Integer NUMERO_ATENDIMENTO_ATUAL_CINCO = 5;
 	private final Integer NUMERO_ATENDIMENTO_ATUAL_SEIS = 6;
-	private final long SEQUENCIAL_SERVICO_1 = 1L;
-	private final long SEQUENCIAL_SERVICO_2 = 2L;
+	private final String SEQUENCIAL_SERVICO_1 = "1";
+	private final String SEQUENCIAL_SERVICO_2 = "2";
 	private final String SIGLA_SERVICO_NEG = "NEG";
 	private final String SIGLA_SERVICO_FIN = "FIN";
 	private final String TIPO_COR_G = "G";
@@ -43,17 +43,17 @@ public class ServicoServiceImplTest  extends AbstractServiceImplTest<Servico, Lo
 	}
 
 	@Override
-	protected GenericService<Servico, Long> getService() {
+	protected GenericService<Servico, String> getService() {
 		return servicoService;
 	}
 
 	@Override
-	protected MongoRepository<Servico, Long> getRepositoryMock() {
+	protected MongoRepository<Servico, String> getRepositoryMock() {
 		return servicoRepositoryMock;
 	}
 
 	@Override
-	protected Long getId() {
+	protected String getId() {
 		return getEntidade().getSequencial();
 	}
 	

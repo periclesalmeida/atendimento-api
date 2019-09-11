@@ -20,7 +20,7 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 import static org.springframework.data.domain.ExampleMatcher.matching;
 
 @Service
-public class TipoLocalizacaoServiceImpl extends AbstractService<TipoLocalizacao, Integer> implements TipoLocalizacaoService {
+public class TipoLocalizacaoServiceImpl extends AbstractService<TipoLocalizacao, String> implements TipoLocalizacaoService {
 
     private final String MENSAGEM_OBJETO_JA_CADASTRADO = "Objeto já cadastrado.";
     private TipoLocalizacaoRepository tipoLocalizacaoRepository;
@@ -30,7 +30,7 @@ public class TipoLocalizacaoServiceImpl extends AbstractService<TipoLocalizacao,
     }
 
     @Override
-    protected MongoRepository<TipoLocalizacao, Integer> getRepository() {
+    protected MongoRepository<TipoLocalizacao, String> getRepository() {
         return tipoLocalizacaoRepository;
     }
 
@@ -59,7 +59,7 @@ public class TipoLocalizacaoServiceImpl extends AbstractService<TipoLocalizacao,
     }
 
     private void lancarExecaoCasoCodigoDoObjetoConsultadoEhDiferenteDoInformado(TipoLocalizacao objetoConsultado, TipoLocalizacao objetoInformado) {
-        if (!objetoConsultado.getCodigo().equals(objetoInformado.getCodigo())) {
+        if (!objetoConsultado.getSequencial().equals(objetoInformado.getSequencial())) {
             throw new NegocioException(MENSAGEM_OBJETO_JA_CADASTRADO);
         }
     }

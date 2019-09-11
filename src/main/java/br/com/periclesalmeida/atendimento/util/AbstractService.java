@@ -18,7 +18,7 @@ public abstract class AbstractService<ENTIDADE, ID extends Serializable> impleme
     @Override
     public ENTIDADE incluir(ENTIDADE entidade) {
         this.regrasNegocioIncluir(entidade);
-        this.getRepository().save(entidade);
+        this.getRepository().insert(entidade);
         return entidade;
     }
 

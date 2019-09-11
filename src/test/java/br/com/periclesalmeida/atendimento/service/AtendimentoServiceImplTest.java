@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -24,19 +25,18 @@ import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public class AtendimentoServiceImplTest {
 
-	private static final Long SEQUENCIAL_ATENDIMENTO_2L = 2L;
+	private static final String SEQUENCIAL_ATENDIMENTO_2L = "2";
 	private static final String DESCRICAO_LOCALIZACAO_A = "A";
-	private static final Long SEQUENCIAL_LOCALIZACAO_1L = 1L;
-	private static final Long SEQUENCIAL_ATENDIMENTO_1L = 1L;
+	private static final String SEQUENCIAL_LOCALIZACAO_1L = "1";
+	private static final String SEQUENCIAL_ATENDIMENTO_1L = "1";
 	private static final Integer NUMERO_ATENDIMENTO_1 = 1;
-	private static final Long SEQUENCIAL_SERVICO_1L = 1L;
+	private static final String SEQUENCIAL_SERVICO_1L = "1";
 
 	@Mock
 	private AtendimentoRepository atendimentoRepositoryMock;
@@ -79,7 +79,7 @@ public class AtendimentoServiceImplTest {
 		when(localizacaoServiceMock.consultarPorId(SEQUENCIAL_LOCALIZACAO_1L)).thenReturn(getLocalizacaoA());
 
 		getService().chamarProximo(SEQUENCIAL_LOCALIZACAO_1L);
-		verify(localizacaoServiceMock).consultarPorId(anyLong());
+		verify(localizacaoServiceMock).consultarPorId(Mockito.anyString());
 	} 
 
 	@Test 
@@ -88,7 +88,7 @@ public class AtendimentoServiceImplTest {
 		.thenReturn(Arrays.asList(getAtendimentoNaoPrioridade()));
 
 		getService().chamarProximo(SEQUENCIAL_LOCALIZACAO_1L);
-		verify(atendimentoRepositoryMock).listarPorLocalizacaoIhData(anyLong(), any(LocalDate.class));
+		verify(atendimentoRepositoryMock).listarPorLocalizacaoIhData(Mockito.anyString(), any(LocalDate.class));
 	} 
 
 	@Test
@@ -96,7 +96,7 @@ public class AtendimentoServiceImplTest {
 		when(atendimentoRepositoryMock.listarPorLocalizacaoIhData(SEQUENCIAL_LOCALIZACAO_1L, LocalDate.now()))
 		.thenReturn(Arrays.asList(getAtendimentoPrioridade()));
 		getService().consultarMovimentacaoDoDiaDaLocalizacao(SEQUENCIAL_LOCALIZACAO_1L);
-		verify(atendimentoRepositoryMock).listarPorLocalizacaoIhData(anyLong(), any(LocalDate.class));
+		verify(atendimentoRepositoryMock).listarPorLocalizacaoIhData(Mockito.anyString(), any(LocalDate.class));
 	} 
 
 	@Test
@@ -104,7 +104,7 @@ public class AtendimentoServiceImplTest {
 		when(getRepositoryMock().findById(SEQUENCIAL_ATENDIMENTO_1L)).thenReturn(Optional.of(getEntidade()));
 		when(localizacaoServiceMock.consultarPorId(SEQUENCIAL_LOCALIZACAO_1L)).thenReturn(getLocalizacaoA());
 		getService().chamarNovamente(SEQUENCIAL_ATENDIMENTO_1L, SEQUENCIAL_LOCALIZACAO_1L);
-		verify(localizacaoServiceMock).consultarPorId(anyLong());
+		verify(localizacaoServiceMock).consultarPorId(Mockito.anyString());
 	}
 
 	@Test
@@ -174,7 +174,7 @@ public class AtendimentoServiceImplTest {
 		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(SEQUENCIAL_SERVICO_1L)).
 		thenReturn(getServicoComCorVermelho());
 		getService().gerarPrioridade(SEQUENCIAL_SERVICO_1L);
-		verify(servicoServiceMock).retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(anyLong());
+		verify(servicoServiceMock).retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(Mockito.anyString());
 	}
 
 	@Test
@@ -227,7 +227,7 @@ public class AtendimentoServiceImplTest {
 		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(SEQUENCIAL_SERVICO_1L)).
 		thenReturn(getServicoComCorVermelho());
 		getService().gerar(SEQUENCIAL_SERVICO_1L);
-		verify(servicoServiceMock).retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(anyLong());
+		verify(servicoServiceMock).retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(Mockito.anyString());
 	}
 
 	@Test
@@ -272,7 +272,7 @@ public class AtendimentoServiceImplTest {
 		return localizacao;
 	}
 
-	private Long getId() {
+	private String getId() {
 		return getEntidade().getSequencial();
 	}
 
@@ -299,7 +299,7 @@ public class AtendimentoServiceImplTest {
 		return atendimentoService;
 	}
 
-	private MongoRepository<Atendimento, Long> getRepositoryMock() {
+	private MongoRepository<Atendimento, String> getRepositoryMock() {
 		return atendimentoRepositoryMock;
 	}
 }

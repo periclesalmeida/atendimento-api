@@ -1,11 +1,9 @@
 package br.com.periclesalmeida.atendimento.domain;
 
 import br.com.periclesalmeida.atendimento.util.DataUtils;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Id;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -17,7 +15,11 @@ import java.util.Optional;
 public class Atendimento implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private Long sequencial;
+
+    @Id
+    private String sequencial;
+
+    @NotNull(message = "Obrigatório informar o número do atendimento")
     private Integer numeroAtendimento;
     private Date dataHoraCadastro;
     private Date dataHoraApresentacao;
@@ -27,15 +29,13 @@ public class Atendimento implements Serializable {
     private Usuario usuario;
     private Boolean indicadorPrioridade;
 
-    @Id
-    public Long getSequencial() {
+    public String getSequencial() {
         return sequencial;
     }
-    public void setSequencial(Long sequencial) {
+    public void setSequencial(String sequencial) {
         this.sequencial = sequencial;
     }
 
-    @NotNull(message = "Obrigatório informar o número do atendimento")
     public Integer getNumeroAtendimento() {
         return numeroAtendimento;
     }
@@ -43,7 +43,6 @@ public class Atendimento implements Serializable {
         this.numeroAtendimento = numeroAtendimento;
     }
 
-    @Temporal(TemporalType.TIMESTAMP)
     public Date getDataHoraCadastro() {
         return dataHoraCadastro;
     }
@@ -51,7 +50,6 @@ public class Atendimento implements Serializable {
         this.dataHoraCadastro = dataHoraCadastro;
     }
 
-    @Temporal(TemporalType.TIMESTAMP)
     public Date getDataHoraApresentacao() {
         return dataHoraApresentacao;
     }
@@ -59,7 +57,6 @@ public class Atendimento implements Serializable {
         this.dataHoraApresentacao = dataHoraApresentacao;
     }
 
-    @Temporal(TemporalType.TIMESTAMP)
     public Date getDataHoraChamada() {
         return dataHoraChamada;
     }

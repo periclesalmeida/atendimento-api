@@ -3,9 +3,9 @@ package br.com.periclesalmeida.atendimento.domain;
 
 import br.com.periclesalmeida.atendimento.domain.type.TipoCor;
 import br.com.periclesalmeida.atendimento.util.StringUtil;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Id;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
@@ -15,22 +15,28 @@ import java.util.Objects;
 public class Servico implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private Long sequencial;
+
+    @Id
+    private String sequencial;
+
+    @NotBlank(message = "Obrigatório informar a descrição")
     private String descricao;
+
+    @NotBlank(message = "Obrigatório informar a sigla")
     private String sigla;
+
+    @NotBlank(message = "Obrigatório informar a cor")
     private String tipoCor;
     private Integer numeroAtendimentoAtual;
     private Boolean ativo;
 
-    @Id
-    public Long getSequencial() {
+    public String getSequencial() {
         return sequencial;
     }
-    public void setSequencial(Long sequencial) {
+    public void setSequencial(String sequencial) {
         this.sequencial = sequencial;
     }
 
-    @NotBlank(message = "Obrigatório informar a descrição")
     public String getDescricao() {
         return descricao;
     }
@@ -38,7 +44,6 @@ public class Servico implements Serializable {
         this.descricao = StringUtil.setarUpperCase(descricao) ;
     }
 
-    @NotBlank(message = "Obrigatório informar a sigla")
     public String getSigla() {
         return sigla;
     }
@@ -46,7 +51,6 @@ public class Servico implements Serializable {
         this.sigla = StringUtil.setarUpperCase(sigla) ;
     }
 
-    @NotBlank(message = "Obrigatório informar a cor")
     public String getTipoCor() {
         return this.tipoCor;
     }

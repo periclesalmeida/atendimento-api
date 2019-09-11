@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
 
-public interface TipoLocalizacaoRepository extends MongoRepository<TipoLocalizacao, Integer> {
+public interface TipoLocalizacaoRepository extends MongoRepository<TipoLocalizacao, String> {
 
     Optional<TipoLocalizacao> findByDescricaoContainsAllIgnoreCase(String descricao);
 }

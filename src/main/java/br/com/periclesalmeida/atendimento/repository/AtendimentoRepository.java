@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface AtendimentoRepository extends MongoRepository<Atendimento, Long> {
+public interface AtendimentoRepository extends MongoRepository<Atendimento, String> {
 
 	/*
 	@Query("SELECT at                                " +
@@ -26,6 +26,6 @@ public interface AtendimentoRepository extends MongoRepository<Atendimento, Long
 
 	@Query("{ 'dataHoraCadastro' : ?0 }")
 	List<Atendimento> listarPorLocalizacaoIhData(
-			@Param("sequencialLocalizacao") Long sequencialLocalizacao,
+			@Param("sequencialLocalizacao") String sequencialLocalizacao,
 			@Param("data") LocalDate data);
 }

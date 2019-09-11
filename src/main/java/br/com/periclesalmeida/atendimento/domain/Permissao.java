@@ -11,7 +11,12 @@ import java.util.Objects;
 public class Permissao implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    @Id
+    @NotBlank(message = "Obrigatório informar o código")
     private String codigo;
+
+    @NotBlank(message = "Obrigatório informar a descrição")
     private String descricao;
 
     public Permissao(String codigo, String descricao) {
@@ -22,8 +27,6 @@ public class Permissao implements Serializable {
     public Permissao() {
     }
 
-    @Id
-    @NotBlank(message = "Obrigatório informar o código")
     public String getCodigo() {
         return codigo;
     }
@@ -31,7 +34,6 @@ public class Permissao implements Serializable {
         this.codigo = codigo;
     }
 
-    @NotBlank(message = "Obrigatório informar a descrição")
     public String getDescricao() {
         return descricao;
     }

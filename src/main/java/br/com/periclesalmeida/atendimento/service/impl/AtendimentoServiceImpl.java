@@ -34,7 +34,7 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 	}
 
 	@Override
-	public Atendimento gerar(Long sequencialServico) {
+	public Atendimento gerar(String sequencialServico) {
 		Atendimento atendimento = criarAtendimento(sequencialServico);
 		setarIndicadorPrioridadeComoFalso(atendimento);
 		atendimentoRepository.save(atendimento);
@@ -42,7 +42,7 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 	}
 
 	@Override
-	public Atendimento gerarPrioridade(Long sequencialServico) {
+	public Atendimento gerarPrioridade(String sequencialServico) {
 		Atendimento atendimento = criarAtendimento(sequencialServico);
 		setarIndicadorPrioridadeComoTrue(atendimento);
 		atendimentoRepository.save(atendimento);
@@ -50,18 +50,18 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 	}
 
 	@Override
-	public Atendimento consultarPorId(Long var1) {
+	public Atendimento consultarPorId(String var1) {
 		return atendimentoRepository.findById(var1).orElseThrow(() -> new EmptyResultDataAccessException(0));
 	}
 
 	@Override
-	public AtendimentoMovimentacaoDTO consultarMovimentacaoDoDiaDaLocalizacao(Long sequencialLocalizacao) {
+	public AtendimentoMovimentacaoDTO consultarMovimentacaoDoDiaDaLocalizacao(String sequencialLocalizacao) {
 		List<Atendimento> atendimentos = listarAtendimentoDoDiaParaAhLocalizacao(sequencialLocalizacao);
 		return new AtendimentoMovimentacaoDTO(atendimentos);
 	}
 
 	@Override
-	public Atendimento chamarProximo(Long sequencialLocalizacao) {
+	public Atendimento chamarProximo(String sequencialLocalizacao) {
 		List<Atendimento> atendimentos = listarAtendimentoDoDiaParaAhLocalizacao(sequencialLocalizacao);
 		lancarExcecaoCasoNaoExistaProximo(atendimentos);
 		Atendimento atendimentoChamado = retornarAtendimentoQueDeveSerChamado(atendimentos);
@@ -72,7 +72,7 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 	}
 
 	@Override
-	public Atendimento chamarNovamente(Long sequencial, Long sequencialLocalizacao) {
+	public Atendimento chamarNovamente(String sequencial, String sequencialLocalizacao) {
 		Atendimento atendimentoConsultado = consultarPorId(sequencial);
 		Localizacao localizacaoConsultada = localizacaoService.consultarPorId(sequencialLocalizacao);
 		setarDadosDoAtendimento(atendimentoConsultado, localizacaoConsultada);
@@ -128,7 +128,7 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 		atendimento.setDataHoraChamada(new Date());
 	}
 
-	private List<Atendimento> listarAtendimentoDoDiaParaAhLocalizacao(Long sequencialLocalizacao) {
+	private List<Atendimento> listarAtendimentoDoDiaParaAhLocalizacao(String sequencialLocalizacao) {
 		return atendimentoRepository.listarPorLocalizacaoIhData(sequencialLocalizacao,
 				LocalDate.now());
 	}
@@ -141,7 +141,7 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 		atendimento.setIndicadorPrioridade(true);
 	}
 
-	private Atendimento criarAtendimento(Long sequencialServico) {
+	private Atendimento criarAtendimento(String sequencialServico) {
 		Servico servico = servicoService.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(sequencialServico);
 
 		Atendimento atendimento = new Atendimento();

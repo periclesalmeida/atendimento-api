@@ -1,9 +1,10 @@
 package br.com.periclesalmeida.atendimento.domain;
 
 import br.com.periclesalmeida.atendimento.util.StringUtil;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -14,21 +15,28 @@ import java.util.Set;
 public class Localizacao implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private Long sequencial;
-    private String descricao;
-    private TipoLocalizacao tipo;
-    private Boolean ativo;
-    private Set<Servico> servicos;
 
     @Id
-    public Long getSequencial() {
+    private String sequencial;
+
+    @NotBlank(message="Obrigatório informar a descrição.")
+    private String descricao;
+
+    @NotNull(message = "Obrigatório informar o tipo")
+    private TipoLocalizacao tipo;
+    private Boolean ativo;
+
+    @NotNull(message="Obrigatório pelo menos um serviço")
+    @DBRef
+    private Set<Servico> servicos;
+
+    public String getSequencial() {
         return sequencial;
     }
-    public void setSequencial(Long sequencial) {
+    public void setSequencial(String sequencial) {
         this.sequencial = sequencial;
     }
 
-    @NotBlank(message="Obrigatório informar a descrição.")
     public String getDescricao() {
         return descricao;
     }
@@ -36,7 +44,6 @@ public class Localizacao implements Serializable {
         this.descricao = StringUtil.setarUpperCase(descricao) ;
     }
 
-    @NotNull(message = "Obrigatório informar o tipo")
     public TipoLocalizacao getTipo() {
         return tipo;
     }
@@ -51,7 +58,6 @@ public class Localizacao implements Serializable {
         this.ativo = ativo;
     }
 
-    @NotNull(message="Obrigatório pelo menos um serviço")
     public Set<Servico> getServicos() {
         return servicos;
     }
