@@ -1,4 +1,4 @@
-package br.com.periclesalmeida.atendimento.config;
+package br.com.periclesalmeida.atendimento.config.changelog;
 
 import br.com.periclesalmeida.atendimento.domain.Permissao;
 import br.com.periclesalmeida.atendimento.domain.Usuario;
@@ -60,6 +60,6 @@ public class MongockChangeLog {
                         new Permissao("ROLE_USUARIO_ALTERAR","ALTERAR USUÁRIO")
                 );
 
-        mongoTemplate.insert(new Usuario("admin", "C4CA4238A0B923820DCC509A6F75849B", true, new HashSet<>(permissoes)));
+        mongoTemplate.insert(new Usuario("admin", "c4ca4238a0b923820dcc509a6f75849b", true, new HashSet<>(permissoes)));
     }
 }

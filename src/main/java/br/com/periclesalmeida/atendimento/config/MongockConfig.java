@@ -12,7 +12,7 @@ public class MongockConfig {
 
     @Bean
     public SpringBootMongock mongock(ApplicationContext springContext, MongoClient mongoClient) {
-        return new SpringBootMongockBuilder(mongoClient, "atendimento", "br.com.periclesalmeida.atendimento.config")
+        return new SpringBootMongockBuilder(mongoClient, "atendimento", "br.com.periclesalmeida.atendimento.config.changelog")
                 .setApplicationContext(springContext)
                 .setLockQuickConfig()
                 .build();
