@@ -84,21 +84,21 @@ public class ServicoServiceImplTest  extends AbstractServiceImplTest<Servico, St
 	@Test
 	public void aoIncluirDeveriaSetarEntidadeComoAtivo() {
 		getService().incluir(getEntidade());
-		Servico servicoToSave = captureAhEntidadeAoSalvar();
+		Servico servicoToSave = captureAhEntidadeAoIncluir();
 		assertTrue(servicoToSave.getAtivo());
 	}
 
 	@Test
 	public void aoIncluirSeOhNumeroAtendimentoAtualEstiverNuloDeveriaSetarComoZero() {
 		getService().incluir(getEntidade());
-		Servico servicoToSave = captureAhEntidadeAoSalvar();
+		Servico servicoToSave = captureAhEntidadeAoIncluir();
 		assertEquals(NUMERO_ATENDIMENTO_ATUAL_ZERO, servicoToSave.getNumeroAtendimentoAtual());
 	}
 
 	@Test
 	public void aoIncluirSeOhNumeroAtendimentoAtualEstiverPreenchidoDeveriaFazerNada() {
 		getService().incluir(getServicoComCorAzul());
-		Servico servicoToSave = captureAhEntidadeAoSalvar();
+		Servico servicoToSave = captureAhEntidadeAoIncluir();
 		assertEquals(NUMERO_ATENDIMENTO_ATUAL_CINCO, servicoToSave.getNumeroAtendimentoAtual());
 	}
 
@@ -134,6 +134,13 @@ public class ServicoServiceImplTest  extends AbstractServiceImplTest<Servico, St
 		verify(servicoRepositoryMock).save(servicoArgument.capture());
 		return servicoArgument.getValue();
 	}
+
+	private Servico captureAhEntidadeAoIncluir() {
+		ArgumentCaptor<Servico> servicoArgument = ArgumentCaptor.forClass(Servico.class);
+		verify(servicoRepositoryMock).insert(servicoArgument.capture());
+		return servicoArgument.getValue();
+	}
+
 
 	private Servico getServicoComCorInvalida() {
 		Servico servico = new Servico();

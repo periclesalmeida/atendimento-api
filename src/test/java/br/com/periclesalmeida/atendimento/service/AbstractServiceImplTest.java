@@ -25,7 +25,7 @@ public abstract class AbstractServiceImplTest<ENTIDADE, ID> {
     @Test
     public void aoIncluirDeveriaDelegarParaOhRespitorio() {
         getService().incluir(getEntidade());
-        verify(getRepositoryMock()).save(getEntidade());
+        verify(getRepositoryMock()).insert(getEntidade());
     }
 
     @Test

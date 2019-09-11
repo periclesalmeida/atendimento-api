@@ -65,7 +65,7 @@ public class LocalizacaoServiceImplTest extends AbstractServiceImplTest<Localiza
         getService().incluir(getLocalizacaoA());
 
         ArgumentCaptor<Localizacao> localizacaoArgument = ArgumentCaptor.forClass(Localizacao.class);
-        verify(localizacaoRepositoryMock).save(localizacaoArgument.capture());
+        verify(localizacaoRepositoryMock).insert(localizacaoArgument.capture());
         Localizacao localizacaoToSave = localizacaoArgument.getValue();
 
         assertTrue(localizacaoToSave.getAtivo());
