@@ -14,7 +14,7 @@ import java.util.Set;
 public class Usuario {
 
     @Id
-    private String sequencial;
+    private String id;
 
     @NotBlank(message = "Obrigatório informar o login")
     private String login;
@@ -36,11 +36,11 @@ public class Usuario {
     public Usuario() {
     }
 
-    public String getSequencial() {
-        return sequencial;
+    public String getId() {
+        return id;
     }
-    public void setSequencial(String sequencial) {
-        this.sequencial = sequencial;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getLogin() {
@@ -85,11 +85,11 @@ public class Usuario {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Usuario usuario = (Usuario) o;
-        return Objects.equals(sequencial, usuario.sequencial);
+        return Objects.equals(id, usuario.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(sequencial);
+        return Objects.hash(id);
     }
 }

@@ -17,7 +17,7 @@ public class Servico implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private String sequencial;
+    private String id;
 
     @NotBlank(message = "Obrigatório informar a descrição")
     private String descricao;
@@ -30,11 +30,11 @@ public class Servico implements Serializable {
     private Integer numeroAtendimentoAtual;
     private Boolean ativo;
 
-    public String getSequencial() {
-        return sequencial;
+    public String getId() {
+        return id;
     }
-    public void setSequencial(String sequencial) {
-        this.sequencial = sequencial;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getDescricao() {
@@ -92,11 +92,11 @@ public class Servico implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Servico servico = (Servico) o;
-        return Objects.equals(sequencial, servico.sequencial);
+        return Objects.equals(id, servico.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(sequencial);
+        return Objects.hash(id);
     }
 }

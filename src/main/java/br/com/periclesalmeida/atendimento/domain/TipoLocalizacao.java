@@ -14,7 +14,7 @@ public class TipoLocalizacao implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private String sequencial;
+    private String id;
 
     @NotBlank(message = "Obrigatório informar a descrição")
     private String descricao;
@@ -23,14 +23,14 @@ public class TipoLocalizacao implements Serializable {
     }
 
     public TipoLocalizacao(String id) {
-        this.sequencial = id;
+        this.id = id;
     }
 
-    public String getSequencial() {
-        return sequencial;
+    public String getId() {
+        return id;
     }
-    public void setSequencial(String sequencial) {
-        this.sequencial = sequencial;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getDescricao() {
@@ -45,11 +45,11 @@ public class TipoLocalizacao implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TipoLocalizacao that = (TipoLocalizacao) o;
-        return Objects.equals(sequencial, that.sequencial);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(sequencial);
+        return Objects.hash(id);
     }
 }

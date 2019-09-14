@@ -14,24 +14,24 @@ public class Permissao implements Serializable {
 
     @Id
     @NotBlank(message = "Obrigatório informar o código")
-    private String codigo;
+    private String id;
 
     @NotBlank(message = "Obrigatório informar a descrição")
     private String descricao;
 
     public Permissao(String codigo, String descricao) {
-        this.codigo = codigo;
+        this.id = codigo;
         this.descricao = descricao;
     }
 
     public Permissao() {
     }
 
-    public String getCodigo() {
-        return codigo;
+    public String getId() {
+        return id;
     }
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getDescricao() {
@@ -46,11 +46,11 @@ public class Permissao implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Permissao permissao = (Permissao) o;
-        return Objects.equals(codigo, permissao.codigo);
+        return Objects.equals(id, permissao.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(codigo);
+        return Objects.hash(id);
     }
 }
