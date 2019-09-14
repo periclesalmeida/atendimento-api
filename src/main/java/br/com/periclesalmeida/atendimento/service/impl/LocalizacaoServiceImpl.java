@@ -70,7 +70,7 @@ public class LocalizacaoServiceImpl extends AbstractService<Localizacao, String>
     }
 
     private void lancarExecaoCasoCodigoDoObjetoConsultadoEhDiferenteDoInformado(Localizacao objetoConsultado, Localizacao objetoInformado) {
-        if (!objetoConsultado.getSequencial().equals(objetoInformado.getSequencial()) ){
+        if (!objetoConsultado.getId().equals(objetoInformado.getId()) ){
             throw new NegocioException(MENSAGEM_JA_EXISTE_LOCALIZACAO_COM_A_DESCRICAO_E_O_TIPO_INFORMADOS);
         }
     }

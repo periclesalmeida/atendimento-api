@@ -64,7 +64,7 @@ public class TipoLocalizacaoServiceImplTests extends AbstractServiceImplTest<Tip
 
     @Override
     protected String getId() {
-        return getEntidade().getSequencial();
+        return getEntidade().getId();
     }
 
     @Override
@@ -74,14 +74,14 @@ public class TipoLocalizacaoServiceImplTests extends AbstractServiceImplTest<Tip
 
     private TipoLocalizacao getEntidadeComCodigoUm() {
         TipoLocalizacao tipoLocalizacao = new TipoLocalizacao();
-        tipoLocalizacao.setSequencial(CODIGO_TIPO_LOCALIZACAO_1);
+        tipoLocalizacao.setId(CODIGO_TIPO_LOCALIZACAO_1);
         tipoLocalizacao.setDescricao(DESCRICAO_SALA);
         return tipoLocalizacao;
     }
 
     private TipoLocalizacao getEntidadeComCodigoDois() {
         TipoLocalizacao tipoLocalizacao = new TipoLocalizacao();
-        tipoLocalizacao.setSequencial(CODIGO_TIPO_LOCALIZACAO_2);
+        tipoLocalizacao.setId(CODIGO_TIPO_LOCALIZACAO_2);
         tipoLocalizacao.setDescricao(DESCRICAO_SALA);
         return tipoLocalizacao;
     }

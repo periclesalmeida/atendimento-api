@@ -97,14 +97,14 @@ public class UsuarioServiceImpl extends AbstractService<Usuario, String> impleme
     }
 
     private void lancarExecaoCasoSequencialDoObjetoConsultadoEhDiferenteDoInformado(Usuario usuarioConsultado, Usuario usuario) {
-        if (!usuarioConsultado.getSequencial().equals(usuario.getSequencial()) ){
+        if (!usuarioConsultado.getId().equals(usuario.getId()) ){
             throw new NegocioException(MENSAGEM_JA_EXISTE_USUARIO_CADASTRADO_COM_O_LOGIN_INFORMADO);
         }
     }
 
     private Collection<? extends GrantedAuthority> criarGrantedAuthority(Usuario usuario) {
         return usuario.getPermissoes().stream()
-                .map(permissao -> new SimpleGrantedAuthority(permissao.getCodigo().toUpperCase()))
+                .map(permissao -> new SimpleGrantedAuthority(permissao.getId().toUpperCase()))
                 .collect(Collectors.toList());
     }
 }

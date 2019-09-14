@@ -98,7 +98,7 @@ public class ServicoServiceImpl extends AbstractService<Servico, String> impleme
     }
 
     private void lancarExecaoCasoCodigoDoObjetoConsultadoEhDiferenteDoInformado(Servico objetoConsultado, Servico objetoInformado) {
-        if (!objetoConsultado.getSequencial().equals(objetoInformado.getSequencial()) ){
+        if (!objetoConsultado.getId().equals(objetoInformado.getId()) ){
             throw new NegocioException(MENSAGEM_JA_EXISTE_SERVICO_CADASTRADO_COM_A_SIGLA_INFORMADA);
         }
     }

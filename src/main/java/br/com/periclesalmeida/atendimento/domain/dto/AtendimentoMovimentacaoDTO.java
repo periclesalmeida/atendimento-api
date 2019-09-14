@@ -20,7 +20,7 @@ public class AtendimentoMovimentacaoDTO {
 	public List<Atendimento> getAtendimentosRealizados() {
 		return atendimentos.stream().filter(Atendimento::isRealizado)
 				.sorted((t1, t2) -> {
-					return t1.getDataHoraChamada().after(t2.getDataHoraChamada()) 
+					return t1.getDataHoraChamada().isAfter(t2.getDataHoraChamada())
 							? -1 : 1;
 				}).collect(Collectors.toList());
 	}

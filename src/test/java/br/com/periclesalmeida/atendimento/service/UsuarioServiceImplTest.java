@@ -101,7 +101,7 @@ public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, St
 
     @Override
     protected String getId() {
-        return getEntidade().getSequencial();
+        return getEntidade().getId();
     }
 
     @Override
@@ -127,7 +127,7 @@ public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, St
 
     private Usuario getUsuarioLoginAdmin() {
         Usuario usuario = new Usuario();
-        usuario.setSequencial(SEQUENCIAL_USUARIO_1);
+        usuario.setId(SEQUENCIAL_USUARIO_1);
         usuario.setLogin(LOGIN_ADMIN);
         usuario.setSenhaSemRash(SENHA_ALEATORIA);
         usuario.setPermissoes(getPermissoes());
@@ -136,7 +136,7 @@ public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, St
 
     private HashSet<Permissao> getPermissoes() {
         Permissao permissao = new Permissao();
-        permissao.setCodigo(CODIDO_PERMISSAO);
+        permissao.setId(CODIDO_PERMISSAO);
 
         HashSet<Permissao> permissoes = new HashSet<>();
         permissoes.add(permissao);
@@ -146,14 +146,14 @@ public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, St
     private Usuario getUsuarioLoginTestIhSequencial2() {
         Usuario usuario = new Usuario();
         usuario.setLogin(LOGIN_TEST);
-        usuario.setSequencial(SEQUENCIAL_USUARIO_2);
+        usuario.setId(SEQUENCIAL_USUARIO_2);
         return usuario;
     }
 
     private Usuario getUsuarioLoginTestIhSequencial3() {
         Usuario usuario = new Usuario();
         usuario.setLogin(LOGIN_TEST);
-        usuario.setSequencial(SEQUENCIAL_USUARIO_3);
+        usuario.setId(SEQUENCIAL_USUARIO_3);
         return usuario;
     }
 }

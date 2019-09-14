@@ -73,7 +73,7 @@ public class LocalizacaoServiceImplTest extends AbstractServiceImplTest<Localiza
 
     @Override
     protected String getId() {
-        return getEntidade().getSequencial();
+        return getEntidade().getId();
     }
 
     @Override
@@ -94,7 +94,7 @@ public class LocalizacaoServiceImplTest extends AbstractServiceImplTest<Localiza
 
     private Localizacao getLocalizacaoA() {
         Localizacao localizacao = new Localizacao();
-        localizacao.setSequencial(SEQUENCIAL_LOCALIZACAL_1);
+        localizacao.setId(SEQUENCIAL_LOCALIZACAL_1);
         localizacao.setDescricao(DESCRICAO_LOCALIZACAO_A);
         localizacao.setTipo(getTipoLocalizacaoSala());
         return localizacao;
@@ -102,7 +102,7 @@ public class LocalizacaoServiceImplTest extends AbstractServiceImplTest<Localiza
 
     private Localizacao getLocalizacaoB() {
         Localizacao localizacao = new Localizacao();
-        localizacao.setSequencial(SEQUENCIAL_LOCALIZACAO_2);
+        localizacao.setId(SEQUENCIAL_LOCALIZACAO_2);
         localizacao.setDescricao(DESCRICAO_LOCALIZACAO_B);
         localizacao.setTipo(getTipoLocalizacaoSala());
         return localizacao;
@@ -110,7 +110,7 @@ public class LocalizacaoServiceImplTest extends AbstractServiceImplTest<Localiza
 
     private TipoLocalizacao getTipoLocalizacaoSala() {
         TipoLocalizacao tipoLocalizacao = new TipoLocalizacao();
-        tipoLocalizacao.setSequencial(CODIGO_TIPO_LOCALIZACA_1);
+        tipoLocalizacao.setId(CODIGO_TIPO_LOCALIZACA_1);
         tipoLocalizacao.setDescricao(DESCRICAO_TIPO_LOCALIZACAO_SALA);
         return tipoLocalizacao;
     }

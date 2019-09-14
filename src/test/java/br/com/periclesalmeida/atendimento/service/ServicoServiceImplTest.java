@@ -54,7 +54,7 @@ public class ServicoServiceImplTest  extends AbstractServiceImplTest<Servico, St
 
 	@Override
 	protected String getId() {
-		return getEntidade().getSequencial();
+		return getEntidade().getId();
 	}
 	
 	@Override
@@ -150,7 +150,7 @@ public class ServicoServiceImplTest  extends AbstractServiceImplTest<Servico, St
 
 	private Servico getServicoComCorVermelho() {
 		Servico servico = new Servico();
-		servico.setSequencial(SEQUENCIAL_SERVICO_1);
+		servico.setId(SEQUENCIAL_SERVICO_1);
 		servico.setSigla(SIGLA_SERVICO_FIN);
 		servico.setTipoCor(TipoCor.VERMELHO.getValue());
 		return servico;
@@ -158,7 +158,7 @@ public class ServicoServiceImplTest  extends AbstractServiceImplTest<Servico, St
 
 	private Servico getServicoComCorAzul() {
 		Servico servico =  new Servico();
-		servico.setSequencial(SEQUENCIAL_SERVICO_2);
+		servico.setId(SEQUENCIAL_SERVICO_2);
 		servico.setSigla(SIGLA_SERVICO_NEG);
 		servico.setNumeroAtendimentoAtual(NUMERO_ATENDIMENTO_ATUAL_CINCO);
 		servico.setTipoCor(TipoCor.AZUL.getValue());

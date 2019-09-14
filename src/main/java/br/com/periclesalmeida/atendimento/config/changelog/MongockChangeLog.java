@@ -21,7 +21,6 @@ public class MongockChangeLog {
         List<Permissao> permissoes =
                 Arrays.asList(
                         new Permissao("ROLE_TIPO_LOCALIZACAO_CONSULTAR" ,"CONSULTAR TIPO DOCUMENTO"),
-                        new Permissao("ROLE_TIPO_LOCALIZACAO_CONSULTAR","CONSULTAR TIPO DOCUMENTO"),
                         new Permissao("ROLE_TIPO_LOCALIZACAO_INCLUIR","INCLUIR TIPO DOCUMENTO"),
                         new Permissao("ROLE_TIPO_LOCALIZACAO_ALTERAR","ALTERAR TIPO DOCUMENTO"),
                         new Permissao("ROLE_LOCALIZACAO_CONSULTAR","CONSULTAR LOCALIZAÇÃO"),
@@ -45,7 +44,6 @@ public class MongockChangeLog {
         List<Permissao> permissoes =
                 Arrays.asList(
                         new Permissao("ROLE_TIPO_LOCALIZACAO_CONSULTAR" ,"CONSULTAR TIPO DOCUMENTO"),
-                        new Permissao("ROLE_TIPO_LOCALIZACAO_CONSULTAR","CONSULTAR TIPO DOCUMENTO"),
                         new Permissao("ROLE_TIPO_LOCALIZACAO_INCLUIR","INCLUIR TIPO DOCUMENTO"),
                         new Permissao("ROLE_TIPO_LOCALIZACAO_ALTERAR","ALTERAR TIPO DOCUMENTO"),
                         new Permissao("ROLE_LOCALIZACAO_CONSULTAR","CONSULTAR LOCALIZAÇÃO"),

@@ -3,12 +3,14 @@ package br.com.periclesalmeida.atendimento.service;
 import br.com.periclesalmeida.atendimento.domain.Atendimento;
 import br.com.periclesalmeida.atendimento.domain.dto.AtendimentoMovimentacaoDTO;
 
+import java.util.List;
+
 public interface AtendimentoService {
 
-	Atendimento consultarPorId(String identificador);
-    Atendimento gerar(String sequencialServico);
-    Atendimento gerarPrioridade(String sequencialServico);
-    AtendimentoMovimentacaoDTO consultarMovimentacaoDoDiaDaLocalizacao(String sequencialLocalizacao);
-    Atendimento chamarProximo(String sequencialLocalizacao);
-    Atendimento chamarNovamente(String sequencial, String sequencialLocalizacao) ;
+	Atendimento consultarPorId(String id);
+    Atendimento gerar(String idServico);
+    Atendimento gerarPrioridade(String idServico);
+    AtendimentoMovimentacaoDTO consultarMovimentacaoDoDiaDaLocalizacao(List<String> idsServico);
+    Atendimento chamarProximo(String idLocalizacao);
+    Atendimento chamarNovamente(String id, String idLocalizacao) ;
 }
