@@ -1,7 +1,6 @@
 package br.com.periclesalmeida.atendimento.config;
 
 import br.com.periclesalmeida.atendimento.config.security.UsuarioSecurity;
-import br.com.periclesalmeida.atendimento.domain.Usuario;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -17,7 +16,7 @@ public class CustomTokenEnhancer implements TokenEnhancer {
 		UsuarioSecurity usuario = (UsuarioSecurity) authentication.getPrincipal();
 
 		Map<String, Object> addInfo = new HashMap<>();
-		addInfo.put("id", usuario.getUsuario().getSequencial());
+		addInfo.put("id", usuario.getUsuario().getId());
 
 		((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(addInfo);
 		return accessToken;

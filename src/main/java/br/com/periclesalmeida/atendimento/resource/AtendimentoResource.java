@@ -1,16 +1,14 @@
 package br.com.periclesalmeida.atendimento.resource;
 
 import br.com.periclesalmeida.atendimento.domain.Atendimento;
-import br.com.periclesalmeida.atendimento.domain.AtendimentoMovimentacaoDTO;
+import br.com.periclesalmeida.atendimento.domain.dto.AtendimentoMovimentacaoDTO;
 import br.com.periclesalmeida.atendimento.service.AtendimentoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/atendimento")
@@ -22,44 +20,44 @@ public class AtendimentoResource {
         this.atendimentoService = atendimentoService;
     }
 
-    @GetMapping("/{sequencial}")
+    @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_SERVICO_INCLUIR')")
-    public Atendimento consultarPorId(@PathVariable Long sequencial) {
-        return atendimentoService.consultarPorId(sequencial);
+    public Atendimento consultarPorId(@PathVariable String id) {
+        return atendimentoService.consultarPorId(id);
     }
     
-    @GetMapping("/movimentacao/{sequencialLocalizacao}")
+    @GetMapping("/movimentacao/{idsServico}")
     @PreAuthorize("hasAuthority('ROLE_SERVICO_INCLUIR')")
-    public ResponseEntity<AtendimentoMovimentacaoDTO> consultarMovimentacao(@PathVariable Long sequencialLocalizacao) {
-        AtendimentoMovimentacaoDTO atendimentoMovimentacaoDTO = atendimentoService.consultarMovimentacaoDoDiaDaLocalizacao(sequencialLocalizacao);
+    public ResponseEntity<AtendimentoMovimentacaoDTO> consultarMovimentacao(@PathVariable List<String> idsServico) {
+        AtendimentoMovimentacaoDTO atendimentoMovimentacaoDTO = atendimentoService.consultarMovimentacaoDoDiaDaLocalizacao(idsServico);
         return ResponseEntity.status(HttpStatus.OK).body(atendimentoMovimentacaoDTO);
     }
 
-    @PostMapping("/gerar/{sequencialServico}")
+    @PostMapping("/gerar/{idServico}")
     @PreAuthorize("hasAuthority('ROLE_SERVICO_INCLUIR')")
-    public ResponseEntity<Atendimento> gerarSenha(@PathVariable Long sequencialServico) {
-        Atendimento atendimentoGerado = atendimentoService.gerar(sequencialServico);
+    public ResponseEntity<Atendimento> gerarSenha(@PathVariable String idServico) {
+        Atendimento atendimentoGerado = atendimentoService.gerar(idServico);
         return ResponseEntity.status(HttpStatus.CREATED).body(atendimentoGerado);
     }
 
     @PostMapping("/gerar-prioridade/{sequencialServico}")
     @PreAuthorize("hasAuthority('ROLE_SERVICO_INCLUIR')")
-    public ResponseEntity<Atendimento> gerarSenhaPrioridade(@PathVariable Long sequencialServico) {
+    public ResponseEntity<Atendimento> gerarSenhaPrioridade(@PathVariable String sequencialServico) {
         Atendimento atendimentoGerado = atendimentoService.gerarPrioridade(sequencialServico);
         return ResponseEntity.status(HttpStatus.CREATED).body(atendimentoGerado);
     }
 
-    @PostMapping("/chamar-proximo/{sequencialLocalizacao}")
+    @PostMapping("/chamar-proximo/{idLocalizacao}")
     @PreAuthorize("hasAuthority('ROLE_SERVICO_INCLUIR')")
-    public ResponseEntity<Atendimento> chamarProximo(@PathVariable Long sequencialLocalizacao) {
-        Atendimento atendimentoChamado = atendimentoService.chamarProximo(sequencialLocalizacao);
+    public ResponseEntity<Atendimento> chamarProximo(@PathVariable String idLocalizacao) {
+        Atendimento atendimentoChamado = atendimentoService.chamarProximo(idLocalizacao);
         return ResponseEntity.status(HttpStatus.OK).body(atendimentoChamado);
     }
 
-    @PostMapping("/chamar-novamente/{sequencial}/{sequencialLocalizacao}")
+    @PostMapping("/chamar-novamente/{id}/{idLocalizacao}")
     @PreAuthorize("hasAuthority('ROLE_SERVICO_INCLUIR')")
-    public ResponseEntity<Atendimento> chamarNovamente(@PathVariable Long sequencial, @PathVariable Long sequencialLocalizacao) {
-        Atendimento atendimentoChamado = atendimentoService.chamarNovamente(sequencial, sequencialLocalizacao);
+    public ResponseEntity<Atendimento> chamarNovamente(@PathVariable String id, @PathVariable String idLocalizacao) {
+        Atendimento atendimentoChamado = atendimentoService.chamarNovamente(id, idLocalizacao);
         return ResponseEntity.status(HttpStatus.OK).body(atendimentoChamado);
     }
 }

@@ -11,7 +11,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +22,7 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 import static org.springframework.data.domain.ExampleMatcher.matching;
 
 @Service
-public class ServicoServiceImpl extends AbstractService<Servico, Long> implements ServicoService {
+public class ServicoServiceImpl extends AbstractService<Servico, String> implements ServicoService {
 
     private final Integer NUMERO_ATENDIMENTO_ATUAL_ZERO_0 = 0;
     private final String MENSAGEM_JA_EXISTE_SERVICO_CADASTRADO_COM_A_SIGLA_INFORMADA = "Já existe serviço cadastrado com a sigla informada";
@@ -34,7 +34,7 @@ public class ServicoServiceImpl extends AbstractService<Servico, Long> implement
     }
 
     @Override
-    protected JpaRepository<Servico, Long> getRepository() {
+    protected MongoRepository<Servico, String> getRepository() {
         return servicoRepository;
     }
 
@@ -52,7 +52,7 @@ public class ServicoServiceImpl extends AbstractService<Servico, Long> implement
     }
 
     @Override
-    public Servico retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(Long sequencial) {
+    public Servico retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(String sequencial) {
         Servico servicoConsultado = consultarPorId(sequencial);
         incrementarNumeroDeAtendimentoAtual(servicoConsultado);
         servicoRepository.save(servicoConsultado);
@@ -98,7 +98,7 @@ public class ServicoServiceImpl extends AbstractService<Servico, Long> implement
     }
 
     private void lancarExecaoCasoCodigoDoObjetoConsultadoEhDiferenteDoInformado(Servico objetoConsultado, Servico objetoInformado) {
-        if (!objetoConsultado.getSequencial().equals(objetoInformado.getSequencial()) ){
+        if (!objetoConsultado.getId().equals(objetoInformado.getId()) ){
             throw new NegocioException(MENSAGEM_JA_EXISTE_SERVICO_CADASTRADO_COM_A_SIGLA_INFORMADA);
         }
     }

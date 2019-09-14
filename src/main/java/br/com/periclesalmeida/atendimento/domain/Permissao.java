@@ -1,33 +1,39 @@
 package br.com.periclesalmeida.atendimento.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Objects;
 
-@Entity
-@Table(name="atm_permissao", schema="admatm")
+@Document(collection = "permissao")
 public class Permissao implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private String codigo;
-    private String descricao;
 
     @Id
     @NotBlank(message = "Obrigatório informar o código")
-    @Column(name="cod_permissao", nullable=false)
-    public String getCodigo() {
-        return codigo;
-    }
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
+    private String id;
 
     @NotBlank(message = "Obrigatório informar a descrição")
-    @Column(name="dsc_permissao", nullable=false)
+    private String descricao;
+
+    public Permissao(String codigo, String descricao) {
+        this.id = codigo;
+        this.descricao = descricao;
+    }
+
+    public Permissao() {
+    }
+
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getDescricao() {
         return descricao;
     }
@@ -40,11 +46,11 @@ public class Permissao implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Permissao permissao = (Permissao) o;
-        return Objects.equals(codigo, permissao.codigo);
+        return Objects.equals(id, permissao.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(codigo);
+        return Objects.hash(id);
     }
 }

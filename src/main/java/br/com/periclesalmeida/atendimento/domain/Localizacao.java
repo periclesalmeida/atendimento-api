@@ -1,37 +1,42 @@
 package br.com.periclesalmeida.atendimento.domain;
 
 import br.com.periclesalmeida.atendimento.util.StringUtil;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 
-@Entity
-@Table(name="atm_localizacao", schema="admatm")
+@Document(collection = "localizacao")
 public class Localizacao implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private Long sequencial;
-    private String descricao;
-    private TipoLocalizacao tipo;
-    private Boolean ativo;
-    private Set<Servico> servicos;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="seq_localizacao", nullable=false)
-    public Long getSequencial() {
-        return sequencial;
+    private String id;
+
+    @NotBlank(message="Obrigatório informar a descrição.")
+    private String descricao;
+
+    @NotNull(message = "Obrigatório informar o tipo")
+    private TipoLocalizacao tipo;
+    private Boolean ativo;
+
+    @NotNull(message="Obrigatório pelo menos um serviço")
+    @DBRef
+    private Set<Servico> servicos;
+
+    public String getId() {
+        return id;
     }
-    public void setSequencial(Long sequencial) {
-        this.sequencial = sequencial;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    @Column(name="dsc_localizacao", nullable=false)
-    @NotBlank(message="Obrigatório informar a descrição.")
     public String getDescricao() {
         return descricao;
     }
@@ -39,9 +44,6 @@ public class Localizacao implements Serializable {
         this.descricao = StringUtil.setarUpperCase(descricao) ;
     }
 
-    @ManyToOne
-    @NotNull(message = "Obrigatório informar o tipo")
-    @JoinColumn(name="seq_tipo_localizacao", referencedColumnName="seq_tipo_localizacao", nullable=false)
     public TipoLocalizacao getTipo() {
         return tipo;
     }
@@ -49,7 +51,6 @@ public class Localizacao implements Serializable {
         this.tipo = tipo;
     }
 
-    @Column(name="ind_ativo", nullable=false)
     public Boolean getAtivo() {
         return ativo;
     }
@@ -57,12 +58,6 @@ public class Localizacao implements Serializable {
         this.ativo = ativo;
     }
 
-    @ManyToMany(fetch=FetchType.LAZY)
-    @NotNull(message="Obrigatório pelo menos um serviço")
-    @JoinTable(name="atm_localizacao_servico", schema="admatm",
-            joinColumns={@JoinColumn(name="seq_localizacao", referencedColumnName="seq_localizacao")},
-            inverseJoinColumns={@JoinColumn(name="seq_servico", referencedColumnName="seq_servico")
-            })
     public Set<Servico> getServicos() {
         return servicos;
     }
@@ -75,12 +70,11 @@ public class Localizacao implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Localizacao that = (Localizacao) o;
-        return Objects.equals(sequencial, that.sequencial);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(sequencial);
+        return Objects.hash(id);
     }
 }

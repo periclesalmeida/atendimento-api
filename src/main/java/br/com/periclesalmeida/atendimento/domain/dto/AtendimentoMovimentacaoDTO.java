@@ -1,4 +1,6 @@
-package br.com.periclesalmeida.atendimento.domain;
+package br.com.periclesalmeida.atendimento.domain.dto;
+
+import br.com.periclesalmeida.atendimento.domain.Atendimento;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,7 +20,7 @@ public class AtendimentoMovimentacaoDTO {
 	public List<Atendimento> getAtendimentosRealizados() {
 		return atendimentos.stream().filter(Atendimento::isRealizado)
 				.sorted((t1, t2) -> {
-					return t1.getDataHoraChamada().after(t2.getDataHoraChamada()) 
+					return t1.getDataHoraChamada().isAfter(t2.getDataHoraChamada())
 							? -1 : 1;
 				}).collect(Collectors.toList());
 	}

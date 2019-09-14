@@ -10,7 +10,7 @@ import br.com.periclesalmeida.atendimento.util.exception.NegocioException;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,7 +28,7 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 import static org.springframework.data.domain.ExampleMatcher.matching;
 
 @Service
-public class UsuarioServiceImpl extends AbstractService<Usuario, Long> implements UsuarioService {
+public class UsuarioServiceImpl extends AbstractService<Usuario, String> implements UsuarioService {
 
     private final String MENSAGEM_OBRIGATORIO_INFORMAR_A_SENHA = "Obrigatório informar a senha";
     private final String MENSAGEM_USUARIO_NÃO_POSSUI_PERMISSÃO = "Usuário não possui permissão.";
@@ -59,7 +59,7 @@ public class UsuarioServiceImpl extends AbstractService<Usuario, Long> implement
     }
 
     @Override
-    protected JpaRepository<Usuario, Long> getRepository() {
+    protected MongoRepository<Usuario, String> getRepository() {
         return usuarioRepository;
     }
 
@@ -97,14 +97,14 @@ public class UsuarioServiceImpl extends AbstractService<Usuario, Long> implement
     }
 
     private void lancarExecaoCasoSequencialDoObjetoConsultadoEhDiferenteDoInformado(Usuario usuarioConsultado, Usuario usuario) {
-        if (!usuarioConsultado.getSequencial().equals(usuario.getSequencial()) ){
+        if (!usuarioConsultado.getId().equals(usuario.getId()) ){
             throw new NegocioException(MENSAGEM_JA_EXISTE_USUARIO_CADASTRADO_COM_O_LOGIN_INFORMADO);
         }
     }
 
     private Collection<? extends GrantedAuthority> criarGrantedAuthority(Usuario usuario) {
         return usuario.getPermissoes().stream()
-                .map(permissao -> new SimpleGrantedAuthority(permissao.getCodigo().toUpperCase()))
+                .map(permissao -> new SimpleGrantedAuthority(permissao.getId().toUpperCase()))
                 .collect(Collectors.toList());
     }
 }

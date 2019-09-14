@@ -43,14 +43,14 @@ public class UsuarioResource {
 
     @PutMapping("/{sequencial}")
     @PreAuthorize("hasAuthority('ROLE_USUARIO_ALTERAR')")
-    public ResponseEntity<Usuario>  alterar(@PathVariable Long sequencial, @Validated @RequestBody Usuario entidade) {
+    public ResponseEntity<Usuario>  alterar(@PathVariable String sequencial, @Validated @RequestBody Usuario entidade) {
         usuarioService.alterar(sequencial, entidade);
         return ResponseEntity.status(HttpStatus.OK).body(entidade);
     }
 
     @GetMapping("/{sequencial}")
     @PreAuthorize("hasAuthority('ROLE_USUARIO_CONSULTAR')")
-    public Usuario  consultarPorId(@PathVariable Long sequencial) {
+    public Usuario  consultarPorId(@PathVariable String sequencial) {
         return usuarioService.consultarPorId(sequencial);
     }
 

@@ -1,45 +1,42 @@
 package br.com.periclesalmeida.atendimento.domain;
 
 
+import br.com.periclesalmeida.atendimento.domain.type.TipoCor;
+import br.com.periclesalmeida.atendimento.util.StringUtil;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import javax.persistence.Transient;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotBlank;
-
-import br.com.periclesalmeida.atendimento.domain.type.TipoCor;
-import br.com.periclesalmeida.atendimento.util.StringUtil;
-
-@Entity
-@Table(name="atm_servico", schema="admatm")
+@Document(collection = "servico")
 public class Servico implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private Long sequencial;
+
+    @Id
+    private String id;
+
+    @NotBlank(message = "Obrigatório informar a descrição")
     private String descricao;
+
+    @NotBlank(message = "Obrigatório informar a sigla")
     private String sigla;
+
+    @NotBlank(message = "Obrigatório informar a cor")
     private String tipoCor;
     private Integer numeroAtendimentoAtual;
     private Boolean ativo;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="seq_servico", nullable=false)
-    public Long getSequencial() {
-        return sequencial;
+    public String getId() {
+        return id;
     }
-    public void setSequencial(Long sequencial) {
-        this.sequencial = sequencial;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    @NotBlank(message = "Obrigatório informar a descrição")
-    @Column(name="dsc_servico", nullable=false)
     public String getDescricao() {
         return descricao;
     }
@@ -47,8 +44,6 @@ public class Servico implements Serializable {
         this.descricao = StringUtil.setarUpperCase(descricao) ;
     }
 
-    @NotBlank(message = "Obrigatório informar a sigla")
-    @Column(name="dsc_sigla", nullable=false)
     public String getSigla() {
         return sigla;
     }
@@ -56,8 +51,6 @@ public class Servico implements Serializable {
         this.sigla = StringUtil.setarUpperCase(sigla) ;
     }
 
-    @NotBlank(message = "Obrigatório informar a cor")
-    @Column(name="tip_cor", nullable=false)
     public String getTipoCor() {
         return this.tipoCor;
     }
@@ -65,7 +58,6 @@ public class Servico implements Serializable {
         this.tipoCor = tipoCor;
     }
 
-    @Column(name="num_atendimento_atual", nullable=false)
     public Integer getNumeroAtendimentoAtual() {
         return numeroAtendimentoAtual;
     }
@@ -73,7 +65,6 @@ public class Servico implements Serializable {
         this.numeroAtendimentoAtual = numeroAtendimentoAtual;
     }
 
-    @Column(name="ind_ativo", nullable=false)
     public Boolean getAtivo() {
         return ativo;
     }
@@ -101,11 +92,11 @@ public class Servico implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Servico servico = (Servico) o;
-        return Objects.equals(sequencial, servico.sequencial);
+        return Objects.equals(id, servico.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(sequencial);
+        return Objects.hash(id);
     }
 }

@@ -3,7 +3,7 @@ package br.com.periclesalmeida.atendimento.service;
 import br.com.periclesalmeida.atendimento.domain.Servico;
 import br.com.periclesalmeida.atendimento.util.GenericService;
 
-public interface ServicoService extends GenericService<Servico, Long> {
+public interface ServicoService extends GenericService<Servico, String> {
 
-    Servico retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(Long sequencial);
+    Servico retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(String sequencial);
 }

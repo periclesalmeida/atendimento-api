@@ -1,35 +1,34 @@
 package br.com.periclesalmeida.atendimento.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.HashSet;
-import java.util.Optional;
-
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 import br.com.periclesalmeida.atendimento.domain.Permissao;
 import br.com.periclesalmeida.atendimento.domain.Usuario;
 import br.com.periclesalmeida.atendimento.repository.UsuarioRepository;
 import br.com.periclesalmeida.atendimento.service.impl.UsuarioServiceImpl;
 import br.com.periclesalmeida.atendimento.util.GenericService;
 import br.com.periclesalmeida.atendimento.util.exception.NegocioException;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, Long> {
+import java.util.HashSet;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, String> {
 
     private final String SENHA_COM_RASH = "SENHA_COM_RASH";
     private final String SENHA_ALEATORIA = "SENHA_123";
     private final String CODIDO_PERMISSAO = "COD_PERMISSAO";
-    private final long SEQUENCIAL_USUARIO_1 = 1L;
-    private final long SEQUENCIAL_USUARIO_2 = 2L;
-    private final long SEQUENCIAL_USUARIO_3 = 3L;
+    private final String SEQUENCIAL_USUARIO_1 = "1L";
+    private final String SEQUENCIAL_USUARIO_2 = "2L";
+    private final String SEQUENCIAL_USUARIO_3 = "3L";
     private final String LOGIN_ADMIN = "ADMIN";
     private final String LOGIN_TEST = "TEST";
 
@@ -101,8 +100,8 @@ public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, Lo
     }
 
     @Override
-    protected Long getId() {
-        return getEntidade().getSequencial();
+    protected String getId() {
+        return getEntidade().getId();
     }
 
     @Override
@@ -111,12 +110,12 @@ public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, Lo
     }
 
     @Override
-    protected GenericService<Usuario, Long> getService() {
+    protected GenericService<Usuario, String> getService() {
         return usuarioService;
     }
 
     @Override
-    protected JpaRepository<Usuario, Long> getRepositoryMock() {
+    protected MongoRepository<Usuario, String> getRepositoryMock() {
         return usuarioRepositoryMock;
     }
 
@@ -128,7 +127,7 @@ public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, Lo
 
     private Usuario getUsuarioLoginAdmin() {
         Usuario usuario = new Usuario();
-        usuario.setSequencial(SEQUENCIAL_USUARIO_1);
+        usuario.setId(SEQUENCIAL_USUARIO_1);
         usuario.setLogin(LOGIN_ADMIN);
         usuario.setSenhaSemRash(SENHA_ALEATORIA);
         usuario.setPermissoes(getPermissoes());
@@ -137,7 +136,7 @@ public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, Lo
 
     private HashSet<Permissao> getPermissoes() {
         Permissao permissao = new Permissao();
-        permissao.setCodigo(CODIDO_PERMISSAO);
+        permissao.setId(CODIDO_PERMISSAO);
 
         HashSet<Permissao> permissoes = new HashSet<>();
         permissoes.add(permissao);
@@ -147,14 +146,14 @@ public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, Lo
     private Usuario getUsuarioLoginTestIhSequencial2() {
         Usuario usuario = new Usuario();
         usuario.setLogin(LOGIN_TEST);
-        usuario.setSequencial(SEQUENCIAL_USUARIO_2);
+        usuario.setId(SEQUENCIAL_USUARIO_2);
         return usuario;
     }
 
     private Usuario getUsuarioLoginTestIhSequencial3() {
         Usuario usuario = new Usuario();
         usuario.setLogin(LOGIN_TEST);
-        usuario.setSequencial(SEQUENCIAL_USUARIO_3);
+        usuario.setId(SEQUENCIAL_USUARIO_3);
         return usuario;
     }
 }

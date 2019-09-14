@@ -8,7 +8,7 @@ import br.com.periclesalmeida.atendimento.util.exception.NegocioException;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
 
@@ -16,12 +16,12 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class TipoLocalizacaoServiceImplTests extends AbstractServiceImplTest<TipoLocalizacao, Integer> {
+public class TipoLocalizacaoServiceImplTests extends AbstractServiceImplTest<TipoLocalizacao, String> {
 
-    private final int CODIGO_TIPO_LOCALIZACAO_2 = 2;
+    private final String CODIGO_TIPO_LOCALIZACAO_2 = "2";
     private final String DESCRICAO = "descricao";
     private final String DESCRICAO_SALA = "SALA";
-    private final int CODIGO_TIPO_LOCALIZACAO_1 = 1;
+    private final String CODIGO_TIPO_LOCALIZACAO_1 = "1";
 
     @Mock
     private TipoLocalizacaoRepository tipoLocalizacaoRepositoryMock;
@@ -38,7 +38,7 @@ public class TipoLocalizacaoServiceImplTests extends AbstractServiceImplTest<Tip
     }
 
     @Override
-    protected JpaRepository<TipoLocalizacao, Integer> getRepositoryMock() {
+    protected MongoRepository<TipoLocalizacao, String> getRepositoryMock() {
         return tipoLocalizacaoRepositoryMock;
     }
 
@@ -63,8 +63,8 @@ public class TipoLocalizacaoServiceImplTests extends AbstractServiceImplTest<Tip
     }
 
     @Override
-    protected Integer getId() {
-        return getEntidade().getCodigo();
+    protected String getId() {
+        return getEntidade().getId();
     }
 
     @Override
@@ -74,14 +74,14 @@ public class TipoLocalizacaoServiceImplTests extends AbstractServiceImplTest<Tip
 
     private TipoLocalizacao getEntidadeComCodigoUm() {
         TipoLocalizacao tipoLocalizacao = new TipoLocalizacao();
-        tipoLocalizacao.setCodigo(CODIGO_TIPO_LOCALIZACAO_1);
+        tipoLocalizacao.setId(CODIGO_TIPO_LOCALIZACAO_1);
         tipoLocalizacao.setDescricao(DESCRICAO_SALA);
         return tipoLocalizacao;
     }
 
     private TipoLocalizacao getEntidadeComCodigoDois() {
         TipoLocalizacao tipoLocalizacao = new TipoLocalizacao();
-        tipoLocalizacao.setCodigo(CODIGO_TIPO_LOCALIZACAO_2);
+        tipoLocalizacao.setId(CODIGO_TIPO_LOCALIZACAO_2);
         tipoLocalizacao.setDescricao(DESCRICAO_SALA);
         return tipoLocalizacao;
     }

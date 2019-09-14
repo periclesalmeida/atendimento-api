@@ -1,32 +1,38 @@
 package br.com.periclesalmeida.atendimento.domain;
 
 import br.com.periclesalmeida.atendimento.util.StringUtil;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Objects;
 
-@Entity
-@Table(name="atm_tipo_localizacao", schema="admatm")
+@Document(collection = "tipolocalizacao")
 public class TipoLocalizacao implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private Integer codigo;
-    private String descricao;
 
     @Id
-    @Column(name="seq_tipo_localizacao", nullable=false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer getCodigo() {
-        return codigo;
-    }
-    public void setCodigo(Integer codigo) {
-        this.codigo = codigo;
+    private String id;
+
+    @NotBlank(message = "Obrigatório informar a descrição")
+    private String descricao;
+
+    public TipoLocalizacao() {
     }
 
-    @Column(name="dsc_tipo_localizacao", nullable=false)
-    @NotBlank(message = "Obrigatório informar a descrição")
+    public TipoLocalizacao(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getDescricao() {
         return descricao;
     }
@@ -39,11 +45,11 @@ public class TipoLocalizacao implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TipoLocalizacao that = (TipoLocalizacao) o;
-        return Objects.equals(codigo, that.codigo);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(codigo);
+        return Objects.hash(id);
     }
 }

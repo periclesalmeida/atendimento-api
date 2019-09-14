@@ -1,7 +1,7 @@
 package br.com.periclesalmeida.atendimento.repository;
 
 import br.com.periclesalmeida.atendimento.domain.Permissao;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface PermissaoRepository extends JpaRepository<Permissao, String> {
+public interface PermissaoRepository extends MongoRepository<Permissao, String> {
 }

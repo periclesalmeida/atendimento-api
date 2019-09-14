@@ -1,29 +1,29 @@
 package br.com.periclesalmeida.atendimento.service.impl;
 
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Service;
-
 import br.com.periclesalmeida.atendimento.domain.Atendimento;
-import br.com.periclesalmeida.atendimento.domain.AtendimentoMovimentacaoDTO;
 import br.com.periclesalmeida.atendimento.domain.Localizacao;
 import br.com.periclesalmeida.atendimento.domain.Servico;
+import br.com.periclesalmeida.atendimento.domain.dto.AtendimentoMovimentacaoDTO;
 import br.com.periclesalmeida.atendimento.repository.AtendimentoRepository;
 import br.com.periclesalmeida.atendimento.service.AtendimentoService;
 import br.com.periclesalmeida.atendimento.service.LocalizacaoService;
 import br.com.periclesalmeida.atendimento.service.ServicoService;
 import br.com.periclesalmeida.atendimento.util.VerificadorUtil;
 import br.com.periclesalmeida.atendimento.util.exception.NegocioException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AtendimentoServiceImpl implements AtendimentoService {
 
 	private final String MENSAGEM_NAO_EXISTE_ATENDIMENTO_NA_FILA = "Não existe atendimento na fila.";
-	private final int QUANTIDADE_DE_ATENDIMENTO_REALIZADO_ATE_A_PROXIMA_PRIORIDADE = 2;
+	private final Integer QUANTIDADE_DE_ATENDIMENTO_REALIZADO_ATE_A_PROXIMA_PRIORIDADE = 2;
 	private AtendimentoRepository atendimentoRepository;
 	private ServicoService servicoService;
 	private LocalizacaoService localizacaoService;
@@ -35,7 +35,7 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 	}
 
 	@Override
-	public Atendimento gerar(Long sequencialServico) {
+	public Atendimento gerar(String sequencialServico) {
 		Atendimento atendimento = criarAtendimento(sequencialServico);
 		setarIndicadorPrioridadeComoFalso(atendimento);
 		atendimentoRepository.save(atendimento);
@@ -43,42 +43,54 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 	}
 
 	@Override
-	public Atendimento gerarPrioridade(Long sequencialServico) {
-		Atendimento atendimento = criarAtendimento(sequencialServico);
+	public Atendimento gerarPrioridade(String id) {
+		Atendimento atendimento = criarAtendimento(id);
 		setarIndicadorPrioridadeComoTrue(atendimento);
 		atendimentoRepository.save(atendimento);
 		return atendimento;
 	}
 
 	@Override
-	public Atendimento consultarPorId(Long var1) {
+	public Atendimento consultarPorId(String var1) {
 		return atendimentoRepository.findById(var1).orElseThrow(() -> new EmptyResultDataAccessException(0));
 	}
 
 	@Override
-	public AtendimentoMovimentacaoDTO consultarMovimentacaoDoDiaDaLocalizacao(Long sequencialLocalizacao) {
-		List<Atendimento> atendimentos = listarAtendimentoDoDiaParaAhLocalizacao(sequencialLocalizacao);
+	public AtendimentoMovimentacaoDTO consultarMovimentacaoDoDiaDaLocalizacao(List<String> sequenciaisServico) {
+		List<Atendimento> atendimentos = listarAtendimentoDoDiaParaOsServicos(sequenciaisServico);
+		ordenarListaPorDataHoraCadastro(atendimentos);
 		return new AtendimentoMovimentacaoDTO(atendimentos);
 	}
 
 	@Override
-	public Atendimento chamarProximo(Long sequencialLocalizacao) {
-		List<Atendimento> atendimentos = listarAtendimentoDoDiaParaAhLocalizacao(sequencialLocalizacao);
+	public Atendimento chamarProximo(String idLocalizacao) {
+		Localizacao localizacaoConsultada = localizacaoService.consultarPorId(idLocalizacao);
+		List<String> idsServico = gerarListaStringComIdDosServicosDaLocalizacao(localizacaoConsultada);
+		List<Atendimento> atendimentos = listarAtendimentoDoDiaParaOsServicos(idsServico);
 		lancarExcecaoCasoNaoExistaProximo(atendimentos);
 		Atendimento atendimentoChamado = retornarAtendimentoQueDeveSerChamado(atendimentos);
-		Localizacao localizacaoConsultada = localizacaoService.consultarPorId(sequencialLocalizacao);
 		setarDadosDoAtendimento(atendimentoChamado, localizacaoConsultada);
 		atendimentoRepository.save(atendimentoChamado);
 		return atendimentoChamado;
 	}
 
 	@Override
-	public Atendimento chamarNovamente(Long sequencial, Long sequencialLocalizacao) {
-		Atendimento atendimentoConsultado = consultarPorId(sequencial);
-		Localizacao localizacaoConsultada = localizacaoService.consultarPorId(sequencialLocalizacao);
+	public Atendimento chamarNovamente(String id, String idLocalizacao) {
+		Atendimento atendimentoConsultado = consultarPorId(id);
+		Localizacao localizacaoConsultada = localizacaoService.consultarPorId(idLocalizacao);
 		setarDadosDoAtendimento(atendimentoConsultado, localizacaoConsultada);
 		atendimentoRepository.save(atendimentoConsultado);
 		return atendimentoConsultado;
+	}
+
+	private void ordenarListaPorDataHoraCadastro(List<Atendimento> atendimentos) {
+		atendimentos.sort((t1, t2) -> {
+			return t1.getDataHoraCadastro().isAfter(t2.getDataHoraCadastro()) ? 1 : -1;
+		});
+	}
+
+	private List<String> gerarListaStringComIdDosServicosDaLocalizacao(Localizacao localizacaoConsultada) {
+		return localizacaoConsultada.getServicos().stream().map(Servico::getId).collect(Collectors.toList());
 	}
 
 	private void lancarExcecaoCasoNaoExistaProximo(List<Atendimento> atendimentos) {
@@ -92,10 +104,10 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 
 		return isAtenderAhPrioridade(atendimentoMaisAntigoEmEsperaPrioritario, quantidadeDeAtendimentosRealizadosAteAhPrioridadeAtendida) ?
 				atendimentoMaisAntigoEmEsperaPrioritario.get() :
-					atendimentoMaisAntigoEmEspera.get();
+				atendimentoMaisAntigoEmEspera.get();
 	}
 
-	private boolean isAtenderAhPrioridade(Optional<Atendimento> atendimentoMaisAntigoEmEsperaPrioritario, Integer quantidadeDeAtendimentosRealizadosAteAhPrioridadeAtendida) {
+	private Boolean isAtenderAhPrioridade(Optional<Atendimento> atendimentoMaisAntigoEmEsperaPrioritario, Integer quantidadeDeAtendimentosRealizadosAteAhPrioridadeAtendida) {
 		return atendimentoMaisAntigoEmEsperaPrioritario.isPresent() &&
 				quantidadeDeAtendimentosRealizadosAteAhPrioridadeAtendida == QUANTIDADE_DE_ATENDIMENTO_REALIZADO_ATE_A_PROXIMA_PRIORIDADE;
 	}
@@ -126,12 +138,15 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 
 	private void setarDadosDoAtendimento(Atendimento atendimento , Localizacao localizacao) {
 		atendimento.setLocalizacao(localizacao);
-		atendimento.setDataHoraChamada(new Date());
+		atendimento.setDataHoraChamada(LocalDateTime.now());
 	}
 
-	private List<Atendimento> listarAtendimentoDoDiaParaAhLocalizacao(Long sequencialLocalizacao) {
-		return atendimentoRepository.listarPorLocalizacaoIhData(sequencialLocalizacao,
-				LocalDate.now());
+	private List<Atendimento> listarAtendimentoDoDiaParaOsServicos(List<String> sequenciaisServico) {
+		return atendimentoRepository.listarPorPeriodoIhServico(
+				LocalDate.now().atStartOfDay(),
+				LocalDate.now().atTime(23,59,59),
+				sequenciaisServico
+		);
 	}
 
 	private void setarIndicadorPrioridadeComoFalso(Atendimento atendimento) {
@@ -142,8 +157,8 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 		atendimento.setIndicadorPrioridade(true);
 	}
 
-	private Atendimento criarAtendimento(Long sequencialServico) {
-		Servico servico = servicoService.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(sequencialServico);
+	private Atendimento criarAtendimento(String idServico) {
+		Servico servico = servicoService.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(idServico);
 
 		Atendimento atendimento = new Atendimento();
 		atendimento.setServico(servico);
@@ -157,6 +172,6 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 	}
 
 	private void setarDataHoraDeCadastroComoDataDeHoje(Atendimento atendimento) {
-		atendimento.setDataHoraCadastro(new Date());
+		atendimento.setDataHoraCadastro(LocalDateTime.now());
 	}
 }

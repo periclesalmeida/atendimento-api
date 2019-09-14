@@ -4,7 +4,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.io.Serializable;
 import java.util.List;
@@ -13,12 +13,12 @@ import static org.springframework.data.domain.Example.of;
 
 public abstract class AbstractService<ENTIDADE, ID extends Serializable> implements GenericService<ENTIDADE, ID> {
 
-    protected abstract JpaRepository<ENTIDADE, ID> getRepository();
+    protected abstract MongoRepository<ENTIDADE, ID> getRepository();
 
     @Override
     public ENTIDADE incluir(ENTIDADE entidade) {
         this.regrasNegocioIncluir(entidade);
-        this.getRepository().save(entidade);
+        this.getRepository().insert(entidade);
         return entidade;
     }
 

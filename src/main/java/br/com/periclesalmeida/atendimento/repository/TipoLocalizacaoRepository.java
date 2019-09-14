@@ -1,11 +1,11 @@
 package br.com.periclesalmeida.atendimento.repository;
 
 import br.com.periclesalmeida.atendimento.domain.TipoLocalizacao;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
 
-public interface TipoLocalizacaoRepository extends JpaRepository<TipoLocalizacao, Integer> {
+public interface TipoLocalizacaoRepository extends MongoRepository<TipoLocalizacao, String> {
 
     Optional<TipoLocalizacao> findByDescricaoContainsAllIgnoreCase(String descricao);
 }

@@ -1,33 +1,32 @@
 package br.com.periclesalmeida.atendimento.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.Optional;
-
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import br.com.periclesalmeida.atendimento.domain.Servico;
 import br.com.periclesalmeida.atendimento.domain.type.TipoCor;
 import br.com.periclesalmeida.atendimento.repository.ServicoRepository;
 import br.com.periclesalmeida.atendimento.service.impl.ServicoServiceImpl;
 import br.com.periclesalmeida.atendimento.util.GenericService;
 import br.com.periclesalmeida.atendimento.util.exception.NegocioException;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public class ServicoServiceImplTest  extends AbstractServiceImplTest<Servico, Long> {
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+public class ServicoServiceImplTest  extends AbstractServiceImplTest<Servico, String> {
 
 	private final Integer NUMERO_ATENDIMENTO_ATUAL_ZERO = 0;
 	private final Integer NUMERO_ATENDIMENTO_ATUAL_CINCO = 5;
 	private final Integer NUMERO_ATENDIMENTO_ATUAL_SEIS = 6;
-	private final long SEQUENCIAL_SERVICO_1 = 1L;
-	private final long SEQUENCIAL_SERVICO_2 = 2L;
+	private final String SEQUENCIAL_SERVICO_1 = "1";
+	private final String SEQUENCIAL_SERVICO_2 = "2";
 	private final String SIGLA_SERVICO_NEG = "NEG";
 	private final String SIGLA_SERVICO_FIN = "FIN";
 	private final String TIPO_COR_G = "G";
@@ -44,18 +43,18 @@ public class ServicoServiceImplTest  extends AbstractServiceImplTest<Servico, Lo
 	}
 
 	@Override
-	protected GenericService<Servico, Long> getService() {
+	protected GenericService<Servico, String> getService() {
 		return servicoService;
 	}
 
 	@Override
-	protected JpaRepository<Servico, Long> getRepositoryMock() {
+	protected MongoRepository<Servico, String> getRepositoryMock() {
 		return servicoRepositoryMock;
 	}
 
 	@Override
-	protected Long getId() {
-		return getEntidade().getSequencial();
+	protected String getId() {
+		return getEntidade().getId();
 	}
 	
 	@Override
@@ -85,21 +84,21 @@ public class ServicoServiceImplTest  extends AbstractServiceImplTest<Servico, Lo
 	@Test
 	public void aoIncluirDeveriaSetarEntidadeComoAtivo() {
 		getService().incluir(getEntidade());
-		Servico servicoToSave = captureAhEntidadeAoSalvar();
+		Servico servicoToSave = captureAhEntidadeAoIncluir();
 		assertTrue(servicoToSave.getAtivo());
 	}
 
 	@Test
 	public void aoIncluirSeOhNumeroAtendimentoAtualEstiverNuloDeveriaSetarComoZero() {
 		getService().incluir(getEntidade());
-		Servico servicoToSave = captureAhEntidadeAoSalvar();
+		Servico servicoToSave = captureAhEntidadeAoIncluir();
 		assertEquals(NUMERO_ATENDIMENTO_ATUAL_ZERO, servicoToSave.getNumeroAtendimentoAtual());
 	}
 
 	@Test
 	public void aoIncluirSeOhNumeroAtendimentoAtualEstiverPreenchidoDeveriaFazerNada() {
 		getService().incluir(getServicoComCorAzul());
-		Servico servicoToSave = captureAhEntidadeAoSalvar();
+		Servico servicoToSave = captureAhEntidadeAoIncluir();
 		assertEquals(NUMERO_ATENDIMENTO_ATUAL_CINCO, servicoToSave.getNumeroAtendimentoAtual());
 	}
 
@@ -136,6 +135,13 @@ public class ServicoServiceImplTest  extends AbstractServiceImplTest<Servico, Lo
 		return servicoArgument.getValue();
 	}
 
+	private Servico captureAhEntidadeAoIncluir() {
+		ArgumentCaptor<Servico> servicoArgument = ArgumentCaptor.forClass(Servico.class);
+		verify(servicoRepositoryMock).insert(servicoArgument.capture());
+		return servicoArgument.getValue();
+	}
+
+
 	private Servico getServicoComCorInvalida() {
 		Servico servico = new Servico();
 		servico.setTipoCor(TIPO_COR_G);
@@ -144,7 +150,7 @@ public class ServicoServiceImplTest  extends AbstractServiceImplTest<Servico, Lo
 
 	private Servico getServicoComCorVermelho() {
 		Servico servico = new Servico();
-		servico.setSequencial(SEQUENCIAL_SERVICO_1);
+		servico.setId(SEQUENCIAL_SERVICO_1);
 		servico.setSigla(SIGLA_SERVICO_FIN);
 		servico.setTipoCor(TipoCor.VERMELHO.getValue());
 		return servico;
@@ -152,7 +158,7 @@ public class ServicoServiceImplTest  extends AbstractServiceImplTest<Servico, Lo
 
 	private Servico getServicoComCorAzul() {
 		Servico servico =  new Servico();
-		servico.setSequencial(SEQUENCIAL_SERVICO_2);
+		servico.setId(SEQUENCIAL_SERVICO_2);
 		servico.setSigla(SIGLA_SERVICO_NEG);
 		servico.setNumeroAtendimentoAtual(NUMERO_ATENDIMENTO_ATUAL_CINCO);
 		servico.setTipoCor(TipoCor.AZUL.getValue());

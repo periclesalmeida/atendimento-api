@@ -38,7 +38,7 @@ public class LocalizacaoResource {
 
     @PutMapping("/{sequencial}")
     @PreAuthorize("hasAuthority('ROLE_LOCALIZACAO_ALTERAR')")
-    public ResponseEntity<Localizacao> alterar(@PathVariable Long sequencial, @Validated @RequestBody Localizacao entidade) {
+    public ResponseEntity<Localizacao> alterar(@PathVariable String sequencial, @Validated @RequestBody Localizacao entidade) {
         localizacaoService.alterar(sequencial, entidade);
         return ResponseEntity.status(HttpStatus.OK).body(entidade);
     }
@@ -51,7 +51,7 @@ public class LocalizacaoResource {
 
     @GetMapping("/{sequencial}")
     @PreAuthorize("hasAuthority('ROLE_LOCALIZACAO_CONSULTAR')")
-    public Localizacao consultarPorId(@PathVariable Long sequencial) {
+    public Localizacao consultarPorId(@PathVariable String sequencial) {
         return localizacaoService.consultarPorId(sequencial);
     }
 

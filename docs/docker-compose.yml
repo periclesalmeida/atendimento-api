@@ -1,14 +1,13 @@
 version: '2'
 services:
-  postgres:
-    image: postgres:10.7
-    container_name: srv-postgres
+  mongo:
+    image: mongo
+    container_name: srv-mongo
     ports:
-     - "5432:5432"
-    environment:
-         POSTGRES_PASSWORD: postgres
+      - "27017:27017"
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: root
+#      MONGO_INITDB_ROOT_PASSWORD: root
     volumes:
-      - $HOME/repositorio/volumes/postgres/backup:/volume
-      - $HOME/repositorio/volumes/postgres/data:/var/lib/postgresql/data
-
-
+      - $HOME/repositorio/volumes/mongo/data:/data/db
+      - $HOME/repositorio/volumes/mongo/backup:/data/bkp

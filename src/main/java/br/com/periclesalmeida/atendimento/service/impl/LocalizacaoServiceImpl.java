@@ -9,7 +9,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +20,7 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 import static org.springframework.data.domain.ExampleMatcher.matching;
 
 @Service
-public class LocalizacaoServiceImpl extends AbstractService<Localizacao, Long> implements LocalizacaoService {
+public class LocalizacaoServiceImpl extends AbstractService<Localizacao, String> implements LocalizacaoService {
 
     private static final String MENSAGEM_JA_EXISTE_LOCALIZACAO_COM_A_DESCRICAO_E_O_TIPO_INFORMADOS = "Já existe localização com a descrição e o tipo informados.";
     private LocalizacaoRepository localizacaoRepository;
@@ -30,7 +30,7 @@ public class LocalizacaoServiceImpl extends AbstractService<Localizacao, Long> i
     }
 
     @Override
-    protected JpaRepository<Localizacao, Long> getRepository() {
+    protected MongoRepository<Localizacao, String> getRepository() {
         return localizacaoRepository;
     }
 
@@ -70,7 +70,7 @@ public class LocalizacaoServiceImpl extends AbstractService<Localizacao, Long> i
     }
 
     private void lancarExecaoCasoCodigoDoObjetoConsultadoEhDiferenteDoInformado(Localizacao objetoConsultado, Localizacao objetoInformado) {
-        if (!objetoConsultado.getSequencial().equals(objetoInformado.getSequencial()) ){
+        if (!objetoConsultado.getId().equals(objetoInformado.getId()) ){
             throw new NegocioException(MENSAGEM_JA_EXISTE_LOCALIZACAO_COM_A_DESCRICAO_E_O_TIPO_INFORMADOS);
         }
     }

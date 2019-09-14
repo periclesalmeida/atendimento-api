@@ -1,31 +1,30 @@
 package br.com.periclesalmeida.atendimento.service;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.Optional;
-
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import br.com.periclesalmeida.atendimento.domain.Localizacao;
 import br.com.periclesalmeida.atendimento.domain.TipoLocalizacao;
 import br.com.periclesalmeida.atendimento.repository.LocalizacaoRepository;
 import br.com.periclesalmeida.atendimento.service.impl.LocalizacaoServiceImpl;
 import br.com.periclesalmeida.atendimento.util.GenericService;
 import br.com.periclesalmeida.atendimento.util.exception.NegocioException;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public class LocalizacaoServiceImplTest extends AbstractServiceImplTest<Localizacao, Long> {
+import java.util.Optional;
 
-    private final int CODIGO_TIPO_LOCALIZACA_1 = 1;
-    private final long SEQUENCIAL_LOCALIZACAL_1 = 1L;
-    private final long SEQUENCIAL_LOCALIZACAO_2 = 2L;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+public class LocalizacaoServiceImplTest extends AbstractServiceImplTest<Localizacao, String> {
+
+    private final String CODIGO_TIPO_LOCALIZACA_1 = "1";
+    private final String SEQUENCIAL_LOCALIZACAL_1 = "1";
+    private final String SEQUENCIAL_LOCALIZACAO_2 = "2";
     private final String DESCRICAO_TIPO_LOCALIZACAO_SALA = "SALA";
     private final String DESCRICAO_LOCALIZACAO_A = "A";
     private final String DESCRICAO_LOCALIZACAO_B = "B";
@@ -66,15 +65,15 @@ public class LocalizacaoServiceImplTest extends AbstractServiceImplTest<Localiza
         getService().incluir(getLocalizacaoA());
 
         ArgumentCaptor<Localizacao> localizacaoArgument = ArgumentCaptor.forClass(Localizacao.class);
-        verify(localizacaoRepositoryMock).save(localizacaoArgument.capture());
+        verify(localizacaoRepositoryMock).insert(localizacaoArgument.capture());
         Localizacao localizacaoToSave = localizacaoArgument.getValue();
 
         assertTrue(localizacaoToSave.getAtivo());
     }
 
     @Override
-    protected Long getId() {
-        return getEntidade().getSequencial();
+    protected String getId() {
+        return getEntidade().getId();
     }
 
     @Override
@@ -83,19 +82,19 @@ public class LocalizacaoServiceImplTest extends AbstractServiceImplTest<Localiza
     }
 
     @Override
-    protected GenericService<Localizacao, Long> getService() {
+    protected GenericService<Localizacao, String> getService() {
         return localizacaoService;
     }
 
     @Override
-    protected JpaRepository<Localizacao, Long> getRepositoryMock() {
+    protected MongoRepository<Localizacao, String> getRepositoryMock() {
         return localizacaoRepositoryMock;
     }
 
 
     private Localizacao getLocalizacaoA() {
         Localizacao localizacao = new Localizacao();
-        localizacao.setSequencial(SEQUENCIAL_LOCALIZACAL_1);
+        localizacao.setId(SEQUENCIAL_LOCALIZACAL_1);
         localizacao.setDescricao(DESCRICAO_LOCALIZACAO_A);
         localizacao.setTipo(getTipoLocalizacaoSala());
         return localizacao;
@@ -103,7 +102,7 @@ public class LocalizacaoServiceImplTest extends AbstractServiceImplTest<Localiza
 
     private Localizacao getLocalizacaoB() {
         Localizacao localizacao = new Localizacao();
-        localizacao.setSequencial(SEQUENCIAL_LOCALIZACAO_2);
+        localizacao.setId(SEQUENCIAL_LOCALIZACAO_2);
         localizacao.setDescricao(DESCRICAO_LOCALIZACAO_B);
         localizacao.setTipo(getTipoLocalizacaoSala());
         return localizacao;
@@ -111,7 +110,7 @@ public class LocalizacaoServiceImplTest extends AbstractServiceImplTest<Localiza
 
     private TipoLocalizacao getTipoLocalizacaoSala() {
         TipoLocalizacao tipoLocalizacao = new TipoLocalizacao();
-        tipoLocalizacao.setCodigo(CODIGO_TIPO_LOCALIZACA_1);
+        tipoLocalizacao.setId(CODIGO_TIPO_LOCALIZACA_1);
         tipoLocalizacao.setDescricao(DESCRICAO_TIPO_LOCALIZACAO_SALA);
         return tipoLocalizacao;
     }

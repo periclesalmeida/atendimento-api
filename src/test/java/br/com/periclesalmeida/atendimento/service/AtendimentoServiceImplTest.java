@@ -1,51 +1,53 @@
 package br.com.periclesalmeida.atendimento.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Optional;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.test.context.junit4.SpringRunner;
-
 import br.com.periclesalmeida.atendimento.domain.Atendimento;
 import br.com.periclesalmeida.atendimento.domain.Localizacao;
 import br.com.periclesalmeida.atendimento.domain.Servico;
 import br.com.periclesalmeida.atendimento.domain.type.TipoCor;
 import br.com.periclesalmeida.atendimento.repository.AtendimentoRepository;
 import br.com.periclesalmeida.atendimento.service.impl.AtendimentoServiceImpl;
-import br.com.periclesalmeida.atendimento.util.DataUtils;
 import br.com.periclesalmeida.atendimento.util.exception.NegocioException;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public class AtendimentoServiceImplTest {
 
-	private static final Long SEQUENCIAL_ATENDIMENTO_2L = 2L;
-	private static final String DESCRICAO_LOCALIZACAO_A = "A";
-	private static final Long SEQUENCIAL_LOCALIZACAO_1L = 1L;
-	private static final Long SEQUENCIAL_ATENDIMENTO_1L = 1L;
-	private static final Integer NUMERO_ATENDIMENTO_1 = 1;
-	private static final Long SEQUENCIAL_SERVICO_1L = 1L;
+	private final String ID_ATENDIMENTO_2 = "2";
+	private final String DESCRICAO_LOCALIZACAO_A = "A";
+	private final String ID_LOCALIZACAO_1 = "1";
+	private final String ID_ATENDIMENTO_1 = "1";
+	private final Integer NUMERO_ATENDIMENTO_1 = 1;
+	private final String ID_SERVICO_1 = "1";
+	private final LocalDateTime DATA_HORA_ATUAL = LocalDateTime.now();
+	private final String DATA_HORA_ATUAL_FORMATADA = DATA_HORA_ATUAL.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
 
 	@Mock
 	private AtendimentoRepository atendimentoRepositoryMock;
-	
+
 	@Mock
 	private ServicoService servicoServiceMock;
+
 	@Mock
 	private LocalizacaoService localizacaoServiceMock;
 
@@ -55,189 +57,200 @@ public class AtendimentoServiceImplTest {
 	public void inicializarContexto() {
 		this.atendimentoService = new AtendimentoServiceImpl(atendimentoRepositoryMock, servicoServiceMock, localizacaoServiceMock);
 	}
-	
-	@Test 
-	public void aoChamarProximoDeveriaDelegarParaOhRepositorySave() throws Exception {
-		when(atendimentoRepositoryMock.listarPorLocalizacaoIhData(SEQUENCIAL_LOCALIZACAO_1L, LocalDate.now()))
-		.thenReturn(Arrays.asList(getAtendimentoNaoPrioridade()));
-		when(localizacaoServiceMock.consultarPorId(SEQUENCIAL_LOCALIZACAO_1L)).thenReturn(getLocalizacaoA());
 
-		getService().chamarProximo(SEQUENCIAL_LOCALIZACAO_1L);
-		verify(getRepositoryMock()).save(getEntidade());
-	} 
-	
+	@Test
+	public void aoChamarProximoDeveriaDelegarParaOhRepositorySave() throws Exception {
+		when(localizacaoServiceMock.consultarPorId(ID_LOCALIZACAO_1))
+				.thenReturn(getLocalizacaoA());
+		when(atendimentoRepositoryMock.listarPorPeriodoIhServico(LocalDate.now().atStartOfDay(),
+				LocalDate.now().atTime(23,59,59), Arrays.asList(ID_SERVICO_1)
+		)).thenReturn(Arrays.asList(getAtendimentoNaoPrioridade()));
+
+		getService().chamarProximo(ID_LOCALIZACAO_1);
+		verify(getRepositoryMock()).save(any(Atendimento.class));
+	}
+
 	@Test(expected = NegocioException.class)
 	public void aoChamarProximoDeveriaIhNaoExisteProximoDeveriaLancarExcecao() throws Exception {
-		when(atendimentoRepositoryMock.listarPorLocalizacaoIhData(SEQUENCIAL_LOCALIZACAO_1L, LocalDate.now()))
-		.thenReturn(null);
-		when(localizacaoServiceMock.consultarPorId(SEQUENCIAL_LOCALIZACAO_1L)).thenReturn(getLocalizacaoA());
+		when(localizacaoServiceMock.consultarPorId(ID_LOCALIZACAO_1))
+				.thenReturn(getLocalizacaoA());
+		when(atendimentoRepositoryMock.listarPorPeriodoIhServico(LocalDate.now().atStartOfDay(),
+				LocalDate.now().atTime(23,59,59), Arrays.asList(ID_SERVICO_1)
+		)).thenReturn(null);
+		when(localizacaoServiceMock.consultarPorId(ID_LOCALIZACAO_1)).thenReturn(getLocalizacaoA());
 
-		getService().chamarProximo(SEQUENCIAL_LOCALIZACAO_1L);
+		getService().chamarProximo(ID_LOCALIZACAO_1);
 	} 
 
 	@Test 
 	public void aoChamarProximoDeveriaDelegarParaOhLocalizacaoServiceConsultarPorId() throws Exception {
-		when(atendimentoRepositoryMock.listarPorLocalizacaoIhData(SEQUENCIAL_LOCALIZACAO_1L, LocalDate.now()))
-		.thenReturn(Arrays.asList(getAtendimentoNaoPrioridade()));
-		when(localizacaoServiceMock.consultarPorId(SEQUENCIAL_LOCALIZACAO_1L)).thenReturn(getLocalizacaoA());
+		when(localizacaoServiceMock.consultarPorId(ID_LOCALIZACAO_1))
+				.thenReturn(getLocalizacaoA());
+		when(atendimentoRepositoryMock.listarPorPeriodoIhServico(LocalDate.now().atStartOfDay(),
+				LocalDate.now().atTime(23,59,59), Arrays.asList(ID_SERVICO_1)
+		)).thenReturn(Arrays.asList(getAtendimentoNaoPrioridade()));
+		when(localizacaoServiceMock.consultarPorId(ID_LOCALIZACAO_1)).thenReturn(getLocalizacaoA());
 
-		getService().chamarProximo(SEQUENCIAL_LOCALIZACAO_1L);
-		verify(localizacaoServiceMock).consultarPorId(anyLong());
+		getService().chamarProximo(ID_LOCALIZACAO_1);
+		verify(localizacaoServiceMock).consultarPorId(Mockito.anyString());
 	} 
 
 	@Test 
-	public void aoChamarProximoDeveriaDelegarParaOhRepositoryListarPorLocalizacaoIhData() throws Exception {
-		when(atendimentoRepositoryMock.listarPorLocalizacaoIhData(SEQUENCIAL_LOCALIZACAO_1L, LocalDate.now()))
-		.thenReturn(Arrays.asList(getAtendimentoNaoPrioridade()));
-
-		getService().chamarProximo(SEQUENCIAL_LOCALIZACAO_1L);
-		verify(atendimentoRepositoryMock).listarPorLocalizacaoIhData(anyLong(), any(LocalDate.class));
+	public void aoChamarProximoDeveriaDelegarParaOhRepositorylistarPorPeriodoIhServico() throws Exception {
+		when(localizacaoServiceMock.consultarPorId(ID_LOCALIZACAO_1))
+				.thenReturn(getLocalizacaoA());
+		when(atendimentoRepositoryMock.listarPorPeriodoIhServico(LocalDate.now().atStartOfDay(),
+				LocalDate.now().atTime(23,59,59), Arrays.asList(ID_SERVICO_1)
+		)).thenReturn(Arrays.asList(getAtendimentoNaoPrioridade()));
+		getService().chamarProximo(ID_LOCALIZACAO_1);
+		verify(atendimentoRepositoryMock).listarPorPeriodoIhServico(any(LocalDateTime.class),any(LocalDateTime.class), any(List.class));
 	} 
 
 	@Test
 	public void aoConsultarMovimentacaoDoDiaDaLocalizacaoDeveriaDelegarParaOhRepositoryListarMovimentacaoPorLocalizacaoIhData() throws Exception {
-		when(atendimentoRepositoryMock.listarPorLocalizacaoIhData(SEQUENCIAL_LOCALIZACAO_1L, LocalDate.now()))
-		.thenReturn(Arrays.asList(getAtendimentoPrioridade()));
-		getService().consultarMovimentacaoDoDiaDaLocalizacao(SEQUENCIAL_LOCALIZACAO_1L);
-		verify(atendimentoRepositoryMock).listarPorLocalizacaoIhData(anyLong(), any(LocalDate.class));
+		when(atendimentoRepositoryMock.listarPorPeriodoIhServico(LocalDate.now().atStartOfDay(),
+				LocalDate.now().atTime(23,59,59), Arrays.asList(ID_SERVICO_1)
+		)).thenReturn(Arrays.asList(getAtendimentoNaoPrioridade()));
+		getService().consultarMovimentacaoDoDiaDaLocalizacao(Arrays.asList(ID_SERVICO_1));
+		verify(atendimentoRepositoryMock).listarPorPeriodoIhServico(any(LocalDateTime.class),any(LocalDateTime.class),  any(List.class));
 	} 
 
 	@Test
 	public void aoChamarNovamenteDeveriaDelegarParaOhLocalizacaoServiceConsultarPorId() throws Exception {
-		when(getRepositoryMock().findById(SEQUENCIAL_ATENDIMENTO_1L)).thenReturn(Optional.of(getEntidade()));
-		when(localizacaoServiceMock.consultarPorId(SEQUENCIAL_LOCALIZACAO_1L)).thenReturn(getLocalizacaoA());
-		getService().chamarNovamente(SEQUENCIAL_ATENDIMENTO_1L, SEQUENCIAL_LOCALIZACAO_1L);
-		verify(localizacaoServiceMock).consultarPorId(anyLong());
+		when(getRepositoryMock().findById(ID_ATENDIMENTO_1)).thenReturn(Optional.of(getEntidade()));
+		when(localizacaoServiceMock.consultarPorId(ID_LOCALIZACAO_1)).thenReturn(getLocalizacaoA());
+		getService().chamarNovamente(ID_ATENDIMENTO_1, ID_LOCALIZACAO_1);
+		verify(localizacaoServiceMock).consultarPorId(Mockito.anyString());
 	}
 
 	@Test
 	public void aoChamarNovamenteDeveriaDelegarParaRepositorySave() throws Exception {
-		when(getRepositoryMock().findById(SEQUENCIAL_ATENDIMENTO_1L)).thenReturn(Optional.of(getEntidade()));
-		when(localizacaoServiceMock.consultarPorId(SEQUENCIAL_LOCALIZACAO_1L)).thenReturn(getLocalizacaoA());
-		getService().chamarNovamente(SEQUENCIAL_ATENDIMENTO_1L, SEQUENCIAL_LOCALIZACAO_1L);
+		when(getRepositoryMock().findById(ID_ATENDIMENTO_1)).thenReturn(Optional.of(getEntidade()));
+		when(localizacaoServiceMock.consultarPorId(ID_LOCALIZACAO_1)).thenReturn(getLocalizacaoA());
+		getService().chamarNovamente(ID_ATENDIMENTO_1, ID_LOCALIZACAO_1);
 		verify(getRepositoryMock()).save(getEntidade());
 	}
 
 	@Test
 	public void aoChamarNovamenteDeveriaSetarLocalizacaoNoAtendimento() {
-		when(getRepositoryMock().findById(SEQUENCIAL_ATENDIMENTO_1L)).thenReturn(Optional.of(getEntidade()));
-		when(localizacaoServiceMock.consultarPorId(SEQUENCIAL_LOCALIZACAO_1L)).thenReturn(getLocalizacaoA());
-		getService().chamarNovamente(SEQUENCIAL_ATENDIMENTO_1L, SEQUENCIAL_LOCALIZACAO_1L);
+		when(getRepositoryMock().findById(ID_ATENDIMENTO_1)).thenReturn(Optional.of(getEntidade()));
+		when(localizacaoServiceMock.consultarPorId(ID_LOCALIZACAO_1)).thenReturn(getLocalizacaoA());
+		getService().chamarNovamente(ID_ATENDIMENTO_1, ID_LOCALIZACAO_1);
 		Atendimento atendimentoToSave = captureAhEntidadeAoSalvar();
 		assertEquals(getLocalizacaoA(), atendimentoToSave.getLocalizacao());
 	}
 
 	@Test
 	public void aoChamarNovamenteDeveriaSetarDataHoraDaChamadaNoAtendimento() {
-		when(getRepositoryMock().findById(SEQUENCIAL_ATENDIMENTO_1L)).thenReturn(Optional.of(getEntidade()));
-		when(localizacaoServiceMock.consultarPorId(SEQUENCIAL_LOCALIZACAO_1L)).thenReturn(getLocalizacaoA());
-		getService().chamarNovamente(SEQUENCIAL_ATENDIMENTO_1L, SEQUENCIAL_LOCALIZACAO_1L);
+		when(getRepositoryMock().findById(ID_ATENDIMENTO_1)).thenReturn(Optional.of(getEntidade()));
+		when(localizacaoServiceMock.consultarPorId(ID_LOCALIZACAO_1)).thenReturn(getLocalizacaoA());
+		getService().chamarNovamente(ID_ATENDIMENTO_1, ID_LOCALIZACAO_1);
 		Atendimento atendimentoToSave = captureAhEntidadeAoSalvar();
-		assertEquals(DataUtils.converterDataComHorarioParaString(new Date()), DataUtils.converterDataComHorarioParaString(atendimentoToSave.getDataHoraChamada()) );
+		assertEquals(DATA_HORA_ATUAL_FORMATADA, atendimentoToSave.getDataHoraCadastroFormatada());
 	}
 
 	@Test
 	public void aoGerarPrioridadeDeveriaSetarPrioridadeComoFalse() {
-		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(SEQUENCIAL_SERVICO_1L)).
-		thenReturn(getServicoComCorVermelho());
-		getService().gerarPrioridade(SEQUENCIAL_SERVICO_1L);
+		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(ID_SERVICO_1)).
+				thenReturn(getServicoComCorVermelho());
+		getService().gerarPrioridade(ID_SERVICO_1);
 		Atendimento atendimentoToSave = captureAhEntidadeAoSalvar();
 		assertTrue(atendimentoToSave.getIndicadorPrioridade());
 	}
 
 	@Test
 	public void aoGerarPrioridadeDeveriaSetarDataHoraDeCadastro() throws Exception {
-		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(SEQUENCIAL_SERVICO_1L)).
-		thenReturn(getServicoComCorVermelho());
-		getService().gerarPrioridade(SEQUENCIAL_SERVICO_1L);
+		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(ID_SERVICO_1)).
+				thenReturn(getServicoComCorVermelho());
+		getService().gerarPrioridade(ID_SERVICO_1);
 		Atendimento atendimentoToSave = captureAhEntidadeAoSalvar();
-		assertEquals(DataUtils.converterDataComHorarioParaString(new Date()), atendimentoToSave.getDataHoraCadastroFormatada());
-	} 
+		assertEquals(DATA_HORA_ATUAL_FORMATADA, atendimentoToSave.getDataHoraCadastroFormatada());
+	}
 
 	@Test
 	public void aoGerarPrioridadeDeveriaSetarNumeroDeAtendimentoComoNumeroDeAtendimentoAtualDoServico() throws Exception {
-		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(SEQUENCIAL_SERVICO_1L)).
-		thenReturn(getServicoComCorVermelho());
-		getService().gerarPrioridade(SEQUENCIAL_SERVICO_1L);
+		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(ID_SERVICO_1)).
+				thenReturn(getServicoComCorVermelho());
+		getService().gerarPrioridade(ID_SERVICO_1);
 		Atendimento atendimentoToSave = captureAhEntidadeAoSalvar();
 		assertEquals(getServicoComCorVermelho().getNumeroAtendimentoAtual(), atendimentoToSave.getNumeroAtendimento());
 	}
 
 	@Test
 	public void aoGerarPrioridadeDeveriaSetarOhServicoConsultadoNoAtendimento() throws Exception {
-		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(SEQUENCIAL_SERVICO_1L)).
-		thenReturn(getServicoComCorVermelho());
-		getService().gerarPrioridade(SEQUENCIAL_SERVICO_1L);
+		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(ID_SERVICO_1)).
+				thenReturn(getServicoComCorVermelho());
+		getService().gerarPrioridade(ID_SERVICO_1);
 		Atendimento atendimentoToSave = captureAhEntidadeAoSalvar();
 		assertEquals(atendimentoToSave.getServico(), getServicoComCorVermelho());
 	}
 
 	@Test
 	public void aoGerarPrioridadeDeveriaDelegarParaOhServicoServiceRetornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual() {
-		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(SEQUENCIAL_SERVICO_1L)).
-		thenReturn(getServicoComCorVermelho());
-		getService().gerarPrioridade(SEQUENCIAL_SERVICO_1L);
-		verify(servicoServiceMock).retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(anyLong());
+		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(ID_SERVICO_1)).
+				thenReturn(getServicoComCorVermelho());
+		getService().gerarPrioridade(ID_SERVICO_1);
+		verify(servicoServiceMock).retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(Mockito.anyString());
 	}
 
 	@Test
 	public void aoGerarPrioridadeDeveriaDelegarParaOhSave() throws Exception {
-		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(SEQUENCIAL_SERVICO_1L)).
-		thenReturn(getServicoComCorVermelho());
-		getService().gerarPrioridade(SEQUENCIAL_SERVICO_1L);
+		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(ID_SERVICO_1)).
+				thenReturn(getServicoComCorVermelho());
+		getService().gerarPrioridade(ID_SERVICO_1);
 		verify(getRepositoryMock()).save(getEntidade());
 	}
 
 
 	@Test
 	public void aoGerarDeveriaSetarPrioridadeComoFalse() {
-		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(SEQUENCIAL_SERVICO_1L)).
-		thenReturn(getServicoComCorVermelho());
-		getService().gerar(SEQUENCIAL_SERVICO_1L);
+		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(ID_SERVICO_1)).
+				thenReturn(getServicoComCorVermelho());
+		getService().gerar(ID_SERVICO_1);
 		Atendimento atendimentoToSave = captureAhEntidadeAoSalvar();
 		assertFalse(atendimentoToSave.getIndicadorPrioridade());
 	}
 
 	@Test
 	public void aoGerarDeveriaSetarDataHoraDeCadastro() throws Exception {
-		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(SEQUENCIAL_SERVICO_1L)).
-		thenReturn(getServicoComCorVermelho());
-		getService().gerar(SEQUENCIAL_SERVICO_1L);
+		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(ID_SERVICO_1)).
+				thenReturn(getServicoComCorVermelho());
+		getService().gerar(ID_SERVICO_1);
 		Atendimento atendimentoToSave = captureAhEntidadeAoSalvar();
-		assertEquals(DataUtils.converterDataComHorarioParaString(new Date()), atendimentoToSave.getDataHoraCadastroFormatada());
-	} 
+		assertEquals(DATA_HORA_ATUAL_FORMATADA, atendimentoToSave.getDataHoraCadastroFormatada());
+	}
 
 	@Test
 	public void aoGerarDeveriaSetarNumeroDeAtendimentoComoNumeroDeAtendimentoAtualDoServico() throws Exception {
-		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(SEQUENCIAL_SERVICO_1L)).
-		thenReturn(getServicoComCorVermelho());
-		getService().gerar(SEQUENCIAL_SERVICO_1L);
+		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(ID_SERVICO_1)).
+				thenReturn(getServicoComCorVermelho());
+		getService().gerar(ID_SERVICO_1);
 		Atendimento atendimentoToSave = captureAhEntidadeAoSalvar();
 		assertEquals(getServicoComCorVermelho().getNumeroAtendimentoAtual(), atendimentoToSave.getNumeroAtendimento());
 	}
 
 	@Test
 	public void aoGerarDeveriaSetarOhServicoConsultadoNoAtendimento() throws Exception {
-		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(SEQUENCIAL_SERVICO_1L)).
-		thenReturn(getServicoComCorVermelho());
-		getService().gerar(SEQUENCIAL_SERVICO_1L);
+		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(ID_SERVICO_1)).
+				thenReturn(getServicoComCorVermelho());
+		getService().gerar(ID_SERVICO_1);
 		Atendimento atendimentoToSave = captureAhEntidadeAoSalvar();
 		assertEquals(atendimentoToSave.getServico(), getServicoComCorVermelho());
 	}
 
 	@Test
 	public void aoGerarDeveriaDelegarParaOhServicoServiceRetornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual() {
-		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(SEQUENCIAL_SERVICO_1L)).
-		thenReturn(getServicoComCorVermelho());
-		getService().gerar(SEQUENCIAL_SERVICO_1L);
-		verify(servicoServiceMock).retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(anyLong());
+		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(ID_SERVICO_1)).
+				thenReturn(getServicoComCorVermelho());
+		getService().gerar(ID_SERVICO_1);
+		verify(servicoServiceMock).retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(Mockito.anyString());
 	}
 
 	@Test
 	public void aoGerarDeveriaDelegarParaOhSave() throws Exception {
-		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(SEQUENCIAL_SERVICO_1L)).
-		thenReturn(getServicoComCorVermelho());
-		getService().gerar(SEQUENCIAL_SERVICO_1L);
+		when(servicoServiceMock.retornarServicoAtualizandoOhProximoNumeroDeAtendimentoAtual(ID_SERVICO_1)).
+				thenReturn(getServicoComCorVermelho());
+		getService().gerar(ID_SERVICO_1);
 		verify(getRepositoryMock()).save(getEntidade());
 	}
 
@@ -262,7 +275,7 @@ public class AtendimentoServiceImplTest {
 
 	private Servico getServicoComCorVermelho() {
 		Servico servico = new Servico();
-		servico.setSequencial(SEQUENCIAL_SERVICO_1L);
+		servico.setId(ID_SERVICO_1);
 		servico.setTipoCor(TipoCor.VERMELHO.getValue());
 		servico.setNumeroAtendimentoAtual(NUMERO_ATENDIMENTO_1);
 		return servico;
@@ -270,13 +283,14 @@ public class AtendimentoServiceImplTest {
 
 	private Localizacao getLocalizacaoA() {
 		Localizacao localizacao = new Localizacao();
-		localizacao.setSequencial(SEQUENCIAL_LOCALIZACAO_1L);
+		localizacao.setId(ID_LOCALIZACAO_1);
 		localizacao.setDescricao(DESCRICAO_LOCALIZACAO_A);
+		localizacao.setServicos(new HashSet<>(Arrays.asList(getServicoComCorVermelho())));
 		return localizacao;
 	}
 
-	private Long getId() {
-		return getEntidade().getSequencial();
+	private String getId() {
+		return getEntidade().getId();
 	}
 
 	private Atendimento getEntidade() {
@@ -285,16 +299,16 @@ public class AtendimentoServiceImplTest {
 
 	private Atendimento getAtendimentoPrioridade() {
 		Atendimento atendimento = new Atendimento();
-		atendimento.setSequencial(SEQUENCIAL_ATENDIMENTO_2L);
+		atendimento.setId(ID_ATENDIMENTO_2);
 		atendimento.setIndicadorPrioridade(true);
-		atendimento.setDataHoraCadastro(new Date());
+		atendimento.setDataHoraCadastro(DATA_HORA_ATUAL);
 		return atendimento;
 	}
 
 	private Atendimento getAtendimentoNaoPrioridade() {
 		Atendimento atendimento = new Atendimento();
 		atendimento.setIndicadorPrioridade(false);
-		atendimento.setDataHoraCadastro(new Date());
+		atendimento.setDataHoraCadastro(DATA_HORA_ATUAL);
 		return atendimento;
 	}
 
@@ -302,7 +316,7 @@ public class AtendimentoServiceImplTest {
 		return atendimentoService;
 	}
 
-	private JpaRepository<Atendimento, Long> getRepositoryMock() {
+	private MongoRepository<Atendimento, String> getRepositoryMock() {
 		return atendimentoRepositoryMock;
 	}
 }
