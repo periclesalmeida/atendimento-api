@@ -1,0 +1,15 @@
+spring:
+  profiles:
+    active: @activatedProperties@
+  data:
+    mongodb:
+      database: atendimento
+      host: localhost
+      port: 27017
+      repositories:
+        enabled: true
+
+
+
+
+
