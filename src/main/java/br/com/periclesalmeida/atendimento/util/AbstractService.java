@@ -72,6 +72,6 @@ public abstract class AbstractService<ENTIDADE, ID extends Serializable> impleme
     }
 
     protected String[] getPropriedadesIgnoreAlterar() {
-        return new String[]{"codigo", "sequencial"};
+        return new String[]{"id"};
     }
 }
