@@ -129,6 +129,7 @@ public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, St
         Usuario usuario = new Usuario();
         usuario.setId(SEQUENCIAL_USUARIO_1);
         usuario.setLogin(LOGIN_ADMIN);
+        usuario.setSenha(SENHA_ALEATORIA);
         usuario.setSenhaSemRash(SENHA_ALEATORIA);
         usuario.setPermissoes(getPermissoes());
         return usuario;
