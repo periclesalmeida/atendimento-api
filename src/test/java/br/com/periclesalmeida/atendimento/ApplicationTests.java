@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 		UnitTests.class,
 		IntegrationTests.class
 })
-public class SistemaDeAtendimentoApplicationTests {
+public class ApplicationTests {
 
 
 }

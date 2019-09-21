@@ -5,7 +5,6 @@ import br.com.periclesalmeida.atendimento.domain.Permissao;
 import br.com.periclesalmeida.atendimento.domain.Usuario;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.json.JacksonJsonParser;
@@ -13,7 +12,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
@@ -28,12 +28,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        classes = {SistemaDeAtendimentoApplication.class}
-)
+@SpringBootTest
 @AutoConfigureMockMvc
+@WebAppConfiguration
+@ContextConfiguration(classes = {SistemaDeAtendimentoApplication.class} )
 public abstract class AbstractStepDef {
 
     protected final String APPLICATION_JSON_CHARSET_UTF_8 = "application/json;charset=UTF-8";
@@ -119,3 +117,4 @@ public abstract class AbstractStepDef {
         return params;
     }
 }
+
