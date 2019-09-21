@@ -6,14 +6,12 @@ import com.github.cloudyrock.mongock.ChangeLog;
 import com.github.cloudyrock.mongock.ChangeSet;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
 @ChangeLog
-@Component
 public class MongockChangeLog {
 
     @ChangeSet(id= "1.0", order = "001", author = "periclesalmeida")
@@ -58,6 +56,6 @@ public class MongockChangeLog {
                         new Permissao("ROLE_USUARIO_ALTERAR","ALTERAR USUÁRIO")
                 );
 
-        mongoTemplate.insert(new Usuario("admin", "c4ca4238a0b923820dcc509a6f75849b", true, new HashSet<>(permissoes)));
+        mongoTemplate.insert(new Usuario("admin", "{MD5}c4ca4238a0b923820dcc509a6f75849b", true, new HashSet<>(permissoes)));
     }
 }
