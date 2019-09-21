@@ -12,7 +12,7 @@ public class UsuarioSecurity extends User {
 	private Usuario usuario;
 
 	public UsuarioSecurity(Usuario usuario, Collection<? extends GrantedAuthority> authorities) {
-		super(usuario.getLogin(), "{MD5}"+ usuario.getSenha(), authorities);
+		super(usuario.getLogin(), usuario.getSenha(), authorities);
 		this.usuario = usuario;
 	}
 
