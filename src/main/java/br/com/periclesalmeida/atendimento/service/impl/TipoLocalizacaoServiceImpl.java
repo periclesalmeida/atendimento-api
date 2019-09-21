@@ -8,11 +8,9 @@ import br.com.periclesalmeida.atendimento.util.exception.NegocioException;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.data.domain.Example.of;
@@ -22,7 +20,7 @@ import static org.springframework.data.domain.ExampleMatcher.matching;
 @Service
 public class TipoLocalizacaoServiceImpl extends AbstractService<TipoLocalizacao, String> implements TipoLocalizacaoService {
 
-    private final String MENSAGEM_OBJETO_JA_CADASTRADO = "Objeto já cadastrado.";
+    private final String MENSAGEM_TIPO_LOCALIZACAO_JA_CADASTRADO = "Tipo Localização já cadastrado";
     private TipoLocalizacaoRepository tipoLocalizacaoRepository;
 
     public TipoLocalizacaoServiceImpl(TipoLocalizacaoRepository tipoLocalizacaoRepository) {
@@ -32,11 +30,6 @@ public class TipoLocalizacaoServiceImpl extends AbstractService<TipoLocalizacao,
     @Override
     protected MongoRepository<TipoLocalizacao, String> getRepository() {
         return tipoLocalizacaoRepository;
-    }
-
-    @Override
-    public List<TipoLocalizacao> consultarTodos() {
-        return tipoLocalizacaoRepository.findAll(Sort.by("descricao"));
     }
 
     @Override
@@ -60,7 +53,7 @@ public class TipoLocalizacaoServiceImpl extends AbstractService<TipoLocalizacao,
 
     private void lancarExecaoCasoCodigoDoObjetoConsultadoEhDiferenteDoInformado(TipoLocalizacao objetoConsultado, TipoLocalizacao objetoInformado) {
         if (!objetoConsultado.getId().equals(objetoInformado.getId())) {
-            throw new NegocioException(MENSAGEM_OBJETO_JA_CADASTRADO);
+            throw new NegocioException(MENSAGEM_TIPO_LOCALIZACAO_JA_CADASTRADO);
         }
     }
 }

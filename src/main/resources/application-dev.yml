@@ -1,0 +1,12 @@
+server:
+  port: 8083
+
+atendimento:
+  apiInfo:
+    title: Sistema de Atendimento
+    description: Sistema para controle de atendimento ao cliente
+    version: @project.version@
+    contact:
+      nome: Pericles Almeida Jr
+      url: https://github.com/periclesalmeida
+      email: jose.pericles.almeida@gmail.com

@@ -42,12 +42,6 @@ public class TipoLocalizacaoServiceImplTests extends AbstractServiceImplTest<Tip
         return tipoLocalizacaoRepositoryMock;
     }
 
-    @Override
-    public void aoConsultarTodosDeveriaDelegarParaOhRepositorio() {
-        getService().consultarTodos();
-        verify(getRepositoryMock()).findAll(Sort.by(DESCRICAO));
-    }
-
     @Test
     public void aoSalvarDeveriaDelegarParaOhRepositorioFindByDescricaoContainsAllIgnoreCase() {
         when(tipoLocalizacaoRepositoryMock.findByDescricaoContainsAllIgnoreCase(anyString())).thenReturn(Optional.of(getEntidadeComCodigoUm()));
@@ -73,16 +67,10 @@ public class TipoLocalizacaoServiceImplTests extends AbstractServiceImplTest<Tip
     }
 
     private TipoLocalizacao getEntidadeComCodigoUm() {
-        TipoLocalizacao tipoLocalizacao = new TipoLocalizacao();
-        tipoLocalizacao.setId(CODIGO_TIPO_LOCALIZACAO_1);
-        tipoLocalizacao.setDescricao(DESCRICAO_SALA);
-        return tipoLocalizacao;
+        return  new TipoLocalizacao(CODIGO_TIPO_LOCALIZACAO_1, DESCRICAO_SALA);
     }
 
     private TipoLocalizacao getEntidadeComCodigoDois() {
-        TipoLocalizacao tipoLocalizacao = new TipoLocalizacao();
-        tipoLocalizacao.setId(CODIGO_TIPO_LOCALIZACAO_2);
-        tipoLocalizacao.setDescricao(DESCRICAO_SALA);
-        return tipoLocalizacao;
+        return new TipoLocalizacao(CODIGO_TIPO_LOCALIZACAO_2, DESCRICAO_SALA);
     }
 }

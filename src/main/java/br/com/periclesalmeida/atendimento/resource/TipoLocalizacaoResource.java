@@ -11,8 +11,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping(path = "/tipo-localizacao")
 public class TipoLocalizacaoResource {
@@ -37,21 +35,9 @@ public class TipoLocalizacaoResource {
         return ResponseEntity.status(HttpStatus.OK).body(entidade);
     }
 
-    @GetMapping("/{codigo}")
-    @PreAuthorize("hasAuthority('ROLE_TIPO_LOCALIZACAO_CONSULTAR')")
-    public TipoLocalizacao  consultarPorId(@PathVariable String codigo) {
-        return tipoLocalizacaoService.consultarPorId(codigo);
-    }
-
-    @GetMapping(path = "/consulta")
+    @GetMapping
     @PreAuthorize("hasAuthority('ROLE_TIPO_LOCALIZACAO_CONSULTAR')")
     public Page<TipoLocalizacao> consultarPorEntidade(TipoLocalizacao entidade, Pageable pageable) {
         return tipoLocalizacaoService.consultarPassandoEntidade(entidade, pageable);
-    }
-
-    @GetMapping
-    @PreAuthorize("hasAuthority('ROLE_TIPO_LOCALIZACAO_CONSULTAR')")
-    public List<TipoLocalizacao> consultarTodos() {
-        return tipoLocalizacaoService.consultarTodos();
     }
 }

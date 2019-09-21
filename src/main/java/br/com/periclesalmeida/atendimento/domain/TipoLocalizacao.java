@@ -22,8 +22,9 @@ public class TipoLocalizacao implements Serializable {
     public TipoLocalizacao() {
     }
 
-    public TipoLocalizacao(String id) {
+    public TipoLocalizacao(String id, String descricao) {
         this.id = id;
+        this.descricao = descricao;
     }
 
     public String getId() {

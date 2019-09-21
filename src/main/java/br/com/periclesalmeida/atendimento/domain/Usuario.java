@@ -28,7 +28,6 @@ public class Usuario {
     public Usuario(String login, String senha, Boolean ativo, Set<Permissao> permissoes) {
         this.login = login;
         this.senha = senha;
-        this.senhaSemRash = senhaSemRash;
         this.ativo = ativo;
         this.permissoes = permissoes;
     }

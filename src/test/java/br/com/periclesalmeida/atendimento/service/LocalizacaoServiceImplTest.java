@@ -109,9 +109,6 @@ public class LocalizacaoServiceImplTest extends AbstractServiceImplTest<Localiza
     }
 
     private TipoLocalizacao getTipoLocalizacaoSala() {
-        TipoLocalizacao tipoLocalizacao = new TipoLocalizacao();
-        tipoLocalizacao.setId(CODIGO_TIPO_LOCALIZACA_1);
-        tipoLocalizacao.setDescricao(DESCRICAO_TIPO_LOCALIZACAO_SALA);
-        return tipoLocalizacao;
+        return new TipoLocalizacao(CODIGO_TIPO_LOCALIZACA_1, DESCRICAO_TIPO_LOCALIZACAO_SALA);
     }
 }
