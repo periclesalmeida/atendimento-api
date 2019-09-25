@@ -40,7 +40,7 @@ public class AtendimentoServiceImplTest {
 	private final Integer NUMERO_ATENDIMENTO_1 = 1;
 	private final String ID_SERVICO_1 = "1";
 	private final LocalDateTime DATA_HORA_ATUAL = LocalDateTime.now();
-	private final String DATA_HORA_ATUAL_FORMATADA = DATA_HORA_ATUAL.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+	private final String DATA_HORA_ATUAL_FORMATADA = DATA_HORA_ATUAL.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
 
 	@Mock
 	private AtendimentoRepository atendimentoRepositoryMock;
@@ -80,9 +80,9 @@ public class AtendimentoServiceImplTest {
 		when(localizacaoServiceMock.consultarPorId(ID_LOCALIZACAO_1)).thenReturn(getLocalizacaoA());
 
 		getService().chamarProximo(ID_LOCALIZACAO_1);
-	} 
+	}
 
-	@Test 
+	@Test
 	public void aoChamarProximoDeveriaDelegarParaOhLocalizacaoServiceConsultarPorId() throws Exception {
 		when(localizacaoServiceMock.consultarPorId(ID_LOCALIZACAO_1))
 				.thenReturn(getLocalizacaoA());
@@ -93,9 +93,9 @@ public class AtendimentoServiceImplTest {
 
 		getService().chamarProximo(ID_LOCALIZACAO_1);
 		verify(localizacaoServiceMock).consultarPorId(Mockito.anyString());
-	} 
+	}
 
-	@Test 
+	@Test
 	public void aoChamarProximoDeveriaDelegarParaOhRepositorylistarPorPeriodoIhServico() throws Exception {
 		when(localizacaoServiceMock.consultarPorId(ID_LOCALIZACAO_1))
 				.thenReturn(getLocalizacaoA());
@@ -104,7 +104,7 @@ public class AtendimentoServiceImplTest {
 		)).thenReturn(Arrays.asList(getAtendimentoNaoPrioridade()));
 		getService().chamarProximo(ID_LOCALIZACAO_1);
 		verify(atendimentoRepositoryMock).listarPorPeriodoIhServico(any(LocalDateTime.class),any(LocalDateTime.class), any(List.class));
-	} 
+	}
 
 	@Test
 	public void aoConsultarMovimentacaoDoDiaDaLocalizacaoDeveriaDelegarParaOhRepositoryListarMovimentacaoPorLocalizacaoIhData() throws Exception {
@@ -113,7 +113,7 @@ public class AtendimentoServiceImplTest {
 		)).thenReturn(Arrays.asList(getAtendimentoNaoPrioridade()));
 		getService().consultarMovimentacaoDoDiaDaLocalizacao(Arrays.asList(ID_SERVICO_1));
 		verify(atendimentoRepositoryMock).listarPorPeriodoIhServico(any(LocalDateTime.class),any(LocalDateTime.class),  any(List.class));
-	} 
+	}
 
 	@Test
 	public void aoChamarNovamenteDeveriaDelegarParaOhLocalizacaoServiceConsultarPorId() throws Exception {
@@ -146,7 +146,9 @@ public class AtendimentoServiceImplTest {
 		when(localizacaoServiceMock.consultarPorId(ID_LOCALIZACAO_1)).thenReturn(getLocalizacaoA());
 		getService().chamarNovamente(ID_ATENDIMENTO_1, ID_LOCALIZACAO_1);
 		Atendimento atendimentoToSave = captureAhEntidadeAoSalvar();
-		assertEquals(DATA_HORA_ATUAL_FORMATADA, atendimentoToSave.getDataHoraCadastroFormatada());
+		assertEquals(DATA_HORA_ATUAL_FORMATADA,
+				atendimentoToSave.getDataHoraCadastro().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"))
+		);
 	}
 
 	@Test
@@ -164,7 +166,9 @@ public class AtendimentoServiceImplTest {
 				thenReturn(getServicoComCorVermelho());
 		getService().gerarPrioridade(ID_SERVICO_1);
 		Atendimento atendimentoToSave = captureAhEntidadeAoSalvar();
-		assertEquals(DATA_HORA_ATUAL_FORMATADA, atendimentoToSave.getDataHoraCadastroFormatada());
+		assertEquals(DATA_HORA_ATUAL_FORMATADA,
+				atendimentoToSave.getDataHoraCadastro().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
+				));
 	}
 
 	@Test
@@ -217,7 +221,7 @@ public class AtendimentoServiceImplTest {
 				thenReturn(getServicoComCorVermelho());
 		getService().gerar(ID_SERVICO_1);
 		Atendimento atendimentoToSave = captureAhEntidadeAoSalvar();
-		assertEquals(DATA_HORA_ATUAL_FORMATADA, atendimentoToSave.getDataHoraCadastroFormatada());
+		assertEquals(DATA_HORA_ATUAL_FORMATADA,atendimentoToSave.getDataHoraCadastro().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm") ));
 	}
 
 	@Test
