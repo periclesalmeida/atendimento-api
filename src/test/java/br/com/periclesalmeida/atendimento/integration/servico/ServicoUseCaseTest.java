@@ -10,5 +10,4 @@ import org.junit.runner.RunWith;
         tags = "@servico",
         glue = "br/com/periclesalmeida/atendimento/integration/servico"
 )
-public class ServicoUseCaseTest {
-}
+public class ServicoUseCaseTest {}
