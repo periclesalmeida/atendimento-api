@@ -36,6 +36,17 @@ public enum TipoCor {
 		return tipoCor;
 	}
 
+	public static TipoCor nameOf(String name) {
+		TipoCor tipoCor = null;
+		for (TipoCor item : TipoCor.values()) {
+			if (item.getName().equals(name)) {
+				tipoCor = item;
+				break;
+			}
+		}
+		return tipoCor;
+	}
+
 	public String getName() {
 		return this.name();
 	}

@@ -1,5 +1,5 @@
 # language: pt
-@incluir_tipo_localizacao
+@tipo_localizacao
 
 Funcionalidade: Incluir Tipo Localização
     O sistema permite que o usuário inclua um tipo localizãção
