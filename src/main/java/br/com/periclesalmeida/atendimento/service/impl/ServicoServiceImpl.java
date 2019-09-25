@@ -26,7 +26,7 @@ public class ServicoServiceImpl extends AbstractService<Servico, String> impleme
 
     private final Integer NUMERO_ATENDIMENTO_ATUAL_ZERO_0 = 0;
     private final String MENSAGEM_JA_EXISTE_SERVICO_CADASTRADO_COM_A_SIGLA_INFORMADA = "Já existe serviço cadastrado com a sigla informada";
-    private final String MENSAGEM_TIPO_COR_INFORMADO_INVALIDO = "Tipo cor informado inválido.";
+    private final String MENSAGEM_TIPO_COR_INFORMADO_INVALIDO = "Cor inválida";
     private ServicoRepository servicoRepository;
 
     public ServicoServiceImpl(ServicoRepository servicoRepository) {

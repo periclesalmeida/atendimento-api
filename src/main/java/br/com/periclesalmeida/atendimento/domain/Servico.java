@@ -10,6 +10,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Optional;
 
 @Document(collection = "servico")
 public class Servico implements Serializable {
@@ -25,10 +26,26 @@ public class Servico implements Serializable {
     @NotBlank(message = "Obrigatório informar a sigla")
     private String sigla;
 
-    @NotBlank(message = "Obrigatório informar a cor")
+    @NotBlank(message = "Cor inválida")
     private String tipoCor;
     private Integer numeroAtendimentoAtual;
     private Boolean ativo;
+
+    public Servico() {
+    }
+
+    public Servico(String id, String descricao, String sigla, String tipoCor) {
+        this.id = id;
+        this.descricao = descricao;
+        this.sigla = sigla;
+        this.tipoCor = tipoCor;
+    }
+
+    public Servico(String descricao, String sigla, String tipoCor) {
+        this.descricao = descricao;
+        this.sigla = sigla;
+        this.tipoCor = tipoCor;
+    }
 
     public String getId() {
         return id;
@@ -74,12 +91,12 @@ public class Servico implements Serializable {
 
     @Transient
     public String getTipoCorHtml() {
-        return TipoCor.parse(getTipoCor()).getHtml();
+        return Optional.ofNullable(getTipoCor()).isPresent() ? TipoCor.parse(getTipoCor()).getHtml() : null;
     }
 
     @Transient
     public String getTipoCorDescricao() {
-        return TipoCor.parse(getTipoCor()).getName();
+        return Optional.ofNullable(getTipoCor()).isPresent() ? TipoCor.parse(getTipoCor()).getName() : null;
     }
 
     @Transient

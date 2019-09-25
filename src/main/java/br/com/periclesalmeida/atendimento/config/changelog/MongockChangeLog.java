@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 
 @ChangeLog
+@Profile("!test")
 public class MongockChangeLog {
 
     @ChangeSet(id= "1.0", order = "001", author = "periclesalmeida")

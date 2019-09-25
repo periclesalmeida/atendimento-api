@@ -1,5 +1,5 @@
 # language: pt
-@alterar_tipo_localizacao
+@tipo_localizacao
 
 Funcionalidade: Alterar Tipo Localização
     O sistema permite que o usuário altere um tipo localizãção

@@ -1,5 +1,5 @@
 # language: pt
-@consultar_tipo_localizacao
+@tipo_localizacao
 
 Funcionalidade: Consultar Tipo Localização
     O sistema permite que o usuário consulte os tipos localização cadastradas
