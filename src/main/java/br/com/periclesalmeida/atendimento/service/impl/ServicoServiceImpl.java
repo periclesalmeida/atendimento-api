@@ -60,16 +60,16 @@ public class ServicoServiceImpl extends AbstractService<Servico, String> impleme
     }
 
     @Override
-    protected void regrasNegocioSalvar(Servico servico) {
-        lancarExecaoCasoTipoCorInformadoNaoDisponivel(servico);
-        lancarExecaoCasoExistaServicoComAhSiglaInformada(servico);
+    protected void regrasNegocioSalvar(Servico entidade) {
+        lancarExecaoCasoTipoCorInformadoNaoDisponivel(entidade);
+        lancarExecaoCasoExistaServicoComAhSiglaInformada(entidade);
+        setarNumeroAtendimentoAtualSeNaoInformado(entidade);
     }
 
     @Override
     protected void regrasNegocioIncluir(Servico entidade) {
         regrasNegocioSalvar(entidade);
         setarComoAtivo(entidade);
-        setarNumeroAtendimentoAtualSeNaoInformado(entidade);
     }
 
     private void incrementarNumeroDeAtendimentoAtual(Servico servico) {

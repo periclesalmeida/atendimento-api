@@ -141,7 +141,6 @@ public class ServicoStepDef extends AbstractStepDef<Servico> {
         List<Servico> tipos = new ArrayList<>();
         for (Map<String, String> map: dataTable.asMaps()) {
             Servico servico = new ServicoMapper().map(map);
-            servico.setAtivo(true);
             servico.setNumeroAtendimentoAtual(0);
             tipos.add(servico);
         }

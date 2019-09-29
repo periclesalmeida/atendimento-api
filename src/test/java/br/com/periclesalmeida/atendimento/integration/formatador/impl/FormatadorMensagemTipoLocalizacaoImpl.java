@@ -9,7 +9,7 @@ import java.util.List;
 
 public class FormatadorMensagemTipoLocalizacaoImpl extends AbstractFormatadorDeMensagem<TipoLocalizacao> implements FormatadorDeMensagem<TipoLocalizacao> {
 
-    private static final String PADRAO = "Descrição: '{0}'";
+    private static final String PADRAO = "Descrição: ''{0}''";
 
     @Override
     protected String obterPadrao() {
