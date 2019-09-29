@@ -34,11 +34,16 @@ public class Servico implements Serializable {
     public Servico() {
     }
 
-    public Servico(String id, String descricao, String sigla, String tipoCor) {
+    public Servico(String id) {
+        this.id = id;
+    }
+
+    public Servico(String id,  String descricao,  String sigla,String tipoCor, Boolean ativo) {
         this.id = id;
         this.descricao = descricao;
         this.sigla = sigla;
         this.tipoCor = tipoCor;
+        this.ativo = ativo;
     }
 
     public Servico(String descricao, String sigla, String tipoCor) {

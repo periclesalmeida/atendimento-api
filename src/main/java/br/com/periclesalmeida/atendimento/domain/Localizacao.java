@@ -19,16 +19,35 @@ public class Localizacao implements Serializable {
     @Id
     private String id;
 
-    @NotBlank(message="Obrigatório informar a descrição.")
+    @NotBlank(message="Obrigatório informar a descrição")
     private String descricao;
 
     @NotNull(message = "Obrigatório informar o tipo")
     private TipoLocalizacao tipo;
+
+    @NotNull
     private Boolean ativo;
 
-    @NotNull(message="Obrigatório pelo menos um serviço")
+    @NotNull(message="Obrigatório informar pelo menos um serviço")
     @DBRef
     private Set<Servico> servicos;
+
+    public Localizacao(String id, String descricao, Boolean ativo) {
+        this.id = id;
+        this.descricao = descricao;
+        this.ativo = ativo;
+    }
+
+    public Localizacao(String id, String descricao, TipoLocalizacao tipo, Boolean ativo, Set<Servico> servicos) {
+        this.id = id;
+        this.descricao = descricao;
+        this.tipo = tipo;
+        this.ativo = ativo;
+        this.servicos = servicos;
+    }
+
+    public Localizacao() {
+    }
 
     public String getId() {
         return id;
