@@ -165,8 +165,6 @@
 					<repository>periclesalmeida/padrao</repository>
 					<contextDirectory>${project.build.directory}</contextDirectory>
 					<tag>${project.artifactId}-${project.version}</tag>
-					<username>{DOCKER_USERNAME}</username>
-					<password>{DOCKER_PASSWORD}</password>
 					<buildArgs>
 						<JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
 					</buildArgs>

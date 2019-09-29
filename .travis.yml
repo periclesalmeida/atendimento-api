@@ -5,6 +5,7 @@ services:
 
  - ./mvnw clean install -Ptest
  - ./mvnw clean install -Pprod
+ - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
  - ./mvnw dockerfile:build
  - ./mvnw dockerfile:push
 
