@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface LocalizacaoRepository extends MongoRepository<Localizacao, String> {
 
     Optional<Localizacao> findByDescricaoContainsAndTipoAllIgnoreCase(String descricao, TipoLocalizacao tipo);
+
 }
