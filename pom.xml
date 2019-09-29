@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>br.com.periclesalmeida</groupId>
 	<artifactId>atendimento</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>Sistema de Atendimento</name>
 	<description>Sistema de Controle de Atendimento</description>
 
