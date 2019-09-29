@@ -1,3 +1,10 @@
 language: java
-  ./mvnw clean install -Ptest
+
+services:
+  - docker
+
+ - ./mvnw clean install -Ptest
+ - ./mvnw clean install -Pprod
+ - ./mvnw dockerfile:build
+ - ./mvnw dockerfile:push
 

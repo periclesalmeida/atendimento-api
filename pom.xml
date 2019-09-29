@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>br.com.periclesalmeida</groupId>
 	<artifactId>atendimento</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0-SNAPSHOT</version>
 	<name>Sistema de Atendimento</name>
 	<description>Sistema de Controle de Atendimento</description>
 
@@ -21,6 +21,7 @@
 		<swagger2.version>2.9.2</swagger2.version>
 		<mongock.version>3.0.2.BETA</mongock.version>
 		<cucumber.version>4.1.1</cucumber.version>
+		<spotify-dockerfile.version>1.4.3</spotify-dockerfile.version>
 	</properties>
 
 	<dependencies>
@@ -119,6 +120,56 @@
 					<includes>
 						<include>**/ApplicationTests.java</include>
 					</includes>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.0.2</version>
+				<executions>
+					<execution>
+						<id>filter-dockerfile</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/docker</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<version>${spotify-dockerfile.version}</version>
+				<executions>
+					<execution>
+						<id>default</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>build</goal>
+							<goal>push</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<repository>periclesalmeida/padrao</repository>
+					<contextDirectory>${project.build.directory}</contextDirectory>
+					<tag>${project.artifactId}-${project.version}</tag>
+					<username>{DOCKER_USERNAME}</username>
+					<password>{DOCKER_PASSWORD}</password>
+					<buildArgs>
+						<JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
+					</buildArgs>
 				</configuration>
 			</plugin>
 		</plugins>
