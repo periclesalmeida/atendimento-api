@@ -12,6 +12,7 @@ public class ServicoMapper implements Mapper<Servico> {
         return new Servico(map.get("id"),
                 map.get("descricao"),
                 map.get("sigla"),
-                TipoCor.valueOf(map.get("cor")).getValue());
+                TipoCor.valueOf(map.get("cor")).getValue(),
+                "SIM".equals(map.get("ativo")) ? true : false);
     }
 }

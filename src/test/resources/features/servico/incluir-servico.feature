@@ -15,8 +15,8 @@ Funcionalidade: Incluir Serviço
     Quando foi informaro a descrição "MATRÍCULA", sigla "MAT" e cor "VERDE"
     Então deveria retornar objecto criado com sucesso
     E os detalhes do Serviço são:
-      | id     | descricao     | sigla | cor    |
-      | 003    | MATRÍCULA     | MAT   | VERDE  |
+      | id     | descricao     | sigla | cor    | ativo |
+      | 003    | MATRÍCULA     | MAT   | VERDE  | SIM   |
 
   Cenário: Dado que foi informado serviço já cadastrado com a sigla informada
     Quando foi informaro a descrição "MATRÍCULA", sigla "NEG" e cor "VERDE"

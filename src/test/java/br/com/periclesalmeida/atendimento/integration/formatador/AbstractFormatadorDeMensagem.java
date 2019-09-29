@@ -17,7 +17,7 @@ public abstract class AbstractFormatadorDeMensagem<OBJETO> implements Formatador
     @Override
     public String formatarMensagem(OBJETO... objetos) {
         String objetosFormatados = formatarObjetos(objetos);
-        return gerarMensagem(objetosFormatados);
+        return gerarMensagem(objetosFormatados).replace("'", "''");
     }
 
     private String formatarObjetos(OBJETO[] objetos) {
@@ -32,7 +32,9 @@ public abstract class AbstractFormatadorDeMensagem<OBJETO> implements Formatador
 
     private String formatarCampos(OBJETO objetc) {
         Object[] parametros = gerarParametros(objetc).toArray();
-        return MessageFormat.format(obterPadrao(), parametros).replace("'", "''");
+        String padrao = obterPadrao();
+        String mensagem =  MessageFormat.format(obterPadrao(), parametros);
+        return MessageFormat.format(obterPadrao(), parametros);
     }
 
     protected String retirarUltimoPontoIhVirgulaComEspaco(String mensagem) {

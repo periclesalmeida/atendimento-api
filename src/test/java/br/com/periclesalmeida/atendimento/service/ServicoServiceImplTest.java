@@ -89,16 +89,16 @@ public class ServicoServiceImplTest  extends AbstractServiceImplTest<Servico, St
 	}
 
 	@Test
-	public void aoIncluirSeOhNumeroAtendimentoAtualEstiverNuloDeveriaSetarComoZero() {
-		getService().incluir(getEntidade());
-		Servico servicoToSave = captureAhEntidadeAoIncluir();
+	public void aoSalvarSeOhNumeroAtendimentoAtualEstiverNuloDeveriaSetarComoZero() {
+		getService().salvar(getEntidade());
+		Servico servicoToSave = captureAhEntidadeAoSalvar();
 		assertEquals(NUMERO_ATENDIMENTO_ATUAL_ZERO, servicoToSave.getNumeroAtendimentoAtual());
 	}
 
 	@Test
-	public void aoIncluirSeOhNumeroAtendimentoAtualEstiverPreenchidoDeveriaFazerNada() {
-		getService().incluir(getServicoComCorAzul());
-		Servico servicoToSave = captureAhEntidadeAoIncluir();
+	public void aoSalvarSeOhNumeroAtendimentoAtualEstiverPreenchidoDeveriaFazerNada() {
+		getService().salvar(getServicoComCorAzul());
+		Servico servicoToSave = captureAhEntidadeAoSalvar();
 		assertEquals(NUMERO_ATENDIMENTO_ATUAL_CINCO, servicoToSave.getNumeroAtendimentoAtual());
 	}
 
