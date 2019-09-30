@@ -5,9 +5,17 @@ services:
     container_name: srv-mongo
     ports:
       - "27017:27017"
-#    environment:
-#      MONGO_INITDB_ROOT_USERNAME: root
-#      MONGO_INITDB_ROOT_PASSWORD: root
     volumes:
       - $HOME/repositorio/volumes/mongo/data:/data/db
-      - $HOME/repositorio/volumes/mongo/backup:/data/bkp
+      - $HOME/repositorio/volumes/mongo/backup:/data/
+
+  registry:
+    image: jhipster/jhipster-registry:v5.0.2
+    container_name: srv-registry
+    environment:
+      - JAVA_OPTIONS=-Xmx512m -Xms256m
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_SECURITY_USER_PASSWORD=admin
+      - JHIPSTER_REGISTRY_PASSWORD=admin
+    ports:
+      - 8761:8761
