@@ -1,6 +1,6 @@
 package br.com.periclesalmeida.atendimento.integration;
 
-import br.com.periclesalmeida.atendimento.SistemaDeAtendimentoApplication;
+import br.com.periclesalmeida.atendimento.Application;
 import br.com.periclesalmeida.atendimento.domain.Permissao;
 import br.com.periclesalmeida.atendimento.domain.Usuario;
 import br.com.periclesalmeida.atendimento.integration.formatador.FormatadorDeMensagem;
@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @WebAppConfiguration
-@ContextConfiguration(classes = {SistemaDeAtendimentoApplication.class} )
+@ContextConfiguration(classes = {Application.class} )
 public abstract class AbstractStepDef<OBJETO> {
 
     private final String APPLICATION_JSON_CHARSET_UTF_8 = "application/json;charset=UTF-8";
