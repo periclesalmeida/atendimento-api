@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static final String MENSAGEM_OBJETO_NAO_ENCONTRADO = "Objeto não encontrado.";
+    private static final String ERRO_NAO_TRATADO = "Erro não tratado.";
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
@@ -41,6 +42,13 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     public final ResponseEntity<Object> handleNegocioExceptionException(NegocioException ex, WebRequest request) {
         List<Erro> erros = Arrays.asList(new Erro(ex.getMessage(), ex.toString()));
         return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
+        Erro exceptionResponse = new Erro(ERRO_NAO_TRATADO,ex.getMessage());
+        logger.error(ERRO_NAO_TRATADO, ex);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private List<Erro> criarListaDeErros(BindingResult bindingResult) {

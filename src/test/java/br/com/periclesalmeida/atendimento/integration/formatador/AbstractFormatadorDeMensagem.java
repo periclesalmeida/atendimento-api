@@ -17,7 +17,7 @@ public abstract class AbstractFormatadorDeMensagem<OBJETO> implements Formatador
     @Override
     public String formatarMensagem(OBJETO... objetos) {
         String objetosFormatados = formatarObjetos(objetos);
-        return gerarMensagem(objetosFormatados).replace("'", "''");
+        return gerarMensagem(objetosFormatados).replace("'", "''").replace("''''","''");
     }
 
     private String formatarObjetos(OBJETO[] objetos) {

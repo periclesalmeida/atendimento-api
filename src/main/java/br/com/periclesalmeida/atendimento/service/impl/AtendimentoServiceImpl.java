@@ -35,8 +35,8 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 	}
 
 	@Override
-	public Atendimento gerar(String sequencialServico) {
-		Atendimento atendimento = criarAtendimento(sequencialServico);
+	public Atendimento gerar(String idServico) {
+		Atendimento atendimento = criarAtendimento(idServico);
 		setarIndicadorPrioridadeComoFalso(atendimento);
 		atendimentoRepository.save(atendimento);
 		return atendimento;
