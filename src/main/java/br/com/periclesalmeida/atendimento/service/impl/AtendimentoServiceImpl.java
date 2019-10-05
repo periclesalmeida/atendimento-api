@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Service
 public class AtendimentoServiceImpl implements AtendimentoService {
 
-	private final String MENSAGEM_NAO_EXISTE_ATENDIMENTO_NA_FILA = "Não existe atendimento na fila.";
+	private final String MENSAGEM_NAO_EXISTE_ATENDIMENTO_NA_FILA = "Não existe atendimento na fila";
 	private final Integer QUANTIDADE_DE_ATENDIMENTO_REALIZADO_ATE_A_PROXIMA_PRIORIDADE = 2;
 	private AtendimentoRepository atendimentoRepository;
 	private ServicoService servicoService;
@@ -66,9 +66,9 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 	public Atendimento chamarProximo(String idLocalizacao) {
 		Localizacao localizacaoConsultada = localizacaoService.consultarPorId(idLocalizacao);
 		List<String> idsServico = gerarListaStringComIdDosServicosDaLocalizacao(localizacaoConsultada);
-		List<Atendimento> atendimentos = listarAtendimentoDoDiaParaOsServicos(idsServico);
-		lancarExcecaoCasoNaoExistaProximo(atendimentos);
-		Atendimento atendimentoChamado = retornarAtendimentoQueDeveSerChamado(atendimentos);
+		AtendimentoMovimentacaoDTO atendimentoMovimentacaoDTO = consultarMovimentacaoDoDiaDaLocalizacao(idsServico);
+		lancarExcecaoCasoNaoExistaProximo(atendimentoMovimentacaoDTO.getAtendimentosEmEspera());
+		Atendimento atendimentoChamado = retornarAtendimentoQueDeveSerChamado(atendimentoMovimentacaoDTO.getAtendimentosEmEspera());
 		setarDadosDoAtendimento(atendimentoChamado, localizacaoConsultada);
 		atendimentoRepository.save(atendimentoChamado);
 		return atendimentoChamado;

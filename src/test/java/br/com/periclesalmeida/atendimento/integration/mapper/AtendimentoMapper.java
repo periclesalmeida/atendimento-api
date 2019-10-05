@@ -10,10 +10,14 @@ import java.util.Map;
 
 public class AtendimentoMapper implements Mapper<Atendimento> {
 
+    private final long UM = 1L;
+    private final String STIRNG_DATA_ATUAL_MENOS_1_MINUTO = "DATA_ATUAL_MENOS_1_MINUTO";
     private final String STRING_DATA_ATUAL = "DATA_ATUAL";
     private final String STRING_DATA_ONTEM = "DATA_ONTEM";
     private final LocalDateTime DATA_ATUAL = LocalDateTime.now();
-    private final LocalDateTime DATA_ONTEM = DATA_ATUAL.minusDays(1L);
+    private final LocalDateTime DATA_ATUAL_MENOS_1_MINUTO = DATA_ATUAL.minusMinutes(UM);
+    private final LocalDateTime DATA_ONTEM = DATA_ATUAL.minusDays(UM);
+
 
     @Override
     public Atendimento map(Map<String, String> map) {
@@ -35,6 +39,7 @@ public class AtendimentoMapper implements Mapper<Atendimento> {
         Map<String, LocalDateTime> map = new HashMap<>();
         map.put(STRING_DATA_ATUAL, DATA_ATUAL);
         map.put(STRING_DATA_ONTEM, DATA_ONTEM);
+        map.put(STIRNG_DATA_ATUAL_MENOS_1_MINUTO, DATA_ATUAL_MENOS_1_MINUTO);
         return map;
     }
 }

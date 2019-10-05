@@ -31,5 +31,5 @@ Funcionalidade: Gerar Atendimento Prioritário
     Quando foi informado o serviço "002" para atendimento prioritário
     Então deveria retornar objecto criado com sucesso
     E os detalhes do Atendimento são:
-       | número atendimento | data cadastro       | data apresentacao | data chamada       | localizacao | servico | usuario  | prioridade |
-       | 1                  | DATA_ATUAL          |                   |                    |             | 002     |          | SIM        |
+       | número atendimento | data cadastro       | data apresentacao | data chamada       | localizacao | servico | usuario  | prioridade |servico atendimento atual |
+       | 1                  | DATA_ATUAL          |                   |                    |             | 002     |          | SIM        |            1             |

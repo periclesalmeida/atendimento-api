@@ -19,17 +19,23 @@ import io.cucumber.datatable.DataTable;
 import java.io.IOException;
 import java.util.*;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class AtendimentoStepDef extends AbstractStepDef<Atendimento> {
 
-    public static final String RESOURCE_ATENDIMENTO_GERAR_PRIORIDADE = "/atendimento/gerar-prioridade/";
+    private final String RESOURCE_ATENDIMENTO_CHAMAR_NOVAMENTE = "/atendimento/chamar-novamente/";
+    private final String RESOURCE_ATENDIMENTO_GERAR_PRIORIDADE = "/atendimento/gerar-prioridade/";
+    private final String RESOURCE_ATENDIMENTO_CHAMAR_PROXIMO = "/atendimento/chamar-proximo/";
+    private final String RESOURCE_ATENDIMENTO_MOVIMENTACAO = "/atendimento/movimentacao/";
     private final String RESOURCE_ATENDIMENTO_GERAR = "/atendimento/gerar/";
     private final String ROLE_ATENDIMENTO_CONSULTAR = "ROLE_ATENDIMENTO_CONSULTAR";
     private final String ROLE_ATENDIMENTO_INCLUIR = "ROLE_ATENDIMENTO_INCLUIR";
     private List<TipoLocalizacao> tiposExpectativa;
     private List<Servico> servicosExpectativa;
     private List<Localizacao> localizacoesExpectativa;
+    private AtendimentoMapper atendimentoMapper;
 
     @Before
     public void inicializarContexto() {
@@ -41,6 +47,7 @@ public class AtendimentoStepDef extends AbstractStepDef<Atendimento> {
     public void que_o_usuário_possui_permissao_de_acesso_a_funcionalidade(String string) throws Exception {
         inserirUsuarioIhPermissao(string, ROLE_ATENDIMENTO_CONSULTAR, ROLE_ATENDIMENTO_INCLUIR);
         prepararContextoDeSeguranca(string);
+        this.atendimentoMapper = new AtendimentoMapper();
     }
 
     @Dado("que exitem tipo localização cadastrados")
@@ -79,7 +86,17 @@ public class AtendimentoStepDef extends AbstractStepDef<Atendimento> {
 
     @Quando("foi informado os serviços {string}")
     public void foi_informado_os_serviços(String servicos) throws Exception {
-        get("/atendimento/movimentacao/" + servicos);
+        get(RESOURCE_ATENDIMENTO_MOVIMENTACAO + servicos);
+    }
+
+    @Quando("foi informado a localização {string}")
+    public void foi_informado_a_localização(String localizacao) throws Exception {
+        post(RESOURCE_ATENDIMENTO_CHAMAR_PROXIMO + localizacao, null);
+    }
+
+    @Quando("foi informado a localização {string} para o atendimento {string}")
+    public void foi_informado_a_localização_para_o_atendimento(String localizacao, String atendimento) throws Exception {
+        post(RESOURCE_ATENDIMENTO_CHAMAR_NOVAMENTE + atendimento + "/" + localizacao, null);
     }
 
     @Então("deveria retornar objecto criado com sucesso")
@@ -87,10 +104,24 @@ public class AtendimentoStepDef extends AbstractStepDef<Atendimento> {
         expectativaObjetoCriado();
     }
 
+    @Então("deveria retornar sucesso")
+    public void deveria_retornar_sucesso() throws Exception {
+        expectativaSucesso();
+    }
+
+    @Então("deveria retornar erro")
+    public void deveria_retornar_erro() throws Exception {
+        expectativaDeErro();
+    }
+
+    @Então("a mensagem {string}")
+    public void a_mensagem(String string) throws Exception {
+        assertThat(getResultaActions().andReturn().getResponse().getContentAsString(), containsString(string));
+    }
+
     @Então("os detalhes do Atendimento são:")
     public void os_detalhes_do_Atendimento_são(io.cucumber.datatable.DataTable dataTable) throws Exception {
         Atendimento expect = criarListaDeAtendimentoDoDataTable(dataTable).get(0);
-        expect.getServico().setNumeroAtendimentoAtual(expect.getServico().getNumeroAtendimentoAtual() + 1);
         Atendimento cadastrado = getMongoTemplate().findById(extractEntidadeDoResponse().getId(), Atendimento.class);
         String mensagemExperada = formatadorDeMensagem.formatarMensagem(expect);
         String mensagemRetornada = formatadorDeMensagem.formatarMensagem(cadastrado);
@@ -138,13 +169,22 @@ public class AtendimentoStepDef extends AbstractStepDef<Atendimento> {
     private List<Atendimento> criarListaDeAtendimentoDoDataTable(DataTable dataTable) {
         List<Atendimento> atendimentoList = new ArrayList<>();
         for (Map<String, String> map: dataTable.asMaps()) {
-            Atendimento atendimento = new AtendimentoMapper().map(map);
+            Atendimento atendimento = atendimentoMapper.map(map);
             atendimento.setServico(getServico(map.get("servico")));
+
+            if (VerificadorUtil.naoEstaNuloOuVazio(map.get("servico atendimento atual"))) {
+                setarNumeroAtendimentoNoServico(map.get("servico atendimento atual"), atendimento.getServico());
+            }
+
             atendimento.setLocalizacao(getLocalizacao(map.get("localizacao")));
             atendimento.setUsuario(VerificadorUtil.naoEstaNuloOuVazio(map.get("usuario")) ?  new Usuario(map.get("usuario")) : null);
             atendimentoList.add(atendimento);
         }
         return atendimentoList;
+    }
+
+    private void setarNumeroAtendimentoNoServico(String numeroAtendimento, Servico servico) {
+        servico.setNumeroAtendimentoAtual(Integer.parseInt(numeroAtendimento));
     }
 
     private Localizacao getLocalizacao(String id) {
@@ -192,8 +232,6 @@ public class AtendimentoStepDef extends AbstractStepDef<Atendimento> {
         List<Servico> tipos = new ArrayList<>();
         for (Map<String, String> map: dataTable.asMaps()) {
             Servico servico = new ServicoMapper().map(map);
-            servico.setAtivo(true);
-            servico.setNumeroAtendimentoAtual(0);
             tipos.add(servico);
         }
         return tipos;

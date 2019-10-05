@@ -24,12 +24,11 @@ Funcionalidade: Gerar Atendimento
    E que existem atendimentos cadastradas
        | id  | número atendimento | data cadastro       | data apresentacao | data chamada       | localizacao | servico | usuario  | prioridade |
        | 001 | 1                  | 01/01/2019 05:50:35 |                   | 01/01/2019 05:51:01| 001         | 001     | pericles | SIM        |
-       | 002 | 2                  | 01/01/2019 06:50:35 |                   | 01/01/2019 07:50:59| 002         | 003     | pericles | NÃO        |
        | 003 | 2                  | 01/01/2019 05:55:00 |                   |                    | 001         | 001     |          | NÃO        |
 
   Cenário: Dado que foram informados dados válido
     Quando foi informado o serviço "002"
     Então deveria retornar objecto criado com sucesso
     E os detalhes do Atendimento são:
-       | número atendimento | data cadastro       | data apresentacao | data chamada       | localizacao | servico | usuario  | prioridade |
-       | 1                  | DATA_ATUAL          |                   |                    |             | 002     |          | NÃO        |
+       | número atendimento | data cadastro       | data apresentacao | data chamada       | localizacao | servico | usuario  | prioridade |servico atendimento atual |
+       | 1                  | DATA_ATUAL          |                   |                    |             | 002     |          | NÃO        |            1             |

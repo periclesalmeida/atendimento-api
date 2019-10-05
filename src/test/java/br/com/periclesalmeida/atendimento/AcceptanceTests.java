@@ -8,5 +8,5 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
         AllUseCaseTest.class
 })
-public class IntegrationTests {
+public class AcceptanceTests {
 }
