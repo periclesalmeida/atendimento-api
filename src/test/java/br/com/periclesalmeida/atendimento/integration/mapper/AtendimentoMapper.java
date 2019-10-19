@@ -1,6 +1,7 @@
 package br.com.periclesalmeida.atendimento.integration.mapper;
 
 import br.com.periclesalmeida.atendimento.domain.Atendimento;
+import br.com.periclesalmeida.atendimento.util.DateUtil;
 import br.com.periclesalmeida.atendimento.util.VerificadorUtil;
 
 import java.time.LocalDateTime;
@@ -14,7 +15,7 @@ public class AtendimentoMapper implements Mapper<Atendimento> {
     private final String STIRNG_DATA_ATUAL_MENOS_1_MINUTO = "DATA_ATUAL_MENOS_1_MINUTO";
     private final String STRING_DATA_ATUAL = "DATA_ATUAL";
     private final String STRING_DATA_ONTEM = "DATA_ONTEM";
-    private final LocalDateTime DATA_ATUAL = LocalDateTime.now();
+    private final LocalDateTime DATA_ATUAL = DateUtil.getLocalDateTimeNow();
     private final LocalDateTime DATA_ATUAL_MENOS_1_MINUTO = DATA_ATUAL.minusMinutes(UM);
     private final LocalDateTime DATA_ONTEM = DATA_ATUAL.minusDays(UM);
 

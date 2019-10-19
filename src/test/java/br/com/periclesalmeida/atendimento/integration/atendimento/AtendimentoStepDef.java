@@ -7,6 +7,7 @@ import br.com.periclesalmeida.atendimento.integration.mapper.AtendimentoMapper;
 import br.com.periclesalmeida.atendimento.integration.mapper.LocalizacaoMapper;
 import br.com.periclesalmeida.atendimento.integration.mapper.ServicoMapper;
 import br.com.periclesalmeida.atendimento.integration.mapper.TipoLocalizacaoMapper;
+import br.com.periclesalmeida.atendimento.util.DateUtil;
 import br.com.periclesalmeida.atendimento.util.VerificadorUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -17,6 +18,7 @@ import cucumber.api.java.pt.Quando;
 import io.cucumber.datatable.DataTable;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.hamcrest.CoreMatchers.containsString;
@@ -41,6 +43,7 @@ public class AtendimentoStepDef extends AbstractStepDef<Atendimento> {
     public void inicializarContexto() {
         limparBancoDeDados();
         this.formatadorDeMensagem = new FormatadorMensagemAtendimentoImpl();
+        DateUtil.setLocalDateTime(LocalDateTime.now());
     }
 
     @Dado("que o usuário {string} possui permissao de acesso a funcionalidade")

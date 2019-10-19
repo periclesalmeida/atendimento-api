@@ -8,6 +8,7 @@ import br.com.periclesalmeida.atendimento.repository.AtendimentoRepository;
 import br.com.periclesalmeida.atendimento.service.AtendimentoService;
 import br.com.periclesalmeida.atendimento.service.LocalizacaoService;
 import br.com.periclesalmeida.atendimento.service.ServicoService;
+import br.com.periclesalmeida.atendimento.util.DateUtil;
 import br.com.periclesalmeida.atendimento.util.VerificadorUtil;
 import br.com.periclesalmeida.atendimento.util.exception.NegocioException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -138,13 +139,13 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 
 	private void setarDadosDoAtendimento(Atendimento atendimento , Localizacao localizacao) {
 		atendimento.setLocalizacao(localizacao);
-		atendimento.setDataHoraChamada(LocalDateTime.now());
+		atendimento.setDataHoraChamada(DateUtil.getLocalDateTimeNow());
 	}
 
 	private List<Atendimento> listarAtendimentoDoDiaParaOsServicos(List<String> sequenciaisServico) {
 		return atendimentoRepository.listarPorPeriodoIhServico(
-				LocalDate.now().atStartOfDay(),
-				LocalDate.now().atTime(23,59,59),
+				DateUtil.getLocalDateNow().atStartOfDay(),
+				DateUtil.getLocalDateNow().atTime(23,59,59),
 				sequenciaisServico
 		);
 	}
@@ -172,6 +173,6 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 	}
 
 	private void setarDataHoraDeCadastroComoDataDeHoje(Atendimento atendimento) {
-		atendimento.setDataHoraCadastro(LocalDateTime.now());
+		atendimento.setDataHoraCadastro(DateUtil.getLocalDateTimeNow());
 	}
 }
