@@ -21,41 +21,41 @@ public class AtendimentoResource {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_SERVICO_INCLUIR')")
+    @PreAuthorize("hasAuthority('ROLE_ATENDIMENTO_CONSULTAR')")
     public Atendimento consultarPorId(@PathVariable String id) {
         return atendimentoService.consultarPorId(id);
     }
     
     @GetMapping("/movimentacao/{idsServico}")
-    @PreAuthorize("hasAuthority('ROLE_SERVICO_INCLUIR')")
+    @PreAuthorize("hasAuthority('ROLE_ATENDIMENTO_CONSULTAR')")
     public ResponseEntity<AtendimentoMovimentacaoDTO> consultarMovimentacao(@PathVariable List<String> idsServico) {
         AtendimentoMovimentacaoDTO atendimentoMovimentacaoDTO = atendimentoService.consultarMovimentacaoDoDiaDaLocalizacao(idsServico);
         return ResponseEntity.status(HttpStatus.OK).body(atendimentoMovimentacaoDTO);
     }
 
     @PostMapping("/gerar/{idServico}")
-    @PreAuthorize("hasAuthority('ROLE_SERVICO_INCLUIR')")
+    @PreAuthorize("hasAuthority('ROLE_ATENDIMENTO_INCLUIR')")
     public ResponseEntity<Atendimento> gerarSenha(@PathVariable String idServico) {
         Atendimento atendimentoGerado = atendimentoService.gerar(idServico);
         return ResponseEntity.status(HttpStatus.CREATED).body(atendimentoGerado);
     }
 
-    @PostMapping("/gerar-prioridade/{sequencialServico}")
-    @PreAuthorize("hasAuthority('ROLE_SERVICO_INCLUIR')")
-    public ResponseEntity<Atendimento> gerarSenhaPrioridade(@PathVariable String sequencialServico) {
-        Atendimento atendimentoGerado = atendimentoService.gerarPrioridade(sequencialServico);
+    @PostMapping("/gerar-prioridade/{idServico}")
+    @PreAuthorize("hasAuthority('ROLE_ATENDIMENTO_INCLUIR')")
+    public ResponseEntity<Atendimento> gerarSenhaPrioridade(@PathVariable String idServico) {
+        Atendimento atendimentoGerado = atendimentoService.gerarPrioridade(idServico);
         return ResponseEntity.status(HttpStatus.CREATED).body(atendimentoGerado);
     }
 
     @PostMapping("/chamar-proximo/{idLocalizacao}")
-    @PreAuthorize("hasAuthority('ROLE_SERVICO_INCLUIR')")
+    @PreAuthorize("hasAuthority('ROLE_ATENDIMENTO_INCLUIR')")
     public ResponseEntity<Atendimento> chamarProximo(@PathVariable String idLocalizacao) {
         Atendimento atendimentoChamado = atendimentoService.chamarProximo(idLocalizacao);
         return ResponseEntity.status(HttpStatus.OK).body(atendimentoChamado);
     }
 
     @PostMapping("/chamar-novamente/{id}/{idLocalizacao}")
-    @PreAuthorize("hasAuthority('ROLE_SERVICO_INCLUIR')")
+    @PreAuthorize("hasAuthority('ROLE_ATENDIMENTO_INCLUIR')")
     public ResponseEntity<Atendimento> chamarNovamente(@PathVariable String id, @PathVariable String idLocalizacao) {
         Atendimento atendimentoChamado = atendimentoService.chamarNovamente(id, idLocalizacao);
         return ResponseEntity.status(HttpStatus.OK).body(atendimentoChamado);

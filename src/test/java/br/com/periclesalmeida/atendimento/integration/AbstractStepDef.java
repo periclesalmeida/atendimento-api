@@ -106,6 +106,12 @@ public abstract class AbstractStepDef<OBJETO> {
                 .headers(getHttpHeaders()));
     }
 
+    protected void get(String resource) throws Exception {
+        this.resultaActions = mockMvc.perform(MockMvcRequestBuilders.get(resource)
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(getHttpHeaders()));
+    }
+
     protected void get(String resource, MultiValueMap<String, String> params) throws Exception {
         this.resultaActions = mockMvc.perform(MockMvcRequestBuilders.get(resource, getPageable())
                 .params(params)

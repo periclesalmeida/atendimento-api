@@ -17,6 +17,8 @@ import java.util.Optional;
 public class Atendimento implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private static final String DD_MM_YYYY_HH_MM_SS = "dd-MM-yyyy HH:mm:ss";
+    private static final String HH_MM_SS = "HH:mm:ss";
 
     @Id
     private String id;
@@ -32,6 +34,19 @@ public class Atendimento implements Serializable {
     private Servico servico;
     private Usuario usuario;
     private Boolean indicadorPrioridade;
+
+    public Atendimento() {
+    }
+
+    public Atendimento(String id, Integer numeroAtendimento, LocalDateTime dataHoraCadastro,
+                       LocalDateTime dataHoraApresentacao, LocalDateTime dataHoraChamada, Boolean indicadorPrioridade) {
+        this.id = id;
+        this.numeroAtendimento = numeroAtendimento;
+        this.dataHoraCadastro = dataHoraCadastro;
+        this.dataHoraApresentacao = dataHoraApresentacao;
+        this.dataHoraChamada = dataHoraChamada;
+        this.indicadorPrioridade = indicadorPrioridade;
+    }
 
     public String getId() {
         return id;
@@ -98,13 +113,27 @@ public class Atendimento implements Serializable {
 
     @Transient
     public String getDataHoraCadastroFormatada() {
-        return getDataHoraCadastro().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+        return getDataHoraCadastro().format(DateTimeFormatter.ofPattern(DD_MM_YYYY_HH_MM_SS));
     }
-    
+
+    @Transient
+    public String getDataHoraApresentacaoFormatada() {
+        return Optional.ofNullable(getDataHoraApresentacao()).isPresent() ?
+                getDataHoraApresentacao().format(DateTimeFormatter.ofPattern(DD_MM_YYYY_HH_MM_SS))
+                : null;
+    }
+
+    @Transient
+    public String getDataHoraChamadaFormadata() {
+        return Optional.ofNullable(getDataHoraChamada()).isPresent() ?
+                getDataHoraChamada().format(DateTimeFormatter.ofPattern(DD_MM_YYYY_HH_MM_SS))
+                : null;
+    }
+
     @Transient
     public String getHoraChamada() {
         return VerificadorUtil.naoEstaNulo(getDataHoraChamada()) ?
-                getDataHoraChamada().format(DateTimeFormatter.ofPattern("HH:mm:ss")) :
+                getDataHoraChamada().format(DateTimeFormatter.ofPattern(HH_MM_SS)) :
                 null;
     }
 

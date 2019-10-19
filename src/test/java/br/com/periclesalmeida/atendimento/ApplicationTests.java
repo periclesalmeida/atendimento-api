@@ -8,9 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 		UnitTests.class,
-		IntegrationTests.class
+		AcceptanceTests.class
 })
 public class ApplicationTests {
-
-
 }

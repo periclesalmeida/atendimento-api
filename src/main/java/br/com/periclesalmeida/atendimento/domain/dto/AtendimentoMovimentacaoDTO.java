@@ -9,6 +9,9 @@ public class AtendimentoMovimentacaoDTO {
 
 	private List<Atendimento> atendimentos;
 
+	public AtendimentoMovimentacaoDTO() {
+	}
+
 	public AtendimentoMovimentacaoDTO(List<Atendimento> atendimentos) {
 		this.atendimentos = atendimentos;
 	}

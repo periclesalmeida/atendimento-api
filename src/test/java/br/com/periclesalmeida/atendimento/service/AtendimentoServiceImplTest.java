@@ -20,10 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -76,7 +73,7 @@ public class AtendimentoServiceImplTest {
 				.thenReturn(getLocalizacaoA());
 		when(atendimentoRepositoryMock.listarPorPeriodoIhServico(LocalDate.now().atStartOfDay(),
 				LocalDate.now().atTime(23,59,59), Arrays.asList(ID_SERVICO_1)
-		)).thenReturn(null);
+		)).thenReturn(Collections.emptyList());
 		when(localizacaoServiceMock.consultarPorId(ID_LOCALIZACAO_1)).thenReturn(getLocalizacaoA());
 
 		getService().chamarProximo(ID_LOCALIZACAO_1);
