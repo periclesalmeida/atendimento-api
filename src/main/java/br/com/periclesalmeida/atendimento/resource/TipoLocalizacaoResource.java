@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,21 +21,21 @@ public class TipoLocalizacaoResource {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_TIPO_LOCALIZACAO_INCLUIR')")
+    //@PreAuthorize("hasAuthority('ROLE_TIPO_LOCALIZACAO_INCLUIR')")
     public ResponseEntity<TipoLocalizacao>  incluir(@Validated @RequestBody TipoLocalizacao entidade) {
         tipoLocalizacaoService.incluir(entidade);
         return ResponseEntity.status(HttpStatus.CREATED).body(entidade);
     }
 
     @PutMapping("/{codigo}")
-    @PreAuthorize("hasAuthority('ROLE_TIPO_LOCALIZACAO_ALTERAR')")
+    //@PreAuthorize("hasAuthority('ROLE_TIPO_LOCALIZACAO_ALTERAR')")
     public ResponseEntity<TipoLocalizacao>  alterar(@PathVariable String codigo, @Validated @RequestBody TipoLocalizacao entidade) {
         tipoLocalizacaoService.alterar(codigo, entidade);
         return ResponseEntity.status(HttpStatus.OK).body(entidade);
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ROLE_TIPO_LOCALIZACAO_CONSULTAR')")
+    //@PreAuthorize("hasAuthority('ROLE_TIPO_LOCALIZACAO_CONSULTAR')")
     public Page<TipoLocalizacao> consultarPorEntidade(TipoLocalizacao entidade, Pageable pageable) {
         return tipoLocalizacaoService.consultarPassandoEntidade(entidade, pageable);
     }

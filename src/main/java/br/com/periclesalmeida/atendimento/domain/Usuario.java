@@ -1,6 +1,5 @@
 package br.com.periclesalmeida.atendimento.domain;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -53,7 +52,6 @@ public class Usuario {
         this.login = login;
     }
 
-    @JsonIgnore
     public String getSenha() {
         return senha;
     }

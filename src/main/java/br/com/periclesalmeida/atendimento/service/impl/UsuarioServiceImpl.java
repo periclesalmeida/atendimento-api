@@ -1,6 +1,5 @@
 package br.com.periclesalmeida.atendimento.service.impl;
 
-import br.com.periclesalmeida.atendimento.config.security.UsuarioSecurity;
 import br.com.periclesalmeida.atendimento.domain.Permissao;
 import br.com.periclesalmeida.atendimento.domain.Usuario;
 import br.com.periclesalmeida.atendimento.repository.UsuarioRepository;
@@ -11,17 +10,10 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.springframework.data.domain.Example.of;
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.contains;
@@ -36,11 +28,10 @@ public class UsuarioServiceImpl extends AbstractService<Usuario, String> impleme
     private final String MENSAGEM_USUARIO_E_OU_SENHA_INVALIDO = "Usuário e/ou senha inválido";
 
     private UsuarioRepository usuarioRepository;
-    private PasswordEncoder passwordEncoder;
 
-    public UsuarioServiceImpl(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+
+    public UsuarioServiceImpl(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -51,11 +42,9 @@ public class UsuarioServiceImpl extends AbstractService<Usuario, String> impleme
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Usuario> usuarioOptional = usuarioRepository.findByLogin(username);
-        Usuario usuario = usuarioOptional.orElseThrow(() -> new UsernameNotFoundException(MENSAGEM_USUARIO_E_OU_SENHA_INVALIDO));
-        lancarExcecaoCasoUsuarioNaoPossuaPermissao(usuario.getPermissoes());
-        return new UsuarioSecurity(usuario, criarGrantedAuthority(usuario));
+    public Usuario consultarPorLogin(String login) {
+        Optional<Usuario> optionalUsuario =  usuarioRepository.findByLogin(login);
+        return optionalUsuario.orElse(null);
     }
 
     @Override
@@ -77,7 +66,7 @@ public class UsuarioServiceImpl extends AbstractService<Usuario, String> impleme
 
     private void setarSenhaSeSenhaSemRashInformada(Usuario usuario) {
         Optional.ofNullable(usuario.getSenhaSemRash()).ifPresent(s -> {
-            usuario.setSenha(passwordEncoder.encode(usuario.getSenhaSemRash()));
+//            usuario.setSenha(passwordEncoder.encode(usuario.getSenhaSemRash()));
         });
     }
 
@@ -102,9 +91,9 @@ public class UsuarioServiceImpl extends AbstractService<Usuario, String> impleme
         }
     }
 
-    private Collection<? extends GrantedAuthority> criarGrantedAuthority(Usuario usuario) {
-        return usuario.getPermissoes().stream()
-                .map(permissao -> new SimpleGrantedAuthority(permissao.getId().toUpperCase()))
-                .collect(Collectors.toList());
-    }
+//    private Collection<? extends GrantedAuthority> criarGrantedAuthority(Usuario usuario) {
+//        return usuario.getPermissoes().stream()
+//                .map(permissao -> new SimpleGrantedAuthority(permissao.getId().toUpperCase()))
+//                .collect(Collectors.toList());
+//    }
 }

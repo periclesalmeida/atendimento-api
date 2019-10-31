@@ -1,6 +1,6 @@
 spring:
-  profiles:
-    active: @activatedProperties@
+  application:
+    name: atendimento
   data:
     mongodb:
       database: atendimento
@@ -8,6 +8,10 @@ spring:
       port: 27017
       repositories:
         enabled: true
+
+logging:
+  level:
+    root: info
 
 eureka:
   client:

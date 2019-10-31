@@ -5,7 +5,6 @@ import br.com.periclesalmeida.atendimento.domain.dto.AtendimentoMovimentacaoDTO;
 import br.com.periclesalmeida.atendimento.service.AtendimentoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,41 +20,41 @@ public class AtendimentoResource {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_ATENDIMENTO_CONSULTAR')")
+    //@PreAuthorize("hasAuthority('ROLE_ATENDIMENTO_CONSULTAR')")
     public Atendimento consultarPorId(@PathVariable String id) {
         return atendimentoService.consultarPorId(id);
     }
     
     @GetMapping("/movimentacao/{idsServico}")
-    @PreAuthorize("hasAuthority('ROLE_ATENDIMENTO_CONSULTAR')")
+    //@PreAuthorize("hasAuthority('ROLE_ATENDIMENTO_CONSULTAR')")
     public ResponseEntity<AtendimentoMovimentacaoDTO> consultarMovimentacao(@PathVariable List<String> idsServico) {
         AtendimentoMovimentacaoDTO atendimentoMovimentacaoDTO = atendimentoService.consultarMovimentacaoDoDiaDaLocalizacao(idsServico);
         return ResponseEntity.status(HttpStatus.OK).body(atendimentoMovimentacaoDTO);
     }
 
     @PostMapping("/gerar/{idServico}")
-    @PreAuthorize("hasAuthority('ROLE_ATENDIMENTO_INCLUIR')")
+    //@PreAuthorize("hasAuthority('ROLE_ATENDIMENTO_INCLUIR')")
     public ResponseEntity<Atendimento> gerarSenha(@PathVariable String idServico) {
         Atendimento atendimentoGerado = atendimentoService.gerar(idServico);
         return ResponseEntity.status(HttpStatus.CREATED).body(atendimentoGerado);
     }
 
     @PostMapping("/gerar-prioridade/{idServico}")
-    @PreAuthorize("hasAuthority('ROLE_ATENDIMENTO_INCLUIR')")
+    //@PreAuthorize("hasAuthority('ROLE_ATENDIMENTO_INCLUIR')")
     public ResponseEntity<Atendimento> gerarSenhaPrioridade(@PathVariable String idServico) {
         Atendimento atendimentoGerado = atendimentoService.gerarPrioridade(idServico);
         return ResponseEntity.status(HttpStatus.CREATED).body(atendimentoGerado);
     }
 
     @PostMapping("/chamar-proximo/{idLocalizacao}")
-    @PreAuthorize("hasAuthority('ROLE_ATENDIMENTO_INCLUIR')")
+    //@PreAuthorize("hasAuthority('ROLE_ATENDIMENTO_INCLUIR')")
     public ResponseEntity<Atendimento> chamarProximo(@PathVariable String idLocalizacao) {
         Atendimento atendimentoChamado = atendimentoService.chamarProximo(idLocalizacao);
         return ResponseEntity.status(HttpStatus.OK).body(atendimentoChamado);
     }
 
     @PostMapping("/chamar-novamente/{id}/{idLocalizacao}")
-    @PreAuthorize("hasAuthority('ROLE_ATENDIMENTO_INCLUIR')")
+    //@PreAuthorize("hasAuthority('ROLE_ATENDIMENTO_INCLUIR')")
     public ResponseEntity<Atendimento> chamarNovamente(@PathVariable String id, @PathVariable String idLocalizacao) {
         Atendimento atendimentoChamado = atendimentoService.chamarNovamente(id, idLocalizacao);
         return ResponseEntity.status(HttpStatus.OK).body(atendimentoChamado);

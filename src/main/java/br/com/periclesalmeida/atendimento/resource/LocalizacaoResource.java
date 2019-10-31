@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,21 +20,21 @@ public class LocalizacaoResource {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_LOCALIZACAO_INCLUIR')")
+    //@PreAuthorize("hasAuthority('ROLE_LOCALIZACAO_INCLUIR')")
     public ResponseEntity<Localizacao> incluir(@Validated @RequestBody Localizacao entidade) {
         localizacaoService.incluir(entidade);
         return ResponseEntity.status(HttpStatus.CREATED).body(entidade);
     }
 
     @PutMapping("/{sequencial}")
-    @PreAuthorize("hasAuthority('ROLE_LOCALIZACAO_ALTERAR')")
+    //@PreAuthorize("hasAuthority('ROLE_LOCALIZACAO_ALTERAR')")
     public ResponseEntity<Localizacao> alterar(@PathVariable String sequencial, @Validated @RequestBody Localizacao entidade) {
         localizacaoService.alterar(sequencial, entidade);
         return ResponseEntity.status(HttpStatus.OK).body(entidade);
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ROLE_LOCALIZACAO_CONSULTAR')")
+    //@PreAuthorize("hasAuthority('ROLE_LOCALIZACAO_CONSULTAR')")
     public Page<Localizacao> consultarPorEntidade(Localizacao entidade, Pageable pageable) {
         return localizacaoService.consultarPassandoEntidade(entidade, pageable);
     }

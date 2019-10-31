@@ -19,3 +19,14 @@ services:
       - JHIPSTER_REGISTRY_PASSWORD=admin
     ports:
       - 8761:8761
+
+#  gateway:
+#    image: periclesalmeida/padrao:gateway-1.0
+#    container_name: srv-gateway
+#    environment:
+#      - JAVA_OPTIONS=-Xmx512m -Xms256m
+#      - SPRING_PROFILES_ACTIVE=prod
+#      - SERVER_PORT=8181
+#      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE= http://admin:admin@registry:8761/eureka
+#    ports:
+#      - 8181:8181
