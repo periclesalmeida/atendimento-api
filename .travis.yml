@@ -9,7 +9,8 @@ script:
   - ./mvnw clean install -Pprod
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - ./mvnw dockerfile:build
-  - if: branch = master ./mvnw dockerfile:push
+  - if: branch = master
+    ./mvnw dockerfile:push
 
 
 
