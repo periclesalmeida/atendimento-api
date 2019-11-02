@@ -11,11 +11,13 @@ import java.util.Map;
 
 public class AtendimentoMapper implements Mapper<Atendimento> {
 
-    private final long UM = 1L;
-    private final String STIRNG_DATA_ATUAL_MENOS_1_MINUTO = "DATA_ATUAL_MENOS_1_MINUTO";
+    private final Long UM = 1L;
+    private final String STRING_DATA_ATUAL_MAIS_1_MINUTO = "DATA_ATUAL_MAIS_1_MINUTO";
+    private final String STRING_DATA_ATUAL_MENOS_1_MINUTO = "DATA_ATUAL_MENOS_1_MINUTO";
     private final String STRING_DATA_ATUAL = "DATA_ATUAL";
     private final String STRING_DATA_ONTEM = "DATA_ONTEM";
     private final LocalDateTime DATA_ATUAL = DateUtil.getLocalDateTimeNow();
+    private final LocalDateTime DATA_ATUAL_MAIS_1_MINUTO = DATA_ATUAL.withMinute(UM.intValue());
     private final LocalDateTime DATA_ATUAL_MENOS_1_MINUTO = DATA_ATUAL.minusMinutes(UM);
     private final LocalDateTime DATA_ONTEM = DATA_ATUAL.minusDays(UM);
 
@@ -40,7 +42,8 @@ public class AtendimentoMapper implements Mapper<Atendimento> {
         Map<String, LocalDateTime> map = new HashMap<>();
         map.put(STRING_DATA_ATUAL, DATA_ATUAL);
         map.put(STRING_DATA_ONTEM, DATA_ONTEM);
-        map.put(STIRNG_DATA_ATUAL_MENOS_1_MINUTO, DATA_ATUAL_MENOS_1_MINUTO);
+        map.put(STRING_DATA_ATUAL_MAIS_1_MINUTO, DATA_ATUAL_MAIS_1_MINUTO);
+        map.put(STRING_DATA_ATUAL_MENOS_1_MINUTO, DATA_ATUAL_MENOS_1_MINUTO);
         return map;
     }
 }

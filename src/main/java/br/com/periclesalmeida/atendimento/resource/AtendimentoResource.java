@@ -1,6 +1,7 @@
 package br.com.periclesalmeida.atendimento.resource;
 
 import br.com.periclesalmeida.atendimento.domain.Atendimento;
+import br.com.periclesalmeida.atendimento.domain.dto.AtendimentoMovimentacaoChamadoDTO;
 import br.com.periclesalmeida.atendimento.domain.dto.AtendimentoMovimentacaoDTO;
 import br.com.periclesalmeida.atendimento.service.AtendimentoService;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,14 @@ public class AtendimentoResource {
     @GetMapping("/movimentacao/{idsServico}")
     @PreAuthorize("hasAuthority('ROLE_ATENDIMENTO_CONSULTAR')")
     public ResponseEntity<AtendimentoMovimentacaoDTO> consultarMovimentacao(@PathVariable List<String> idsServico) {
-        AtendimentoMovimentacaoDTO atendimentoMovimentacaoDTO = atendimentoService.consultarMovimentacaoDoDiaDaLocalizacao(idsServico);
+        AtendimentoMovimentacaoDTO atendimentoMovimentacaoDTO = atendimentoService.consultarMovimentacaoDoDiaDosServicos(idsServico);
+        return ResponseEntity.status(HttpStatus.OK).body(atendimentoMovimentacaoDTO);
+    }
+
+    @GetMapping("/movimentacao-chamado/{idsServico}")
+    @PreAuthorize("hasAuthority('ROLE_ATENDIMENTO_CONSULTAR')")
+    public ResponseEntity<AtendimentoMovimentacaoChamadoDTO> consultarMovimentacaoChamado(@PathVariable List<String> idsServico) {
+        AtendimentoMovimentacaoChamadoDTO atendimentoMovimentacaoDTO = atendimentoService.consultarMovimentacaoChamadaDoDiaDosServicos(idsServico);
         return ResponseEntity.status(HttpStatus.OK).body(atendimentoMovimentacaoDTO);
     }
 

@@ -3,6 +3,7 @@ package br.com.periclesalmeida.atendimento.service.impl;
 import br.com.periclesalmeida.atendimento.domain.Atendimento;
 import br.com.periclesalmeida.atendimento.domain.Localizacao;
 import br.com.periclesalmeida.atendimento.domain.Servico;
+import br.com.periclesalmeida.atendimento.domain.dto.AtendimentoMovimentacaoChamadoDTO;
 import br.com.periclesalmeida.atendimento.domain.dto.AtendimentoMovimentacaoDTO;
 import br.com.periclesalmeida.atendimento.repository.AtendimentoRepository;
 import br.com.periclesalmeida.atendimento.service.AtendimentoService;
@@ -55,20 +56,27 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 	}
 
 	@Override
-	public AtendimentoMovimentacaoDTO consultarMovimentacaoDoDiaDaLocalizacao(List<String> sequenciaisServico) {
+	public AtendimentoMovimentacaoDTO consultarMovimentacaoDoDiaDosServicos(List<String> sequenciaisServico) {
 		List<Atendimento> atendimentos = listarAtendimentoDoDiaParaOsServicos(sequenciaisServico);
-		ordenarListaPorDataHoraCadastro(atendimentos);
+		ordenarPorDataHoraCadastro(atendimentos);
 		return new AtendimentoMovimentacaoDTO(atendimentos);
+	}
+
+	@Override
+	public AtendimentoMovimentacaoChamadoDTO consultarMovimentacaoChamadaDoDiaDosServicos(List<String> idsServico) {
+		List<Atendimento> atendimentos = listarAtendimentoChamadoNoDiaParaOsServicos(idsServico);
+		ordenarPorDataHoraChamada(atendimentos);
+		return new AtendimentoMovimentacaoChamadoDTO(atendimentos);
 	}
 
 	@Override
 	public Atendimento chamarProximo(String idLocalizacao) {
 		Localizacao localizacaoConsultada = localizacaoService.consultarPorId(idLocalizacao);
 		List<String> idsServico = gerarListaStringComIdDosServicosDaLocalizacao(localizacaoConsultada);
-		AtendimentoMovimentacaoDTO atendimentoMovimentacaoDTO = consultarMovimentacaoDoDiaDaLocalizacao(idsServico);
+		AtendimentoMovimentacaoDTO atendimentoMovimentacaoDTO = consultarMovimentacaoDoDiaDosServicos(idsServico);
 		lancarExcecaoCasoNaoExistaProximo(atendimentoMovimentacaoDTO.getAtendimentosEmEspera());
 		Atendimento atendimentoChamado = retornarAtendimentoQueDeveSerChamado(atendimentoMovimentacaoDTO.getAtendimentosEmEspera());
-		setarDadosDoAtendimento(atendimentoChamado, localizacaoConsultada);
+		setarNoAtendimentoLocalizacaoDataHoraChamadaAtualIhRemoverDataHoraApresentacao(atendimentoChamado, localizacaoConsultada);
 		atendimentoRepository.save(atendimentoChamado);
 		return atendimentoChamado;
 	}
@@ -77,12 +85,26 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 	public Atendimento chamarNovamente(String id, String idLocalizacao) {
 		Atendimento atendimentoConsultado = consultarPorId(id);
 		Localizacao localizacaoConsultada = localizacaoService.consultarPorId(idLocalizacao);
-		setarDadosDoAtendimento(atendimentoConsultado, localizacaoConsultada);
+		setarNoAtendimentoLocalizacaoDataHoraChamadaAtualIhRemoverDataHoraApresentacao(atendimentoConsultado, localizacaoConsultada);
 		atendimentoRepository.save(atendimentoConsultado);
 		return atendimentoConsultado;
 	}
 
-	private void ordenarListaPorDataHoraCadastro(List<Atendimento> atendimentos) {
+	private void ordenarPorDataHoraChamada(List<Atendimento> atendimentos) {
+		atendimentos.sort((t1, t2) -> {
+			return t1.getDataHoraChamada().isAfter(t2.getDataHoraChamada()) ? 1 : -1;
+		});
+	}
+
+	private List listarAtendimentoChamadoNoDiaParaOsServicos(List<String> idsServico) {
+		return atendimentoRepository.listarPorPeriodoDeChamadaIhServicos(
+				DateUtil.getLocalDateNow().atStartOfDay(),
+				DateUtil.getLocalDateNow().atTime(23,59,59),
+				idsServico
+		);
+	}
+
+	private void ordenarPorDataHoraCadastro(List<Atendimento> atendimentos) {
 		atendimentos.sort((t1, t2) -> {
 			return t1.getDataHoraCadastro().isAfter(t2.getDataHoraCadastro()) ? 1 : -1;
 		});
@@ -135,13 +157,14 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 				.filter(Atendimento::isEmEspera).findFirst();
 	}
 
-	private void setarDadosDoAtendimento(Atendimento atendimento , Localizacao localizacao) {
+	private void setarNoAtendimentoLocalizacaoDataHoraChamadaAtualIhRemoverDataHoraApresentacao(Atendimento atendimento , Localizacao localizacao) {
 		atendimento.setLocalizacao(localizacao);
 		atendimento.setDataHoraChamada(DateUtil.getLocalDateTimeNow());
+		atendimento.setDataHoraApresentacao(null);
 	}
 
 	private List<Atendimento> listarAtendimentoDoDiaParaOsServicos(List<String> sequenciaisServico) {
-		return atendimentoRepository.listarPorPeriodoIhServico(
+		return atendimentoRepository.listarPorPeriodoDeCadastroIhServicos(
 				DateUtil.getLocalDateNow().atStartOfDay(),
 				DateUtil.getLocalDateNow().atTime(23,59,59),
 				sequenciaisServico

@@ -56,10 +56,19 @@ public class AtendimentoServiceImplTest {
 	}
 
 	@Test
+	public void aoConsultarMovimentacaoApresentadaDoDiaDosServicosDeveriaDelegarParaOhRepositorylistarPorPeriodoDeChamadaIhServicos() throws Exception {
+		when(atendimentoRepositoryMock.listarPorPeriodoDeChamadaIhServicos(LocalDate.now().atStartOfDay(),
+				LocalDate.now().atTime(23,59,59), Arrays.asList(ID_SERVICO_1)
+		)).thenReturn(Arrays.asList(getAtendimentoNaoPrioridade()));
+		getService().consultarMovimentacaoChamadaDoDiaDosServicos(Arrays.asList(ID_SERVICO_1));
+		verify(atendimentoRepositoryMock).listarPorPeriodoDeChamadaIhServicos(any(LocalDateTime.class),any(LocalDateTime.class),  any(List.class));
+	}
+
+	@Test
 	public void aoChamarProximoDeveriaDelegarParaOhRepositorySave() throws Exception {
 		when(localizacaoServiceMock.consultarPorId(ID_LOCALIZACAO_1))
 				.thenReturn(getLocalizacaoA());
-		when(atendimentoRepositoryMock.listarPorPeriodoIhServico(LocalDate.now().atStartOfDay(),
+		when(atendimentoRepositoryMock.listarPorPeriodoDeCadastroIhServicos(LocalDate.now().atStartOfDay(),
 				LocalDate.now().atTime(23,59,59), Arrays.asList(ID_SERVICO_1)
 		)).thenReturn(Arrays.asList(getAtendimentoNaoPrioridade()));
 
@@ -71,7 +80,7 @@ public class AtendimentoServiceImplTest {
 	public void aoChamarProximoDeveriaIhNaoExisteProximoDeveriaLancarExcecao() throws Exception {
 		when(localizacaoServiceMock.consultarPorId(ID_LOCALIZACAO_1))
 				.thenReturn(getLocalizacaoA());
-		when(atendimentoRepositoryMock.listarPorPeriodoIhServico(LocalDate.now().atStartOfDay(),
+		when(atendimentoRepositoryMock.listarPorPeriodoDeCadastroIhServicos(LocalDate.now().atStartOfDay(),
 				LocalDate.now().atTime(23,59,59), Arrays.asList(ID_SERVICO_1)
 		)).thenReturn(Collections.emptyList());
 		when(localizacaoServiceMock.consultarPorId(ID_LOCALIZACAO_1)).thenReturn(getLocalizacaoA());
@@ -83,7 +92,7 @@ public class AtendimentoServiceImplTest {
 	public void aoChamarProximoDeveriaDelegarParaOhLocalizacaoServiceConsultarPorId() throws Exception {
 		when(localizacaoServiceMock.consultarPorId(ID_LOCALIZACAO_1))
 				.thenReturn(getLocalizacaoA());
-		when(atendimentoRepositoryMock.listarPorPeriodoIhServico(LocalDate.now().atStartOfDay(),
+		when(atendimentoRepositoryMock.listarPorPeriodoDeCadastroIhServicos(LocalDate.now().atStartOfDay(),
 				LocalDate.now().atTime(23,59,59), Arrays.asList(ID_SERVICO_1)
 		)).thenReturn(Arrays.asList(getAtendimentoNaoPrioridade()));
 		when(localizacaoServiceMock.consultarPorId(ID_LOCALIZACAO_1)).thenReturn(getLocalizacaoA());
@@ -96,20 +105,20 @@ public class AtendimentoServiceImplTest {
 	public void aoChamarProximoDeveriaDelegarParaOhRepositorylistarPorPeriodoIhServico() throws Exception {
 		when(localizacaoServiceMock.consultarPorId(ID_LOCALIZACAO_1))
 				.thenReturn(getLocalizacaoA());
-		when(atendimentoRepositoryMock.listarPorPeriodoIhServico(LocalDate.now().atStartOfDay(),
+		when(atendimentoRepositoryMock.listarPorPeriodoDeCadastroIhServicos(LocalDate.now().atStartOfDay(),
 				LocalDate.now().atTime(23,59,59), Arrays.asList(ID_SERVICO_1)
 		)).thenReturn(Arrays.asList(getAtendimentoNaoPrioridade()));
 		getService().chamarProximo(ID_LOCALIZACAO_1);
-		verify(atendimentoRepositoryMock).listarPorPeriodoIhServico(any(LocalDateTime.class),any(LocalDateTime.class), any(List.class));
+		verify(atendimentoRepositoryMock).listarPorPeriodoDeCadastroIhServicos(any(LocalDateTime.class),any(LocalDateTime.class), any(List.class));
 	}
 
 	@Test
 	public void aoConsultarMovimentacaoDoDiaDaLocalizacaoDeveriaDelegarParaOhRepositoryListarMovimentacaoPorLocalizacaoIhData() throws Exception {
-		when(atendimentoRepositoryMock.listarPorPeriodoIhServico(LocalDate.now().atStartOfDay(),
+		when(atendimentoRepositoryMock.listarPorPeriodoDeCadastroIhServicos(LocalDate.now().atStartOfDay(),
 				LocalDate.now().atTime(23,59,59), Arrays.asList(ID_SERVICO_1)
 		)).thenReturn(Arrays.asList(getAtendimentoNaoPrioridade()));
-		getService().consultarMovimentacaoDoDiaDaLocalizacao(Arrays.asList(ID_SERVICO_1));
-		verify(atendimentoRepositoryMock).listarPorPeriodoIhServico(any(LocalDateTime.class),any(LocalDateTime.class),  any(List.class));
+		getService().consultarMovimentacaoDoDiaDosServicos(Arrays.asList(ID_SERVICO_1));
+		verify(atendimentoRepositoryMock).listarPorPeriodoDeCadastroIhServicos(any(LocalDateTime.class),any(LocalDateTime.class),  any(List.class));
 	}
 
 	@Test
@@ -135,6 +144,15 @@ public class AtendimentoServiceImplTest {
 		getService().chamarNovamente(ID_ATENDIMENTO_1, ID_LOCALIZACAO_1);
 		Atendimento atendimentoToSave = captureAhEntidadeAoSalvar();
 		assertEquals(getLocalizacaoA(), atendimentoToSave.getLocalizacao());
+	}
+
+	@Test
+	public void aoChamarNovamenteDeveriaSetarDataHoraApresentacaoComoNull() {
+		when(getRepositoryMock().findById(ID_ATENDIMENTO_1)).thenReturn(Optional.of(getEntidade()));
+		when(localizacaoServiceMock.consultarPorId(ID_LOCALIZACAO_1)).thenReturn(getLocalizacaoA());
+		getService().chamarNovamente(ID_ATENDIMENTO_1, ID_LOCALIZACAO_1);
+		Atendimento atendimentoToSave = captureAhEntidadeAoSalvar();
+		assertNull(atendimentoToSave.getDataHoraApresentacao());
 	}
 
 	@Test
@@ -310,6 +328,7 @@ public class AtendimentoServiceImplTest {
 		Atendimento atendimento = new Atendimento();
 		atendimento.setIndicadorPrioridade(false);
 		atendimento.setDataHoraCadastro(DATA_HORA_ATUAL);
+		atendimento.setDataHoraApresentacao(DATA_HORA_ATUAL);
 		return atendimento;
 	}
 

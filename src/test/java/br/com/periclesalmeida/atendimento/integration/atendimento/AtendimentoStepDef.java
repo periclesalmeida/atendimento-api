@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.everyItem;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
@@ -31,6 +32,7 @@ public class AtendimentoStepDef extends AbstractStepDef<Atendimento> {
     private final String RESOURCE_ATENDIMENTO_GERAR_PRIORIDADE = "/atendimento/gerar-prioridade/";
     private final String RESOURCE_ATENDIMENTO_CHAMAR_PROXIMO = "/atendimento/chamar-proximo/";
     private final String RESOURCE_ATENDIMENTO_MOVIMENTACAO = "/atendimento/movimentacao/";
+    private final String RESOURCE_ATENDIMENTO_MOVIMENTACAO_CHAMADO = "/atendimento/movimentacao-chamado/";
     private final String RESOURCE_ATENDIMENTO_GERAR = "/atendimento/gerar/";
     private final String ROLE_ATENDIMENTO_CONSULTAR = "ROLE_ATENDIMENTO_CONSULTAR";
     private final String ROLE_ATENDIMENTO_INCLUIR = "ROLE_ATENDIMENTO_INCLUIR";
@@ -43,11 +45,11 @@ public class AtendimentoStepDef extends AbstractStepDef<Atendimento> {
     public void inicializarContexto() {
         limparBancoDeDados();
         this.formatadorDeMensagem = new FormatadorMensagemAtendimentoImpl();
-        DateUtil.setLocalDateTime(LocalDateTime.now());
     }
 
     @Dado("que o usuário {string} possui permissao de acesso a funcionalidade")
     public void que_o_usuário_possui_permissao_de_acesso_a_funcionalidade(String string) throws Exception {
+        DateUtil.mockLocalDateTime(LocalDateTime.now());
         inserirUsuarioIhPermissao(string, ROLE_ATENDIMENTO_CONSULTAR, ROLE_ATENDIMENTO_INCLUIR);
         prepararContextoDeSeguranca(string);
         this.atendimentoMapper = new AtendimentoMapper();
@@ -92,6 +94,11 @@ public class AtendimentoStepDef extends AbstractStepDef<Atendimento> {
         get(RESOURCE_ATENDIMENTO_MOVIMENTACAO + servicos);
     }
 
+    @Quando("foi informado os serviços {string} para consulta de atendimento chamado")
+    public void foi_informado_os_serviços_para_consulta_de_atendimento_chamado(String servicos) throws Exception {
+        get(RESOURCE_ATENDIMENTO_MOVIMENTACAO_CHAMADO + servicos);
+    }
+
     @Quando("foi informado a localização {string}")
     public void foi_informado_a_localização(String localizacao) throws Exception {
         post(RESOURCE_ATENDIMENTO_CHAMAR_PROXIMO + localizacao, null);
@@ -133,30 +140,60 @@ public class AtendimentoStepDef extends AbstractStepDef<Atendimento> {
 
     @Então("o sistema exibe os atendimetos em espera:")
     public void o_sistema_exibe_os_atendimetos_em_espera(io.cucumber.datatable.DataTable dataTable) throws Exception {
-        List<Atendimento> expect = criarListaDeAtendimentoDoDataTable(dataTable);
-        List<Atendimento> result = extractListOfTheResponseAtendimentosEmEspera();
-        String mensagemExperada = formatadorDeMensagem.formatarMensagem(converterListaParaArray(expect));
-        String mensagemRetornada = formatadorDeMensagem.formatarMensagem(converterListaParaArray(result));
-        assertEquals(mensagemExperada,mensagemRetornada);
+        extractListOfDataTableAndResponseAlsoAssert(dataTable, "atendimentosEmEspera");
     }
 
     @Então("os atendimentos realizados:")
     public void os_atendimentos_realizados(io.cucumber.datatable.DataTable dataTable) throws Exception {
+        extractListOfDataTableAndResponseAlsoAssert(dataTable, "atendimentosRealizados");
+    }
+
+    @Então("o sistema exibe os atendimetos apresentados:")
+    public void o_sistema_exibe_os_atendimetos_apresentados(io.cucumber.datatable.DataTable dataTable) throws Exception {
+        extractListOfDataTableAndResponseAlsoAssert(dataTable, "atendimentosApresentados");
+    }
+
+    @Então("os atendimentos não apresentados:")
+    public void os_atendimentos_não_apresentados(io.cucumber.datatable.DataTable dataTable) throws Exception {
+        extractListOfDataTableAndResponseAlsoAssert(dataTable, "atendimentosNaoApresentados");
+    }
+
+    @Então("o próximo atendimento que deveria ser apresentado:")
+    public void o_próximo_atendimento_que_deveria_ser_apresentado(io.cucumber.datatable.DataTable dataTable) throws Exception {
+        extractEntityOfDataTableAndResponseAlsoAssert(dataTable, "proximoAtendimentoApresentado");
+    }
+
+    @Então("o último atendimento apresentado:")
+    public void o_último_atendimento_apresentado(io.cucumber.datatable.DataTable dataTable) throws Exception {
+        extractEntityOfDataTableAndResponseAlsoAssert(dataTable, "ultimoAtendimentoApresentado");
+    }
+
+    private void extractEntityOfDataTableAndResponseAlsoAssert(io.cucumber.datatable.DataTable dataTable, String entityName) throws Exception {
         List<Atendimento> expect = criarListaDeAtendimentoDoDataTable(dataTable);
-        List<Atendimento> result = extractListOfTheResponseAtendimentosRealizados();
+        Atendimento result = extractEntityOfResponse(entityName);
+        List<Atendimento> resultList = new ArrayList();
+        Optional.ofNullable(result).ifPresent(atendimento -> resultList.add(atendimento));
+        String mensagemExperada = formatadorDeMensagem.formatarMensagem(converterListaParaArray(expect));
+        String mensagemRetornada = formatadorDeMensagem.formatarMensagem(converterListaParaArray(resultList));
+        assertEquals(mensagemExperada,mensagemRetornada);
+    }
+
+    private Atendimento extractEntityOfResponse(String entityName) throws Exception {
+        JsonNode jsonNode = getMapper().readValue(getResultaActions().andReturn().getResponse().getContentAsString(), JsonNode.class);
+        return getMapper().convertValue(jsonNode.get(entityName), new TypeReference<Atendimento>(){});
+    }
+
+    private void extractListOfDataTableAndResponseAlsoAssert(io.cucumber.datatable.DataTable dataTable, String nomeOfListResponse) throws Exception {
+        List<Atendimento> expect = criarListaDeAtendimentoDoDataTable(dataTable);
+        List<Atendimento> result = extractSpecificListOfTheResponse(nomeOfListResponse);
         String mensagemExperada = formatadorDeMensagem.formatarMensagem(converterListaParaArray(expect));
         String mensagemRetornada = formatadorDeMensagem.formatarMensagem(converterListaParaArray(result));
         assertEquals(mensagemExperada,mensagemRetornada);
     }
 
-    private List<Atendimento> extractListOfTheResponseAtendimentosEmEspera() throws java.io.IOException {
+    private List<Atendimento> extractSpecificListOfTheResponse(String nameOfListAtendimento) throws Exception {
         JsonNode jsonNode = getMapper().readValue(getResultaActions().andReturn().getResponse().getContentAsString(), JsonNode.class);
-        return getMapper().convertValue(jsonNode.get("atendimentosEmEspera"), new TypeReference<List<Atendimento>>(){});
-    }
-
-    private List<Atendimento> extractListOfTheResponseAtendimentosRealizados() throws java.io.IOException {
-        JsonNode jsonNode = getMapper().readValue(getResultaActions().andReturn().getResponse().getContentAsString(), JsonNode.class);
-        return getMapper().convertValue(jsonNode.get("atendimentosRealizados"), new TypeReference<List<Atendimento>>(){});
+        return getMapper().convertValue(jsonNode.get(nameOfListAtendimento), new TypeReference<List<Atendimento>>(){});
     }
 
     private Atendimento[] converterListaParaArray(List<Atendimento> lista) {

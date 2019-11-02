@@ -113,7 +113,9 @@ public class Atendimento implements Serializable {
 
     @Transient
     public String getDataHoraCadastroFormatada() {
-        return getDataHoraCadastro().format(DateTimeFormatter.ofPattern(DD_MM_YYYY_HH_MM_SS));
+        return Optional.ofNullable(getDataHoraCadastro()).isPresent() ?
+                getDataHoraCadastro().format(DateTimeFormatter.ofPattern(DD_MM_YYYY_HH_MM_SS))
+                : null;
     }
 
     @Transient
@@ -147,6 +149,16 @@ public class Atendimento implements Serializable {
         Duration duration = Duration.between(LocalDateTime.now(), getDataHoraCadastro());
         long diff = Math.abs(duration.toMinutes());
         return diff + " minuto(s)";
+    }
+
+    @Transient
+    public Boolean isApresentado() {
+        return Optional.ofNullable(getDataHoraApresentacao()).isPresent();
+    }
+
+    @Transient
+    public Boolean isNaoApresentado() {
+        return !isApresentado();
     }
 
     @Transient
