@@ -4,13 +4,27 @@ cache: bundler
 services:
   - docker
 
-script:
-  - ./mvnw clean install -Ptest
-  - ./mvnw clean install -Pprod
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - ./mvnw dockerfile:build
-  - if: branch = master
-    ./mvnw dockerfile:push
+stages:
+  - name: build
+    script:
+      - ./mvnw clean install -Ptest
+      - ./mvnw clean install -Pprod
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - ./mvnw dockerfile:build
+
+  - name: deploy
+    script:
+      - ./mvnw dockerfile:push
+    if: branch = master
+
+
+#script:
+#  - ./mvnw clean install -Ptest
+#  - ./mvnw clean install -Pprod
+#  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+#  - ./mvnw dockerfile:build
+#  - if: branch = master
+#    ./mvnw dockerfile:push
 
 
 
