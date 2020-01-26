@@ -141,7 +141,7 @@ public class Atendimento implements Serializable {
 
     @Transient
     public String getNumeroAtendimentoFormatado() {
-        return String.format("%04d", getNumeroAtendimento());
+        return getServico().getSigla() + String.format("%03d", getNumeroAtendimento());
     }
 
     @Transient

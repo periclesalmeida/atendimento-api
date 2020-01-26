@@ -12,8 +12,10 @@ public interface AtendimentoService {
     Atendimento gerar(String idServico);
     Atendimento gerarPrioridade(String idServico);
     Atendimento chamarProximo(String idLocalizacao);
-    Atendimento chamarNovamente(String id, String idLocalizacao) ;
+    Atendimento apresentar(String id);
 
+    Atendimento chamarNovamente(String id, String idLocalizacao) ;
     AtendimentoMovimentacaoDTO consultarMovimentacaoDoDiaDosServicos(List<String> idsServico);
+
     AtendimentoMovimentacaoChamadoDTO consultarMovimentacaoChamadaDoDiaDosServicos(List<String> idsServico);
 }

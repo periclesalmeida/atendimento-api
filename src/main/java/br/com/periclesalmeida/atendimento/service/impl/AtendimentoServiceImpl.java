@@ -35,6 +35,14 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 	}
 
 	@Override
+	public Atendimento apresentar(String id) {
+		Atendimento atendimentoConsultado = consultarPorId(id);
+		atendimentoConsultado.setDataHoraApresentacao(DateUtil.getLocalDateTimeNow());
+		atendimentoRepository.save(atendimentoConsultado);
+		return atendimentoConsultado;
+	}
+
+	@Override
 	public Atendimento gerar(String idServico) {
 		Atendimento atendimento = criarAtendimento(idServico);
 		setarIndicadorPrioridadeComoFalso(atendimento);

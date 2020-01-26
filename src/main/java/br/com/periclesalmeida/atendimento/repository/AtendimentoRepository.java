@@ -15,4 +15,6 @@ public interface AtendimentoRepository extends MongoRepository<Atendimento, Stri
 
 	@Query("{'dataHoraChamada' : { $gte: ?0, $lte: ?1 }, 'servico.id': { $in: ?2} }")
 	List<Atendimento> listarPorPeriodoDeChamadaIhServicos(LocalDateTime atStartOfDay, LocalDateTime atTime, List<String> idsServico);
+
+
 }

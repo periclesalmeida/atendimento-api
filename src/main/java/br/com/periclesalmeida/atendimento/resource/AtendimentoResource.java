@@ -41,6 +41,14 @@ public class AtendimentoResource {
         return ResponseEntity.status(HttpStatus.OK).body(atendimentoMovimentacaoDTO);
     }
 
+    @PostMapping("/apresentar/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ATENDIMENTO_INCLUIR')")
+    public ResponseEntity<Atendimento> apresentar(@PathVariable String id) {
+        Atendimento atendimento = atendimentoService.apresentar(id);
+        return ResponseEntity.status(HttpStatus.OK).body(atendimento);
+    }
+
+
     @PostMapping("/gerar/{idServico}")
     @PreAuthorize("hasAuthority('ROLE_ATENDIMENTO_INCLUIR')")
     public ResponseEntity<Atendimento> gerarSenha(@PathVariable String idServico) {
