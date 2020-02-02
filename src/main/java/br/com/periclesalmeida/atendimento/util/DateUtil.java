@@ -8,7 +8,7 @@ public class DateUtil {
 
     private static LocalDateTime localDateTime;
 
-    public static void setLocalDateTime(LocalDateTime localDateTime) {
+    public static void mockLocalDateTime(LocalDateTime localDateTime) {
         localDateTime = localDateTime;
     }
 
@@ -17,6 +17,6 @@ public class DateUtil {
     }
 
     public static LocalDateTime getLocalDateTimeNow() {
-        return Optional.ofNullable(localDateTime).isPresent() ? localDateTime: localDateTime.now();
+        return Optional.ofNullable(localDateTime).isPresent() ? localDateTime: LocalDateTime.now();
     }
 }

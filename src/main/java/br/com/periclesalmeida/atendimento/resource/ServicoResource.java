@@ -41,6 +41,12 @@ public class ServicoResource {
         return servicoService.consultarPassandoEntidade(entidade, pageable);
     }
 
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_SERVICO_CONSULTAR')")
+    public Servico consultarPorId(@PathVariable String id) {
+        return servicoService.consultarPorId(id);
+    }
+
     @GetMapping(path = "/tipo-cor")
     @PreAuthorize("isAuthenticated()")
     public TipoCor[] consultarTipoCor() {

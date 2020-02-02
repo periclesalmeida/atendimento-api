@@ -2,6 +2,7 @@ package br.com.periclesalmeida.atendimento.resource;
 
 import java.util.List;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -29,7 +30,7 @@ public class UsuarioResource {
     private UsuarioService usuarioService;
     private PermissaoRepository permissaoRepository;
 
-    public UsuarioResource(UsuarioService usuarioService, PermissaoRepository permissaoRepository) {
+    public UsuarioResource(@Lazy  UsuarioService usuarioService, PermissaoRepository permissaoRepository) {
         this.usuarioService = usuarioService;
         this.permissaoRepository = permissaoRepository;
     }

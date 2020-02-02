@@ -22,14 +22,24 @@ import java.util.Arrays;
 @Configuration
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    @Autowired
     private AuthenticationManager authenticationManager;
-
-    @Autowired
     private Oauth2Property oauth2Property;
+    private UserDetailsService userDetailsService;
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
+
+    @Autowired
+    public void setOauth2Property(Oauth2Property oauth2Property) {
+        this.oauth2Property = oauth2Property;
+    }
+
+    @Autowired
+    public void setUserDetailsService(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {

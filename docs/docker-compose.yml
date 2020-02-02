@@ -9,13 +9,31 @@ services:
       - $HOME/repositorio/volumes/mongo/data:/data/db
       - $HOME/repositorio/volumes/mongo/backup:/data/
 
-  registry:
-    image: jhipster/jhipster-registry:v5.0.2
-    container_name: srv-registry
-    environment:
-      - JAVA_OPTIONS=-Xmx512m -Xms256m
-      - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_SECURITY_USER_PASSWORD=admin
-      - JHIPSTER_REGISTRY_PASSWORD=admin
+  atendimento:
+    image: periclesalmeida/padrao:atendimento-1.0
+    container_name: srv-atendimento
     ports:
-      - 8761:8761
+      - "8083:8083"
+    environment:
+      SERVER_PORT: 8083
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATA_MONGODB_DATABASE: atendimento
+      SPRING_DATA_MONGODB_HOST: mongo
+      SPRING_DATA_MONGODB_PORT: 27017
+      JAVA_OPTS: "-Xmx512m -Xms256m"
+    mem_limit: 1024m
+    links:
+      - mongo:mongo
+    depends_on:
+      - mongo
+
+#  registry:
+#    image: jhipster/jhipster-registry:v5.0.2
+#    container_name: srv-registry
+#    environment:
+#      - JAVA_OPTIONS=-Xmx512m -Xms256m
+#      - SPRING_PROFILES_ACTIVE=prod
+#      - SPRING_SECURITY_USER_PASSWORD=admin
+#      - JHIPSTER_REGISTRY_PASSWORD=admin
+#    ports:
+#      - 8761:8761
