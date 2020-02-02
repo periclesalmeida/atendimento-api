@@ -39,5 +39,12 @@ public class LocalizacaoResource {
     public Page<Localizacao> consultarPorEntidade(Localizacao entidade, Pageable pageable) {
         return localizacaoService.consultarPassandoEntidade(entidade, pageable);
     }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_LOCALIZACAO_CONSULTAR')")
+    public Localizacao consultarPorId( @PathVariable  String id) {
+        return localizacaoService.consultarPorId(id);
+    }
+
 }
 

@@ -40,4 +40,10 @@ public class TipoLocalizacaoResource {
     public Page<TipoLocalizacao> consultarPorEntidade(TipoLocalizacao entidade, Pageable pageable) {
         return tipoLocalizacaoService.consultarPassandoEntidade(entidade, pageable);
     }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_TIPO_LOCALIZACAO_CONSULTAR')")
+    public TipoLocalizacao consultarPorId(@PathVariable String id) {
+        return tipoLocalizacaoService.consultarPorId(id);
+    }
 }

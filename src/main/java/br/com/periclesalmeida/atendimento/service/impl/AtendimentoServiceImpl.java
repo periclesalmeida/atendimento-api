@@ -1,18 +1,25 @@
 package br.com.periclesalmeida.atendimento.service.impl;
 
+import br.com.periclesalmeida.atendimento.config.security.UsuarioSecurity;
 import br.com.periclesalmeida.atendimento.domain.Atendimento;
 import br.com.periclesalmeida.atendimento.domain.Localizacao;
 import br.com.periclesalmeida.atendimento.domain.Servico;
+import br.com.periclesalmeida.atendimento.domain.Usuario;
 import br.com.periclesalmeida.atendimento.domain.dto.AtendimentoMovimentacaoChamadoDTO;
 import br.com.periclesalmeida.atendimento.domain.dto.AtendimentoMovimentacaoDTO;
 import br.com.periclesalmeida.atendimento.repository.AtendimentoRepository;
 import br.com.periclesalmeida.atendimento.service.AtendimentoService;
 import br.com.periclesalmeida.atendimento.service.LocalizacaoService;
 import br.com.periclesalmeida.atendimento.service.ServicoService;
+import br.com.periclesalmeida.atendimento.service.UsuarioService;
 import br.com.periclesalmeida.atendimento.util.DateUtil;
 import br.com.periclesalmeida.atendimento.util.VerificadorUtil;
 import br.com.periclesalmeida.atendimento.util.exception.NegocioException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,11 +34,14 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 	private AtendimentoRepository atendimentoRepository;
 	private ServicoService servicoService;
 	private LocalizacaoService localizacaoService;
+	private UsuarioService usuarioService;
 
-	public AtendimentoServiceImpl(AtendimentoRepository atendimentoRepository, ServicoService servicoService, LocalizacaoService localizacaoService) {
+	public AtendimentoServiceImpl(AtendimentoRepository atendimentoRepository, ServicoService servicoService,
+								  LocalizacaoService localizacaoService, UsuarioService usuarioService) {
 		this.atendimentoRepository = atendimentoRepository;
 		this.servicoService = servicoService;
 		this.localizacaoService = localizacaoService;
+		this.usuarioService = usuarioService;
 	}
 
 	@Override
@@ -84,7 +94,7 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 		AtendimentoMovimentacaoDTO atendimentoMovimentacaoDTO = consultarMovimentacaoDoDiaDosServicos(idsServico);
 		lancarExcecaoCasoNaoExistaProximo(atendimentoMovimentacaoDTO.getAtendimentosEmEspera());
 		Atendimento atendimentoChamado = retornarAtendimentoQueDeveSerChamado(atendimentoMovimentacaoDTO.getAtendimentosEmEspera());
-		setarNoAtendimentoLocalizacaoDataHoraChamadaAtualIhRemoverDataHoraApresentacao(atendimentoChamado, localizacaoConsultada);
+		setarInformacoesDaChamada(atendimentoChamado, localizacaoConsultada);
 		atendimentoRepository.save(atendimentoChamado);
 		return atendimentoChamado;
 	}
@@ -93,7 +103,7 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 	public Atendimento chamarNovamente(String id, String idLocalizacao) {
 		Atendimento atendimentoConsultado = consultarPorId(id);
 		Localizacao localizacaoConsultada = localizacaoService.consultarPorId(idLocalizacao);
-		setarNoAtendimentoLocalizacaoDataHoraChamadaAtualIhRemoverDataHoraApresentacao(atendimentoConsultado, localizacaoConsultada);
+		setarInformacoesDaChamada(atendimentoConsultado, localizacaoConsultada);
 		atendimentoRepository.save(atendimentoConsultado);
 		return atendimentoConsultado;
 	}
@@ -165,10 +175,29 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 				.filter(Atendimento::isEmEspera).findFirst();
 	}
 
-	private void setarNoAtendimentoLocalizacaoDataHoraChamadaAtualIhRemoverDataHoraApresentacao(Atendimento atendimento , Localizacao localizacao) {
+	private void setarInformacoesDaChamada(Atendimento atendimento , Localizacao localizacao) {
 		atendimento.setLocalizacao(localizacao);
+		setarDataHoraChamadaComDataHoraAtual(atendimento);
+		setarDataHoraApresentacaoComoNulo(atendimento);
+		setarUsuarioConectado(atendimento);
+	}
+
+	private void setarDataHoraChamadaComDataHoraAtual(Atendimento atendimento) {
 		atendimento.setDataHoraChamada(DateUtil.getLocalDateTimeNow());
+	}
+
+	private void setarDataHoraApresentacaoComoNulo(Atendimento atendimento) {
 		atendimento.setDataHoraApresentacao(null);
+	}
+
+	private void setarUsuarioConectado(Atendimento atendimento) {
+		UsuarioSecurity usuario = (UsuarioSecurity) usuarioService.loadUserByUsername(getLoginUsuarioConectado());
+		atendimento.setUsuario(usuario.getUsuario());
+	}
+
+	private String getLoginUsuarioConectado() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		return (String) authentication.getPrincipal();
 	}
 
 	private List<Atendimento> listarAtendimentoDoDiaParaOsServicos(List<String> sequenciaisServico) {

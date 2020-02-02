@@ -48,11 +48,14 @@ public class AtendimentoServiceImplTest {
 	@Mock
 	private LocalizacaoService localizacaoServiceMock;
 
+	@Mock
+	private UsuarioService usuarioServiceMock;
+
 	private AtendimentoService atendimentoService;
 
 	@Before
 	public void inicializarContexto() {
-		this.atendimentoService = new AtendimentoServiceImpl(atendimentoRepositoryMock, servicoServiceMock, localizacaoServiceMock);
+		this.atendimentoService = new AtendimentoServiceImpl(atendimentoRepositoryMock, servicoServiceMock, localizacaoServiceMock, usuarioServiceMock);
 	}
 
 	@Test
