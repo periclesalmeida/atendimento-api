@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run:
           name: Maven Install
-          command: ./mvnw clean install -Pprod dockerfile:build
+          command: ./mvnw clean install -Pprod
       - run:
           name: Login to DockerHub
           command: docker login -u $DOCKER_USER -p $DOCKER_PASS
