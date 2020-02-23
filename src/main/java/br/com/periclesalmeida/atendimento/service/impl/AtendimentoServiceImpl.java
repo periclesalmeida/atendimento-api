@@ -204,12 +204,14 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 
 	private void setarUsuarioConectado(Atendimento atendimento) {
 		Optional<Usuario> usuario = usuarioRepository.findByLogin(getLoginUsuarioConectado());
-		atendimento.setUsuario(usuario.get());
+		atendimento.setUsuario(usuario.isPresent() ? usuario.get() : null);
 	}
 
 	private String getLoginUsuarioConectado() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		return (String) authentication.getPrincipal();
+		return Optional.ofNullable(authentication).isPresent() ?
+						(String) authentication.getPrincipal() :
+						null;
 	}
 
 	private List<Atendimento> listarAtendimentoDoDiaParaOsServicos(List<String> sequenciaisServico) {

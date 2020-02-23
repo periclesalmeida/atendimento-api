@@ -34,7 +34,7 @@ Funcionalidade: Chamar Próximo Atendimento para a Localização
     Então deveria retornar sucesso
     E os detalhes do Atendimento são:
      | id   | número atendimento | data cadastro              | data apresentacao | data chamada       | localizacao | usuario  | prioridade | servico | 
-     | 003  | 3                  | DATA_ATUAL_MENOS_1_MINUTO  |                   | DATA_ATUAL         |   001       |          | NÃO        |   001   |
+     | 003  | 3                  | DATA_ATUAL_MENOS_1_MINUTO  |                   | DATA_ATUAL         |   001       | pericles | NÃO        |   001   |
 
   Cenário: Dado que foram informado localização sem atendimento pendente
     Quando foi informado a localização "003"

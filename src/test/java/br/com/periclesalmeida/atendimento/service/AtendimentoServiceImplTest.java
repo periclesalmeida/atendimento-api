@@ -3,6 +3,7 @@ package br.com.periclesalmeida.atendimento.service;
 import br.com.periclesalmeida.atendimento.domain.Atendimento;
 import br.com.periclesalmeida.atendimento.domain.Localizacao;
 import br.com.periclesalmeida.atendimento.domain.Servico;
+import br.com.periclesalmeida.atendimento.domain.Usuario;
 import br.com.periclesalmeida.atendimento.domain.type.TipoCor;
 import br.com.periclesalmeida.atendimento.repository.AtendimentoRepository;
 import br.com.periclesalmeida.atendimento.repository.UsuarioRepository;
@@ -31,6 +32,7 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 public class AtendimentoServiceImplTest {
 
+	public static final String USUARIO_ADMIN = "ADMIN";
 	private final String ID_ATENDIMENTO_2 = "2";
 	private final String DESCRICAO_LOCALIZACAO_A = "A";
 	private final String ID_LOCALIZACAO_1 = "1";
@@ -70,12 +72,11 @@ public class AtendimentoServiceImplTest {
 
 	@Test
 	public void aoChamarProximoDeveriaDelegarParaOhRepositorySave() throws Exception {
-		when(localizacaoServiceMock.consultarPorId(ID_LOCALIZACAO_1))
-				.thenReturn(getLocalizacaoA());
+		when(localizacaoServiceMock.consultarPorId(ID_LOCALIZACAO_1)).thenReturn(getLocalizacaoA());
 		when(atendimentoRepositoryMock.listarPorPeriodoDeCadastroIhServicos(LocalDate.now().atStartOfDay(),
 				LocalDate.now().atTime(23,59,59), Arrays.asList(ID_SERVICO_1)
 		)).thenReturn(Arrays.asList(getAtendimentoNaoPrioridade()));
-
+		when(usuarioRepositoryMock.findByLogin(USUARIO_ADMIN)).thenReturn(Optional.ofNullable(getUsuario()));
 		getService().chamarProximo(ID_LOCALIZACAO_1);
 		verify(getRepositoryMock()).save(any(Atendimento.class));
 	}
@@ -99,6 +100,7 @@ public class AtendimentoServiceImplTest {
 		when(atendimentoRepositoryMock.listarPorPeriodoDeCadastroIhServicos(LocalDate.now().atStartOfDay(),
 				LocalDate.now().atTime(23,59,59), Arrays.asList(ID_SERVICO_1)
 		)).thenReturn(Arrays.asList(getAtendimentoNaoPrioridade()));
+
 		when(localizacaoServiceMock.consultarPorId(ID_LOCALIZACAO_1)).thenReturn(getLocalizacaoA());
 
 		getService().chamarProximo(ID_LOCALIZACAO_1);
@@ -112,6 +114,9 @@ public class AtendimentoServiceImplTest {
 		when(atendimentoRepositoryMock.listarPorPeriodoDeCadastroIhServicos(LocalDate.now().atStartOfDay(),
 				LocalDate.now().atTime(23,59,59), Arrays.asList(ID_SERVICO_1)
 		)).thenReturn(Arrays.asList(getAtendimentoNaoPrioridade()));
+		when(usuarioRepositoryMock.findByLogin(USUARIO_ADMIN))
+				.thenReturn(Optional.of(getUsuario()));
+
 		getService().chamarProximo(ID_LOCALIZACAO_1);
 		verify(atendimentoRepositoryMock).listarPorPeriodoDeCadastroIhServicos(any(LocalDateTime.class),any(LocalDateTime.class), any(List.class));
 	}
@@ -288,6 +293,13 @@ public class AtendimentoServiceImplTest {
 	public void aoConsultarPorIdIhDelegarParaOhRepositorioIhRetornouNuloDeveriaLancarExcecaoEmptyResultDataAccessException() {
 		when(getRepositoryMock().findById(getId())).thenReturn(Optional.empty());
 		getService().consultarPorId(getId());
+	}
+
+	private Usuario getUsuario() {
+		Usuario usuario = new Usuario();
+		usuario.setId("ID");
+		usuario.setLogin(USUARIO_ADMIN);
+		return  usuario;
 	}
 
 	private Atendimento captureAhEntidadeAoSalvar() {
