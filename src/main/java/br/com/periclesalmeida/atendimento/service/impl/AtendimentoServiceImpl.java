@@ -1,6 +1,5 @@
 package br.com.periclesalmeida.atendimento.service.impl;
 
-import br.com.periclesalmeida.atendimento.config.security.UsuarioSecurity;
 import br.com.periclesalmeida.atendimento.domain.Atendimento;
 import br.com.periclesalmeida.atendimento.domain.Localizacao;
 import br.com.periclesalmeida.atendimento.domain.Servico;
@@ -8,20 +7,19 @@ import br.com.periclesalmeida.atendimento.domain.Usuario;
 import br.com.periclesalmeida.atendimento.domain.dto.AtendimentoMovimentacaoChamadoDTO;
 import br.com.periclesalmeida.atendimento.domain.dto.AtendimentoMovimentacaoDTO;
 import br.com.periclesalmeida.atendimento.repository.AtendimentoRepository;
+import br.com.periclesalmeida.atendimento.repository.UsuarioRepository;
 import br.com.periclesalmeida.atendimento.service.AtendimentoService;
 import br.com.periclesalmeida.atendimento.service.LocalizacaoService;
 import br.com.periclesalmeida.atendimento.service.ServicoService;
-import br.com.periclesalmeida.atendimento.service.UsuarioService;
 import br.com.periclesalmeida.atendimento.util.DateUtil;
 import br.com.periclesalmeida.atendimento.util.VerificadorUtil;
 import br.com.periclesalmeida.atendimento.util.exception.NegocioException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Service;
 
+import java.time.Period;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,14 +32,13 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 	private AtendimentoRepository atendimentoRepository;
 	private ServicoService servicoService;
 	private LocalizacaoService localizacaoService;
-	private UsuarioService usuarioService;
+	private UsuarioRepository usuarioRepository;
 
-	public AtendimentoServiceImpl(AtendimentoRepository atendimentoRepository, ServicoService servicoService,
-								  LocalizacaoService localizacaoService, UsuarioService usuarioService) {
+	public AtendimentoServiceImpl(AtendimentoRepository atendimentoRepository, ServicoService servicoService, LocalizacaoService localizacaoService, UsuarioRepository usuarioRepository) {
 		this.atendimentoRepository = atendimentoRepository;
 		this.servicoService = servicoService;
 		this.localizacaoService = localizacaoService;
-		this.usuarioService = usuarioService;
+		this.usuarioRepository = usuarioRepository;
 	}
 
 	@Override
@@ -85,6 +82,13 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 		List<Atendimento> atendimentos = listarAtendimentoChamadoNoDiaParaOsServicos(idsServico);
 		ordenarPorDataHoraChamada(atendimentos);
 		return new AtendimentoMovimentacaoChamadoDTO(atendimentos);
+	}
+
+	@Override
+	public AtendimentoMovimentacaoDTO consultarMovimentacaoDosServicosNoPeriodo(List<String> idsServico, Period period) {
+		List<Atendimento> atendimentos = listarAtendimentoChamadoParaOsServicosNoPeriodo(idsServico, period);
+		ordenarPorDataHoraChamada(atendimentos);
+		return new AtendimentoMovimentacaoDTO(atendimentos);
 	}
 
 	@Override
@@ -134,6 +138,14 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 
 	private void lancarExcecaoCasoNaoExistaProximo(List<Atendimento> atendimentos) {
 		if (VerificadorUtil.isListaNulaOuVazia(atendimentos)) throw new NegocioException(MENSAGEM_NAO_EXISTE_ATENDIMENTO_NA_FILA);
+	}
+
+	private List listarAtendimentoChamadoParaOsServicosNoPeriodo(List<String> idsServico, Period period) {
+		return atendimentoRepository.listarPorPeriodoDeChamadaIhServicos(
+				DateUtil.getLocalDateNow().atStartOfDay().minus(period),
+				DateUtil.getLocalDateNow().atTime(23, 59,59),
+				idsServico
+		);
 	}
 
 	private Atendimento retornarAtendimentoQueDeveSerChamado(List<Atendimento> atendimentos) {
@@ -191,8 +203,8 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 	}
 
 	private void setarUsuarioConectado(Atendimento atendimento) {
-		UsuarioSecurity usuario = (UsuarioSecurity) usuarioService.loadUserByUsername(getLoginUsuarioConectado());
-		atendimento.setUsuario(usuario.getUsuario());
+		Optional<Usuario> usuario = usuarioRepository.findByLogin(getLoginUsuarioConectado());
+		atendimento.setUsuario(usuario.get());
 	}
 
 	private String getLoginUsuarioConectado() {

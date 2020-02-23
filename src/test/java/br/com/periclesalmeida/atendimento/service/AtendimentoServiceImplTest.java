@@ -5,6 +5,7 @@ import br.com.periclesalmeida.atendimento.domain.Localizacao;
 import br.com.periclesalmeida.atendimento.domain.Servico;
 import br.com.periclesalmeida.atendimento.domain.type.TipoCor;
 import br.com.periclesalmeida.atendimento.repository.AtendimentoRepository;
+import br.com.periclesalmeida.atendimento.repository.UsuarioRepository;
 import br.com.periclesalmeida.atendimento.service.impl.AtendimentoServiceImpl;
 import br.com.periclesalmeida.atendimento.util.exception.NegocioException;
 import org.junit.Before;
@@ -49,13 +50,13 @@ public class AtendimentoServiceImplTest {
 	private LocalizacaoService localizacaoServiceMock;
 
 	@Mock
-	private UsuarioService usuarioServiceMock;
+	private UsuarioRepository usuarioRepositoryMock;
 
 	private AtendimentoService atendimentoService;
 
 	@Before
 	public void inicializarContexto() {
-		this.atendimentoService = new AtendimentoServiceImpl(atendimentoRepositoryMock, servicoServiceMock, localizacaoServiceMock, usuarioServiceMock);
+		this.atendimentoService = new AtendimentoServiceImpl(atendimentoRepositoryMock, servicoServiceMock, localizacaoServiceMock, usuarioRepositoryMock);
 	}
 
 	@Test

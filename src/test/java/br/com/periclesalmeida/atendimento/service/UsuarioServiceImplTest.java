@@ -46,25 +46,6 @@ public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, St
     }
 
     @Test
-    public void aoLoadUserByUsernameDeveriaDelegarParaOhRepositorioFindByLogin() {
-        when(usuarioRepositoryMock.findByLogin(anyString())).thenReturn(Optional.of(getUsuarioLoginAdmin()));
-        usuarioService.loadUserByUsername(anyString());
-        verify(usuarioRepositoryMock).findByLogin(anyString());
-    }
-
-    @Test(expected = NegocioException.class)
-    public void aoLoadUserByUsernameIhUsuarioNaoPossuiPermissaoDeveriaLancarNegocioException() {
-        when(usuarioRepositoryMock.findByLogin(anyString())).thenReturn(Optional.of(getUsuarioLoginTestIhSequencial2()));
-        usuarioService.loadUserByUsername(anyString());
-    }
-
-    @Test(expected = UsernameNotFoundException.class)
-    public void aoLoadUserByUsernameIhUsuarioNaoExisteDeveriaLancarExcecaoUsernameNotFoundException() {
-        when(usuarioRepositoryMock.findByLogin(anyString())).thenReturn(Optional.empty());
-        usuarioService.loadUserByUsername(anyString());
-    }
-
-    @Test
     public void aoSalvarDeveriaDelegarParaOhRepositorioFindByLogin() {
         when(usuarioRepositoryMock.findByLogin(anyString())).thenReturn(Optional.of(getUsuarioLoginAdmin()));
         getService().salvar(getUsuarioLoginAdmin());
@@ -90,6 +71,28 @@ public class UsuarioServiceImplTest extends  AbstractServiceImplTest<Usuario, St
         Usuario usuarioToSave = captureAhEntidadeAoSalvar();
         assertEquals(SENHA_COM_RASH, usuarioToSave.getSenha());
     }
+
+    /*
+    @Test
+    public void aoLoadUserByUsernameDeveriaDelegarParaOhRepositorioFindByLogin() {
+        when(usuarioRepositoryMock.findByLogin(anyString())).thenReturn(Optional.of(getUsuarioLoginAdmin()));
+        usuarioService.loadUserByUsername(anyString());
+        verify(usuarioRepositoryMock).findByLogin(anyString());
+    }
+
+    @Test(expected = NegocioException.class)
+    public void aoLoadUserByUsernameIhUsuarioNaoPossuiPermissaoDeveriaLancarNegocioException() {
+        when(usuarioRepositoryMock.findByLogin(anyString())).thenReturn(Optional.of(getUsuarioLoginTestIhSequencial2()));
+        usuarioService.loadUserByUsername(anyString());
+    }
+
+
+    @Test(expected = UsernameNotFoundException.class)
+    public void aoLoadUserByUsernameIhUsuarioNaoExisteDeveriaLancarExcecaoUsernameNotFoundException() {
+        when(usuarioRepositoryMock.findByLogin(anyString())).thenReturn(Optional.empty());
+        usuarioService.loadUserByUsername(anyString());
+    }
+     */
 
     @Test
     public void aoSalvarSeNaoFoiInformadaSenhaSemRashDeveriaFazerNada() {
