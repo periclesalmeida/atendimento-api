@@ -6,14 +6,19 @@ jobs:
 
     steps:
       - checkout
-#      - setup_remote_docker:
-#          docker_layer_caching: true
-#      - run:
-#          name: Login to DockerHub
-#          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
       - run:
           name: Maven Install
           command: ./mvnw clean install -Pprod
+      - run:
+          name: Login to DockerHub
+          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run:
+          name: Docker Build
+          command: ./mvnw dockerfile:build
+      - run:
+          name: Docker Push
+          command: ./mvnw dockerfile:push
+
 
 
 
