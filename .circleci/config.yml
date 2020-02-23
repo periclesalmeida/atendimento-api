@@ -17,9 +17,9 @@ jobs:
       - run:
           name: Docker Build
           command: ./mvnw dockerfile:build
-#      - run:
-#          name: Docker Push
-#          command: ./mvnw dockerfile:push
+      - run:
+          name: Docker Push
+          command: ./mvnw dockerfile:push
 
 
 
