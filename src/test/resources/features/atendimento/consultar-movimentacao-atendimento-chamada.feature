@@ -35,8 +35,8 @@ Funcionalidade: Consultar Movimentação de Atendimento Chamado
     Quando foi informado os serviços "001,003" para consulta de atendimento chamado
     Então o sistema exibe os atendimetos apresentados:
        | id  | número atendimento | data cadastro       | data apresentacao             | data chamada               | localizacao | servico | usuario  | prioridade |
-       | 003 | 3                  | DATA_ATUAL          |   DATA_ATUAL_MAIS_1_MINUTO    | DATA_ATUAL_MAIS_1_MINUTO   | 001         | 001     | pericles | NÃO        |
        | 001 | 1                  | DATA_ATUAL          |   DATA_ATUAL                  | DATA_ATUAL                 | 001         | 001     | pericles | SIM        |
+       | 003 | 3                  | DATA_ATUAL          |   DATA_ATUAL_MAIS_1_MINUTO    | DATA_ATUAL_MAIS_1_MINUTO   | 001         | 001     | pericles | NÃO        |
     E os atendimentos não apresentados:
        | id  | número atendimento | data cadastro       | data apresentacao             | data chamada               | localizacao | servico | usuario  | prioridade |
        | 004 | 4                  | DATA_ONTEM          |                               | DATA_ATUAL_MENOS_1_MINUTO  | 001         | 001     | pericles | NÃO        |
@@ -46,7 +46,7 @@ Funcionalidade: Consultar Movimentação de Atendimento Chamado
        | 004 | 4                  | DATA_ONTEM          |                               | DATA_ATUAL_MENOS_1_MINUTO  | 001         | 001     | pericles | NÃO        |
     E o último atendimento apresentado:
        | id  | número atendimento | data cadastro       | data apresentacao             | data chamada               | localizacao | servico | usuario  | prioridade |
-       | 003 | 3                  | DATA_ATUAL          |   DATA_ATUAL_MAIS_1_MINUTO    | DATA_ATUAL_MAIS_1_MINUTO   | 001         | 001     | pericles | NÃO        |
+       | 001 | 1                  | DATA_ATUAL          |   DATA_ATUAL                  | DATA_ATUAL                 | 001         | 001     | pericles | SIM        |
 
   Cenário: Dado que foram informados dados sem atendimento atendimento apresentado
     Quando foi informado os serviços "002" para consulta de atendimento chamado

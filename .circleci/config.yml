@@ -1,0 +1,43 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/atendimento
+    docker:
+      - image: circleci/openjdk:8-jdk
+
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Maven Install
+          command: ./mvnw clean install -Pprod
+      - run:
+          name: Login to DockerHub
+          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run:
+          name: Docker Build
+          command: ./mvnw dockerfile:build
+      - run:
+          name: Docker Push
+          command: ./mvnw dockerfile:push
+
+
+
+
+#version: 2
+#jobs:
+#  build:
+#    docker:
+#      - image: circleci/openjdk:11.0.1-jdk
+#
+#    steps:
+#      - checkout
+#      - setup_remote_docker:
+#          docker_layer_caching: true
+#      - run:
+#          name: Login to DockerHub
+#          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+#      - run: mvn clean install -Pprod
+#      - run: mvn dockerfile:build
+#      - run: mvn dockerfile:push
+
