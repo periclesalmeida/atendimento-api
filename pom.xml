@@ -16,7 +16,7 @@
 
 	<properties>
 		<java.version>1.8</java.version>
-		<spring-security-oauth2.version>2.2.1.RELEASE</spring-security-oauth2.version>
+		<spring-security-oauth2.version>2.2.4.RELEASE</spring-security-oauth2.version>
 		<spring-security-jwt.version>1.0.9.RELEASE</spring-security-jwt.version>
 		<swagger2.version>2.9.2</swagger2.version>
 		<mongock.version>3.0.2.BETA</mongock.version>
